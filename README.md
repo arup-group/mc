@@ -1,6 +1,6 @@
-# Master of Ceromonies - or MATSim Configs from a Schedule of Parameters 
+# Master of Ceremonies
 
-Command Line tool for making a config or batch of configs from a schedule of parameters.
+Command Line tool for making a MATSim config or batch of configs from a schedule of parameters.
 
 ### Contents
 * [Installation](#markdown-header-installation)
@@ -19,8 +19,11 @@ mc --help
 
 ### About
 MATSim models require careful setting of numerous parameters using a `config.xml` file. Specifically, MC creates batches of configs taking subpopulation `planCalcScore` and `strategy` parameters for all modes and activities from a csv formatted schedule in `inputs/`.
+
 MC also takes a `default_config.xml` which provides the remaining params (such as for `global` and `mobsim`). A scheduled batch of output configs will therefore we a combination of **stable params** from **default** and *explorable params* from a *schedule*.
+
 Note that the output config is entirely based on the available params in the default config. Schedules inputs are validated by the `params` module. This needs to be adjusted if new config modules are used (for exampe `changeSingleTripMode` vs `SubtourModeChoice`).
+
 Output config naming convention is `<default_config_name>_test_<schedule_test_id>.xml`.
 
 ### Command line reference
