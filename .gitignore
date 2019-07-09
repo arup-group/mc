@@ -1,6 +1,19 @@
+# Custom
+*.pdf
+dump/
+resources/
+reports/
+*_dump/
+*.log.gz
+*.json
+*.json.gz
+.DS_Store
+<<<<<<< HEAD
+.idea/*
+=======
 .idea/
-*.ipynb
-
+*.xml
+>>>>>>> bd75b584955c22dc88aa357c237d5b1b5f9cd90b
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -24,7 +37,6 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
@@ -114,6 +126,3 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-# Pyre type checker
-.pyre/
