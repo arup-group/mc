@@ -7,7 +7,7 @@ def bad_path(name, path):
         return f"PATH: unknown extension {name, path}"
 
 
-class Validator:
+class BuildValidator:
 
     def is_valid(self):
         logger = list()

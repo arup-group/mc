@@ -1,17 +1,17 @@
 from lxml import etree as et
 import os
 import json
-from mc.validation import Validator
+from mc.validation import BuildValidator
 from mc.valid import valid_map
 
 
 def is_xml(path):
-    if os.path.exists(path) and path[-4:] == ".xml":
+    if path and path.exists() and path.suffix == ".xml":
         return True
 
 
 def is_json(path):
-    if os.path.exists(path) and path[-5:] == ".json":
+    if path and path.exists() and path.suffix == ".json":
         return True
 
 
@@ -81,7 +81,7 @@ def get_paramsets_search(d, target):
     return []
 
 
-class Base:
+class BaseBuilder:
 
     def print(self, i):
         indent = "\t" * i
@@ -167,44 +167,8 @@ class Base:
     def __str__(self):
         return f"{self.class_type}, use .print() to print full output"
 
-    def __eq__(self, other):
-        if not isinstance(other, Base):
-            raise NotImplemented("__eq__ only implemented for comparison between same base class")
-
-        if self.class_type == "config":
-            if not set(self.modules) == set(other.modules):
-                return False
-            for k, module in self.modules.items():
-                if not module == other.modules[k]:
-                    return False
-
-        elif self.class_type == "param":
-
-            if not self.value == other.value:
-                return False
-
-        elif self.class_type in ['module', 'paramset']:
-
-            if not set(self.params) == set(other.params):
-                return False
-            for k, param in self.params.items():
-                if not param == other.params[k]:
-                    return False
-
-            if not set(self.parametersets) == set(other.parametersets):
-                return False
-
-            for k, paramset in self.parametersets.items():
-                if not paramset == other.parametersets[k]:
-                    return False
-
-        else:
-            raise ValueError(f"Unrecognided class: {self.class_type}")
-
-        return True
-
     def add_diffs(self, other, location='', diffs=[]):
-        if not isinstance(other, Base):
+        if not isinstance(other, BaseBuilder):
             raise NotImplemented("__eq__ only implemented for comparison between same base class")
 
         if self.class_type == "config":
@@ -264,7 +228,7 @@ class Base:
         return diffs
 
 
-class Config(Base, Validator):
+class _Config(BaseBuilder, BuildValidator):
 
     class_type = "config"
 
@@ -275,11 +239,12 @@ class Config(Base, Validator):
         self.valid_keys = list(valid_map['modules'])
 
         if is_xml(path):
-            root = et.parse(path).getroot()
-            self.build_from_xml(root)
+            with path.open() as f:
+                root = et.parse(f).getroot()
+                self.build_from_xml(root)
         elif is_json(path):
-            with open(path) as json_file:
-                data = json.load(json_file)
+            with path.open() as f:
+                data = json.load(f)
                 self.build_from_json(data)
 
     def __getitem__(self, key):
@@ -299,6 +264,18 @@ class Config(Base, Validator):
 
     def __iter__(self):
         return iter(self.modules)
+
+    def __eq__(self, other):
+        if not isinstance(other, _Config):
+            raise NotImplemented("__eq__ only implemented for comparison between same class")
+
+        if not set(self.modules) == set(other.modules):
+            return False
+        for k, module in self.modules.items():
+            if not module == other.modules[k]:
+                return False
+
+        return True
 
     def diff(self, other):
         raise NotImplementedError
@@ -348,7 +325,7 @@ class Config(Base, Validator):
             raise KeyError(f"{key} is not a valid module key for configs")
 
 
-class Module(Base):
+class Module(BaseBuilder):
 
     class_type = "module"
 
@@ -405,6 +382,25 @@ class Module(Base):
     def __iter__(self):
         return iter(self.params)
 
+    def __eq__(self, other):
+        if not isinstance(other, BaseBuilder):
+            raise NotImplemented("__eq__ only implemented for comparison between same class")
+
+        if not set(self.params) == set(other.params):
+            return False
+        for k, param in self.params.items():
+            if not param == other.params[k]:
+                return False
+
+        if not set(self.parametersets) == set(other.parametersets):
+            return False
+
+        for k, paramset in self.parametersets.items():
+            if not paramset == other.parametersets[k]:
+                return False
+
+        return True
+
     def is_valid_param_key(self, key):
         if key not in self.valid_param_keys:
             raise KeyError(f"'{key}' is not a valid param key for this module")
@@ -414,7 +410,7 @@ class Module(Base):
             raise KeyError(f"'{key}' is not a valid paramset key for this module")
 
 
-class ParamSet(Base):
+class ParamSet(BaseBuilder):
 
     class_type = "paramset"
 
@@ -477,6 +473,25 @@ class ParamSet(Base):
         else:
             return default
 
+    def __eq__(self, other):
+        if not isinstance(other, BaseBuilder):
+            raise NotImplemented("__eq__ only implemented for comparison between same class")
+
+        if not set(self.params) == set(other.params):
+            return False
+        for k, param in self.params.items():
+            if not param == other.params[k]:
+                return False
+
+        if not set(self.parametersets) == set(other.parametersets):
+            return False
+
+        for k, paramset in self.parametersets.items():
+            if not paramset == other.parametersets[k]:
+                return False
+
+        return True
+
     def is_valid_param_key(self, key):
         if key not in self.valid_param_keys:
             raise KeyError(f"'{key}' is not a valid param key for this module")
@@ -486,7 +501,7 @@ class ParamSet(Base):
             raise KeyError(f"'{key}' is not a valid paramset key for this module")
 
 
-class Param(Base):
+class Param(BaseBuilder):
 
     class_type = "param"
 
@@ -498,6 +513,15 @@ class Param(Base):
 
     def __getitem__(self, key):
         return self.data[key]
+
+    def __eq__(self, other):
+        if not isinstance(other, BaseBuilder):
+            raise NotImplemented("__eq__ only implemented for comparison between same class")
+
+        if not self.value == other.value:
+            return False
+
+        return True
 
 
 
