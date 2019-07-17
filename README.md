@@ -19,10 +19,14 @@ Got a `config.xml` that you love? Let me know and get it added to the CLI genera
 
 ## Installation
 Clone or download the repository from the [downloads section](https://bitbucket.org/arupdigital/MC/downloads/). Once available locally, navigate to the folder and run:
+
+
+Then (for a mac):
+
 ```
 pip3 install -e .
-pip3 install pytest
 cd mc
+pip3 install -r requirements.txt
 pytest
 ```
 
