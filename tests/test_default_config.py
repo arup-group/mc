@@ -1,3 +1,7 @@
+"""
+Build Module tests.
+"""
+
 import pytest
 import os
 import env
@@ -5,8 +9,8 @@ from pathlib import Path
 
 
 env.set_module()
-from mc.base import _Config, get_params_search, get_paramsets_search, get_paramset_type
-from mc.build import Config, DefaultConfig, BuildConfig
+from mc.base import BaseConfig, get_params_search, get_paramsets_search, get_paramset_type
+from mc.build import BaseConfig, DefaultConfig, BuildConfig
 from mc import get_default_path
 
 
@@ -15,7 +19,7 @@ def test_default_config_path():
 
 
 def test_load_config():
-    config = Config(path=get_default_path())
+    config = BaseConfig(path=get_default_path())
     assert config["planCalcScore"]['scoringParameters:default']["lateArrival"]
 
 
@@ -32,7 +36,7 @@ def test_init_build_config():
         input_dir=in_path,
         output_dir=out_path,
         subpops=['default', 'high', 'low'],
-        modes=['car', 'walk'],
+        modes=['car', 'walk', 'pt'],
         acts=['home', 'work']
     )
     assert isinstance(config["controler"]['mobsim'], str)

@@ -1,4 +1,6 @@
-
+"""
+Class inherited by BaseConfig for carrying out debugging.
+"""
 
 def bad_path(name, path):
     if not path:
@@ -9,10 +11,17 @@ def bad_path(name, path):
 
 class BuildValidator:
 
-    def is_valid(self):
+    def debug(self, verbose=True):
         logger = list()
-        logger.append(self.has_bad_paths())
-        logger.append(self.has_bad_subpopulations())
+        logger.extend(self.log_bad_paths())
+        logger.extend(self.log_bad_subpopulations())
+        logger.extend(self.log_bad_scoring())
+
+        if verbose and len(logger):
+            print('---VALIDATION FAILURE---')
+            for log in logger:
+                print(log)
+            print('----------DONE----------')
 
         return len(logger) < 1, logger
 
@@ -79,9 +88,9 @@ class BuildValidator:
 
         logger = []
 
-        change_modes = self['changeMode']['modes'].split(',')
-        qsim_main_modes = self['qsim']['mainMode'].split(',')
-        network_modes = self['planscalcroute']['networkModes'].split(',')
+        # change_modes = self['changeMode']['modes'].split(',')
+        # qsim_main_modes = self['qsim']['mainMode'].split(',')
+        # network_modes = self['planscalcroute']['networkModes'].split(',')
 
         # Scoring:
         scoring_modes = {}
@@ -103,7 +112,7 @@ class BuildValidator:
                     dist_util_rate = paramset.get('marginalUtilityOfDistance_util_m')
                     hour_util_rate = paramset.get('marginalUtilityOfTraveling_util_hr')
                     subpop_mode_cost[mode] = calc_cost(
-                        dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode
+                        logger, dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode
                     )
                 if act:
                     subpop_acts.append(act)
@@ -148,20 +157,22 @@ def log_cost_comparison(logger, costs, log_type, location):
     for mode, cost in costs.items():
         if mode == 'walk':
             continue
-        if cost < walk_cost:
+        if walk_cost and cost < walk_cost:
             logger.append(f"{log_type}: {mode} may be more expensive than walking: {location}")
 
 
-def calc_cost(dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode):
+def calc_cost(logger, dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode):
 
     speed_map = {
         'bike': 4.2,
+        'piggyback': 0.6,
         'walk': 0.83,
         'pt': 10,
         'car': 10
     }
     if mode not in list(speed_map):
-         return None
+        logger.append(f"MISSING COST: {mode} mode speed unknown, approximating as car speed: {speed_map['car']}")
+        mode = 'car'  # default to car speed
     dist_cost = (float(dist_cost_rate) * float(mum)) + float(dist_util_rate)
     time_cost = float(hour_util_rate) / (speed_map[mode] * 3600)
     return dist_cost + time_cost

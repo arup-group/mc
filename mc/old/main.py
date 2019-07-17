@@ -5,7 +5,7 @@ import click
 import numpy as np
 from halo import Halo
 from datetime import datetime
-from mc import params
+from mc.old import params
 
 # get args {default_xml path, test schedule}
 

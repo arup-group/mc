@@ -1,17 +1,37 @@
+"""
+Config classes:
+- Base
+- BaseConfig(Base)
+- Module(Base)
+- ParamSet(Base)
+- Param(Base)
+
+Note that Modules contain ParamSets and Params, Paramsets contain other Paramsets and Params. In practice the maximum
+depth of Paramsets is 2.
+
+Note that these classes are hard to split up at the moment due to inheritance and recursive behaviour creating
+circular dependency...
+"""
+
 from lxml import etree as et
-import os
+from pathlib import Path
 import json
 from mc.validation import BuildValidator
 from mc.valid import valid_map
 
 
+def exists(path):
+    if path and path.exists():
+        return True
+
+
 def is_xml(path):
-    if path and path.exists() and path.suffix == ".xml":
+    if path and path.suffix == ".xml":
         return True
 
 
 def is_json(path):
-    if path and path.exists() and path.suffix == ".json":
+    if path and path.suffix == ".json":
         return True
 
 
@@ -81,9 +101,9 @@ def get_paramsets_search(d, target):
     return []
 
 
-class BaseBuilder:
+class Base:
 
-    def print(self, i):
+    def print(self, i=0):
         indent = "\t" * i
         print(indent, self.class_type, self.data)
         if self.class_type != "param":
@@ -167,8 +187,27 @@ class BaseBuilder:
     def __str__(self):
         return f"{self.class_type}, use .print() to print full output"
 
-    def add_diffs(self, other, location='', diffs=[]):
-        if not isinstance(other, BaseBuilder):
+    def __eq__(self, other):
+        if not isinstance(other, Base):
+            raise NotImplemented("__eq__ only implemented for comparison between same class")
+
+        if not set(self.params) == set(other.params):
+            return False
+        for k, param in self.params.items():
+            if not param == other.params[k]:
+                return False
+
+        if not set(self.parametersets) == set(other.parametersets):
+            return False
+
+        for k, paramset in self.parametersets.items():
+            if not paramset == other.parametersets[k]:
+                return False
+
+        return True
+
+    def diff(self, other, location='', diffs=[]):
+        if not isinstance(other, Base):
             raise NotImplemented("__eq__ only implemented for comparison between same base class")
 
         if self.class_type == "config":
@@ -176,7 +215,7 @@ class BaseBuilder:
             for k, module in self.modules.items():
                 other_module = other.modules.get(k)
                 if other_module:
-                    module.add_diffs(other.modules[k], self.ident, diffs)
+                    module.diff(other.modules[k], self.ident, diffs)
                 else:
                     d = f"+ module@{self.ident}: {k}"
                     diffs.extend([d])
@@ -197,7 +236,7 @@ class BaseBuilder:
             for k, param in self.params.items():
                 other_param = other.params.get(k)
                 if other_param:
-                    param.add_diffs(other.params[k], self.ident, diffs)
+                    param.diff(other.params[k], self.ident, diffs)
                 else:
                     d = f"+ param@{self.ident}: {param.data}"
                     diffs.extend([d])
@@ -211,7 +250,7 @@ class BaseBuilder:
             for k, paramset in self.parametersets.items():
                 other_paramset = other.parametersets.get(k)
                 if other_paramset:
-                    paramset.add_diffs(other.parametersets[k], self.ident, diffs)
+                    paramset.diff(other.parametersets[k], self.ident, diffs)
                 else:
                     d = f"+ paramset@{self.ident}: {k}"
                     diffs.extend([d])
@@ -228,7 +267,7 @@ class BaseBuilder:
         return diffs
 
 
-class _Config(BaseBuilder, BuildValidator):
+class BaseConfig(Base, BuildValidator):
 
     class_type = "config"
 
@@ -238,17 +277,28 @@ class _Config(BaseBuilder, BuildValidator):
         self.data = {'name': 'config'}
         self.valid_keys = list(valid_map['modules'])
 
-        if is_xml(path):
-            with path.open() as f:
-                root = et.parse(f).getroot()
-                self.build_from_xml(root)
-        elif is_json(path):
-            with path.open() as f:
-                data = json.load(f)
-                self.build_from_json(data)
+        if exists(path):
+            if is_xml(path):
+                with path.open() as f:
+                    root = et.parse(f).getroot()
+                    self.build_from_xml(root)
+            elif is_json(path):
+                with path.open() as f:
+                    data = json.load(f)
+                    self.build_from_json(data)
 
     def __getitem__(self, key):
-        return self.modules[key]
+
+        if key in self.modules:
+            return self.modules[key]
+
+        # build and return new paramset if valid
+        elif self.valid_key(key):
+            print(f"INFO creating new empty module: {key}")
+            self.modules[key] = Module(name=key)
+            return self.modules[key]
+        else:
+            raise KeyError(f"key:'{key}' not found in modules")
 
     def __delitem__(self, key):
         del self.modules[key]
@@ -266,7 +316,7 @@ class _Config(BaseBuilder, BuildValidator):
         return iter(self.modules)
 
     def __eq__(self, other):
-        if not isinstance(other, _Config):
+        if not isinstance(other, BaseConfig):
             raise NotImplemented("__eq__ only implemented for comparison between same class")
 
         if not set(self.modules) == set(other.modules):
@@ -277,12 +327,20 @@ class _Config(BaseBuilder, BuildValidator):
 
         return True
 
-    def diff(self, other):
-        raise NotImplementedError
+    # def diff(self, other):
+    #     raise NotImplementedError
 
     def print(self):
         for module in self.modules.values():
             module.print(1)
+
+    def write(self, path: Path):
+        if is_xml(path):
+            self.write_xml(path)
+        elif is_json(path):
+            self.write_json(path)
+        else:
+            raise NameError(f'Unknown data format for path: {path}')
 
     def write_xml(self, path):
         root = self.build_xml()
@@ -320,12 +378,16 @@ class _Config(BaseBuilder, BuildValidator):
     def build_dicts(self):
         raise NotImplementedError
 
+    def valid_key(self, key):
+        if key in self.valid_keys:
+            return True
+
     def is_valid_key(self, key):
-        if key not in self.valid_keys:
+        if not self.valid_key(key):
             raise KeyError(f"{key} is not a valid module key for configs")
 
 
-class Module(BaseBuilder):
+class Module(Base):
 
     class_type = "module"
 
@@ -338,6 +400,8 @@ class Module(BaseBuilder):
 
         self.valid_param_keys = list(valid_map['modules'][name].get('params', []))
         self.valid_paramset_keys = [get_paramset_type(t) for t in list(valid_map['modules'][name].get('parametersets', []))]
+        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
+                           'valid_paramset_keys': self.valid_paramset_keys}
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -352,6 +416,20 @@ class Module(BaseBuilder):
         elif key + ":default" in self.parametersets:
             print("WARNING assuming 'default' required")
             return self.parametersets[key + ":default"]
+
+        # try to collect list of paramsets
+        collected = []
+        for _, parameterset in self.parametersets.items():
+            if parameterset.type == key:
+                collected.append(parameterset)
+        if collected:
+            print("INFO returning list of collected parametersets")
+            return collected
+        # build and return new paramset if valid
+        elif self.valid_paramset_key(key):
+            print(f"INFO creating new empty parameterset: {key}")
+            self.parametersets[key] = ParamSet(ident=key)
+            return self.parametersets[key]
         else:
             raise KeyError(f"key:'{key}' not found in params/sets")
 
@@ -367,50 +445,41 @@ class Module(BaseBuilder):
             return default
 
     def __setitem__(self, key, value):
+
+        if not isinstance(value, (str, ParamSet, Param)):
+            raise ValueError(f"Please use value of either type ParamSet, Param or str")
+
         if isinstance(value, ParamSet):
             self.is_valid_paramset_key(key)
             self.parametersets[key] = value
         elif isinstance(value, Param):
             self.is_valid_param_key(key)
             self.params[key] = value
-        elif isinstance(value, str):
+        else:
             self.is_valid_param_key(key)
             self.params[key] = Param(key, value)
-        else:
-            raise KeyError(f"key:'{key}' not found in params/sets and could not build new param from value:{value}")
 
     def __iter__(self):
         return iter(self.params)
 
-    def __eq__(self, other):
-        if not isinstance(other, BaseBuilder):
-            raise NotImplemented("__eq__ only implemented for comparison between same class")
-
-        if not set(self.params) == set(other.params):
-            return False
-        for k, param in self.params.items():
-            if not param == other.params[k]:
-                return False
-
-        if not set(self.parametersets) == set(other.parametersets):
-            return False
-
-        for k, paramset in self.parametersets.items():
-            if not paramset == other.parametersets[k]:
-                return False
-
-        return True
+    def valid_param_key(self, key):
+        if key in self.valid_param_keys:
+            return True
 
     def is_valid_param_key(self, key):
-        if key not in self.valid_param_keys:
+        if not self.valid_param_key(key):
             raise KeyError(f"'{key}' is not a valid param key for this module")
 
+    def valid_paramset_key(self, key):
+        if get_paramset_type(key) in self.valid_paramset_keys:
+            return True
+
     def is_valid_paramset_key(self, key):
-        if get_paramset_type(key) not in self.valid_paramset_keys:
+        if not self.valid_paramset_key(key):
             raise KeyError(f"'{key}' is not a valid paramset key for this module")
 
 
-class ParamSet(BaseBuilder):
+class ParamSet(Base):
 
     class_type = "paramset"
 
@@ -422,6 +491,8 @@ class ParamSet(BaseBuilder):
         self.parametersets = {}
         self.valid_param_keys = list(get_params_search(valid_map, self.type))
         self.valid_paramset_keys = [get_paramset_type(t) for t in list(get_paramsets_search(valid_map, self.type))]
+        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
+                           'valid_paramset_keys': self.valid_paramset_keys}
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -434,30 +505,38 @@ class ParamSet(BaseBuilder):
         elif key in self.parametersets:
             return self.parametersets[key]
         elif key + ":default" in self.parametersets:
-            print("WARNING assuming 'default' required")
+            print("WARNING assuming '<parameterset>:default' required")
             return self.parametersets[key + ":default"]
+
+        # try to collect list of paramsets
+        collected = []
+        for _, parameterset in self.parametersets.items():
+            if parameterset.type == key:
+                collected.append(parameterset)
+        if collected:
+            print("INFO returning list of collected parametersets")
+            return collected
+
+        # build and return new paramset if valid
+        elif self.valid_paramset_key(key):
+            print(f"INFO creating new empty parameterset: {key}")
+            self.parametersets[key] = ParamSet(ident=key)
+            return self.parametersets[key]
         else:
-            collected = []
-            for _, parameterset in self.parametersets.items():
-                if parameterset.type == key:
-                    collected.append(parameterset)
-            if collected:
-                return collected
-            else:
-                raise KeyError(f"key:'{key}' not found in params/sets")
+            raise KeyError(f"key:'{key}' not found in params/sets")
 
     def __setitem__(self, key, value):
-        if isinstance(value, ParamSet):
+        if not isinstance(value, (str, ParamSet, Param)):
+            raise ValueError(f"Please use value of either type ParamSet, Param or str")
+        elif isinstance(value, ParamSet):
             self.is_valid_paramset_key(key)
             self.parametersets[key] = value
         elif isinstance(value, Param):
             self.is_valid_param_key(key)
             self.params[key] = value
-        elif isinstance(value, str):
+        else:
             self.is_valid_param_key(key)
             self.params[key] = Param(key, value)
-        else:
-            raise KeyError(f"key:'{key}' not found in params/sets and could not build new param from value:{value}")
 
     def __iter__(self):
         return iter(self.params)
@@ -473,35 +552,24 @@ class ParamSet(BaseBuilder):
         else:
             return default
 
-    def __eq__(self, other):
-        if not isinstance(other, BaseBuilder):
-            raise NotImplemented("__eq__ only implemented for comparison between same class")
-
-        if not set(self.params) == set(other.params):
-            return False
-        for k, param in self.params.items():
-            if not param == other.params[k]:
-                return False
-
-        if not set(self.parametersets) == set(other.parametersets):
-            return False
-
-        for k, paramset in self.parametersets.items():
-            if not paramset == other.parametersets[k]:
-                return False
-
-        return True
+    def valid_param_key(self, key):
+        if key in self.valid_param_keys:
+            return True
 
     def is_valid_param_key(self, key):
-        if key not in self.valid_param_keys:
-            raise KeyError(f"'{key}' is not a valid param key for this module")
+        if not self.valid_param_key(key):
+            raise KeyError(f"'{key}' is not a valid param key for this paramset")
+
+    def valid_paramset_key(self, key):
+        if get_paramset_type(key) in self.valid_paramset_keys:
+            return True
 
     def is_valid_paramset_key(self, key):
-        if get_paramset_type(key) not in self.valid_paramset_keys:
-            raise KeyError(f"'{key}' is not a valid paramset key for this module")
+        if not self.valid_paramset_key(key):
+            raise KeyError(f"'{key}' is not a valid paramset key for this paramset")
 
 
-class Param(BaseBuilder):
+class Param(Base):
 
     class_type = "param"
 
@@ -515,17 +583,12 @@ class Param(BaseBuilder):
         return self.data[key]
 
     def __eq__(self, other):
-        if not isinstance(other, BaseBuilder):
+        if not isinstance(other, Base):
             raise NotImplemented("__eq__ only implemented for comparison between same class")
 
         if not self.value == other.value:
             return False
 
         return True
-
-
-
-
-
 
 

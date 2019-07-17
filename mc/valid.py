@@ -1,3 +1,7 @@
+"""
+Dictionary of valid config names for modules, paramsets and params.
+"""
+
 valid_map = {
       "modules": {
         "JDEQSim": {
