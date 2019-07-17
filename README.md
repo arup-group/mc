@@ -85,7 +85,8 @@ test_inputs/new_population.xml
 
 Nested setting is allowed, for example for an empty `Config` a new module, paramset and param
  can be set together:
- ```
+ 
+```
 empty_config = build.Config()
 empty_config['global']['coordinateSystem'] = 'EPSG:27700'
 INFO creating new empty module: global
@@ -94,7 +95,8 @@ empty_config.print()
 module {'name': 'global'}
     param {'name': 'coordinateSystem', 'value': 'EPSG:27700'}
 ```
-...providing that all keys and values are valid:
+
+providing that all keys and values are valid:
 
 ```
 empty_config = build.Config()
