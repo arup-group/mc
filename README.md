@@ -33,7 +33,7 @@ pytest
 ## Command Line
 The CLI commands are pretty explorable via help, start with `mc --help`:
 
-```bash
+```
 Usage: mc [OPTIONS] COMMAND [ARGS]...
 
   Command line interface for MC.
