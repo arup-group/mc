@@ -134,7 +134,7 @@ objects via `.valid_keys`.
 
 
 ## Tests
-It's broken? Yes there are some tests via `pytest` (`pip2 install pytest`), although coverage is "variable". 
+It's broken? Yes there are some tests via `pytest`, although coverage is "variable". 
 
 
 ## Contact
