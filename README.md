@@ -46,39 +46,39 @@ Commands:
   convert  Read an existing config and write as xml or json.
   debug    Debug a config.
   diff     Simple diff two configs.
-  gen      Generate a template config: empty|default|test.
+  gen      Generate a template config: |empty|default|test|.
   print    Print a config to terminal.
 ```
 
 ## Programming Interface
- ```
->>> from mc import build
->>> from pathlib import Path
 ```
-To facilitate a beautiful future where humans never need edit xml and machines start to
- explore MATSim simulation config parameter spaces themselves, mc makes a dictionary-like `mc.build.Config`
-  object available. `Config` objects can read and write to MATSim valid `.xml` input (and `.json`).
-
- ```
->>> config = build.Config(path=Path('default.xml'))
->>> config.write(path=Path('temp.xml'))
+from mc import build
+from pathlib import Path
 ```
- `Config` objects consist of nested `Modules`, `ParamSets` and `Params`. All of which will behave
-  like a nested set of dicts. For example supporting getting and setting methods:
 
- ```
- # get and print module contents:
->>> config['plans'].print()
+To facilitate a beautiful future where humans never need edit xml and machines start to explore MATSim simulation config parameter spaces themselves, mc makes a dictionary-like `mc.build.Config` object available. `Config` objects can read and write to MATSim valid `.xml` input (and `.json`).
+
+```
+config = build.Config(path=Path('default.xml'))
+config.write(path=Path('temp.xml'))
+```
+
+`Config` objects consist of nested `Modules`, `ParamSets` and `Params`. All of which will behave like a nested set of dicts. For example supporting getting and setting methods:
+
+```
+# get and print module contents:
+config['plans'].print()
 
 module {'name': 'plans'}
     param {'name': 'inputPlansFile', 'value': 'test_inputs/population.xml'}
     param {'name': 'inputPersonAttributesFile', 'value': 'test_inputs/attributes.xml'}
     param {'name': 'subpopulationAttributeName', 'value': 'subpopulation'}
 ```
- ```
+
+```
  # set and print a single param:
->>> config['plans']['inputPlansFile'] = 'test_inputs/new_population.xml'
->>> print(config['plans']['inputPlansFile'])
+config['plans']['inputPlansFile'] = 'test_inputs/new_population.xml'
+print(config['plans']['inputPlansFile'])
 
 test_inputs/new_population.xml
 ```
@@ -86,37 +86,42 @@ test_inputs/new_population.xml
 Nested setting is allowed, for example for an empty `Config` a new module, paramset and param
  can be set together:
  ```
->>> empty_config = build.Config()
->>> empty_config['global']['coordinateSystem'] = 'EPSG:27700'
+empty_config = build.Config()
+empty_config['global']['coordinateSystem'] = 'EPSG:27700'
 INFO creating new empty module: global
->>> empty_config.print()
+empty_config.print()
 
 module {'name': 'global'}
     param {'name': 'coordinateSystem', 'value': 'EPSG:27700'}
 ```
 ...providing that all keys and values are valid:
+
 ```
->>> empty_config = build.Config()
->>> empty_config['NotAModule']['coordinateSystem'] = 'EPSG:27700'
+empty_config = build.Config()
+empty_config['NotAModule']['coordinateSystem'] = 'EPSG:27700'
 ...
 KeyError: "key:'NotAModule' not found in modules"
 ```
+
 ```
->>> empty_config['global']['coordinateSystem'] = 2700
+empty_config['global']['coordinateSystem'] = 2700
 INFO creating new empty module: global
 ...
 ValueError: Please use value of either type ParamSet, Param or str
 ```
+
 MATSim configurations include parametersets which look like lists. We therefore suffix
 ParamSet keys using `:<uid>` where the uid is most usefully the appropriate parameterset
 subpopulation, mode or activity:
+
 ```
->>> empty_config.write(path=Path('temp.xml'))
->>> empty_config['planCalcScore']['scoringParameters:high_income']['modeParams:car']['monetaryDistanceRate'] = '-0.0001'
+empty_config.write(path=Path('temp.xml'))
+empty_config['planCalcScore']['scoringParameters:high_income']['modeParams:car']['monetaryDistanceRate'] = '-0.0001'
 INFO creating new empty module: planCalcScore
 INFO creating new empty parameterset: scoringParameters:high_income
 INFO creating new empty parameterset: modeParams:car
 ```
+
 When writing to `.xml` these suffixes are ignored, writing a clean usable config. When reading in
 an existing config, these suffixes are automatically generated.
 WARNING: Not specifying a suffix will generally be assumed as using `:default`.
