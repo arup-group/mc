@@ -177,6 +177,8 @@ class Base:
         :param path: pathlib.Path
         :return: None
         """
+        if isinstance(path, str):
+            path = Path(path)
         if xml_path(path):
             self.write_xml(path)
         elif json_path(path):
@@ -190,6 +192,8 @@ class Base:
         :param path: pathlib.Path
         :return: None
         """
+        if isinstance(path, str):
+            path = Path(path)
         root = self.build_xml()
         tree = et.tostring(root,
                            pretty_print=True,
@@ -206,6 +210,8 @@ class Base:
         :param path: pathlib.Path
         :return: None
         """
+        if isinstance(path, str):
+            path = Path(path)
         data = self.build_json()
         with open(path, 'w', encoding='utf-8') as outfile:
             json.dump(data, outfile, ensure_ascii=False, indent=2)
@@ -382,6 +388,9 @@ class BaseConfig(Base, BaseDebug):
         self.data = {'name': 'config'}
         self.valid_keys = list(VALID_MAP['modules'])
 
+        if isinstance(path, str):
+            path = Path(path)
+
         if path_exists(path):
             if xml_path(path):
                 with path.open() as file:
@@ -406,7 +415,7 @@ class BaseConfig(Base, BaseDebug):
             self.modules[key] = Module(name=key)
             return self.modules[key]
 
-        raise KeyError(f"key:'{key}' not found in modules")
+        raise KeyError(f"key:'{key}' not found in modules and not valid")
 
     def __delitem__(self, key):
         del self.modules[key]
@@ -521,7 +530,7 @@ class Module(Base):
             self.parametersets[key] = ParamSet(ident=key)
             return self.parametersets[key]
 
-        raise KeyError(f"key:'{key}' not found in params/sets")
+        raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
     def get(self, key, default=None):
         if key in self.params:
@@ -583,6 +592,7 @@ class ParamSet(Base):
             self.build_from_json(json_object)
 
     def __getitem__(self, key):
+
         if key in self.params:
             return self.params[key].value
         if key in self.parametersets:
@@ -606,9 +616,10 @@ class ParamSet(Base):
             self.parametersets[key] = ParamSet(ident=key)
             return self.parametersets[key]
 
-        raise KeyError(f"key:'{key}' not found in params/sets")
+        raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
     def __setitem__(self, key, value):
+
         if not isinstance(value, (str, ParamSet, Param)):
             raise ValueError(f"Please use value of either type ParamSet, Param or str")
         if isinstance(value, ParamSet):
@@ -625,6 +636,7 @@ class ParamSet(Base):
         return iter(self.params)
 
     def get(self, key, default=None):
+
         if key in self.params:
             return self.params[key].value
         if key in self.parametersets:
