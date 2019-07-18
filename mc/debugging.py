@@ -1,17 +1,20 @@
 """
 Class inherited by BaseConfig for carrying out debugging.
 """
-
-def bad_path(name, path):
-    if not path:
-        return f"PATH: missing {name}"
-    if not (path[-4:] == '.xml' or path[-7:] == '.xml.gz'):
-        return f"PATH: unknown extension {name, path}"
+from typing import Tuple
 
 
-class BuildValidator:
+class BaseDebug:
+    """
+    Debugging Base class.
+    """
 
-    def debug(self, verbose=True):
+    def debug(self, verbose=True) -> Tuple[bool, list]:
+        """
+        Build a list of debug messages.
+        :param verbose: bool
+        :return: tuple[bool, list]
+        """
         logger = list()
         logger.extend(self.log_bad_paths())
         logger.extend(self.log_bad_subpopulations())
@@ -25,8 +28,11 @@ class BuildValidator:
 
         return len(logger) < 1, logger
 
-    def log_bad_paths(self):
-
+    def log_bad_paths(self) -> list:
+        """
+        Build a list of debug messages for bad paths.
+        :return: list
+        """
         logger = []
         for name, path in self.get_paths().items():
             log = bad_path(name, path)
@@ -35,8 +41,11 @@ class BuildValidator:
 
         return logger
 
-    def get_paths(self):
-
+    def get_paths(self) -> dict:
+        """
+        Build a dict of paths from config.
+        :return: dict
+        """
         return {
             'network_path': self['network']['inputNetworkFile'],
             'plans_path': self['plans']['inputPlansFile'],
@@ -45,8 +54,11 @@ class BuildValidator:
             'transit_vehicles_path': self['transit']['vehiclesFile'],
         }
 
-    def log_bad_subpopulations(self):
-
+    def log_bad_subpopulations(self) -> list:
+        """
+        Build a list of debug messages for bad subpopulations.
+        :return: list
+        """
         logger = []
 
         # Scoring:
@@ -84,8 +96,11 @@ class BuildValidator:
 
         return logger
 
-    def log_bad_scoring(self):
-
+    def log_bad_scoring(self) -> list:
+        """
+        Build a list of debug messages for bad scoring.
+        :return: list
+        """
         logger = []
 
         # change_modes = self['changeMode']['modes'].split(',')
@@ -138,7 +153,30 @@ class BuildValidator:
         return logger
 
 
-def log_duplicates(logger, targets, log_type, location):
+def bad_path(name: str, path: str) -> str:
+    """
+    Build diff for bad path.
+    :param name: str
+    :param path: str
+    :return: str
+    """
+    if not path:
+        return f"PATH: missing {name}"
+    if not (path[-4:] == '.xml' or path[-7:] == '.xml.gz'):
+        return f"PATH: unknown extension {name, path}"
+
+    return None
+
+
+def log_duplicates(logger: list, targets: list, log_type: str, location: str) -> None:
+    """
+    Add diffs to logger for duplicated items in list.
+    :param logger: list
+    :param targets: list
+    :param log_type: str
+    :param location: str
+    :return: None
+    """
     for t in list(set(targets)):
         if targets.count(t) > 1:
             logger.append(f"{log_type}:{t} defined more than once in: {location}")

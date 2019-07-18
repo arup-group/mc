@@ -9,8 +9,8 @@ import env
 
 env.set_module()
 from mc.base import BaseConfig, ParamSet, Param, get_params_search, get_paramsets_search, get_paramset_type
-from mc.validation import *
-from mc.valid import valid_map
+from mc.debugging import *
+from mc.valid import VALID_MAP
 
 
 
@@ -34,11 +34,11 @@ def test_paramset_names_and_types():
 
 
 def test_get_paramsets_type_search():
-    assert get_paramsets_search(valid_map, 'scoringParameters:default')
+    assert get_paramsets_search(VALID_MAP, 'scoringParameters:default')
 
 
 def test_get_params_type_search():
-    assert get_params_search(valid_map, 'scoringParameters:default')
+    assert get_params_search(VALID_MAP, 'scoringParameters:default')
 
 
 def test_module_paramset_level_1_valid_key_construction():

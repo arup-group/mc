@@ -1,28 +1,34 @@
 """
-Commonly implemented Configurations
+Commonly implemented Configurations.
 """
-
-from mc.base import BaseConfig, Module, ParamSet, Param
 import os
-from . import get_default_path
 from pathlib import Path
-from typing import List, Tuple
+from typing import Tuple
+from mc.base import BaseConfig
+from . import get_default_path
 
 
 class Config(BaseConfig):
+    """
+    Config.
+    """
 
     def __init__(self, path=None):
         super().__init__(path=path)
 
 
 class DefaultConfig(BaseConfig):
-
+    """
+    Default configuration.
+    """
     def __init__(self):
         super().__init__(path=get_default_path())
 
 
 class TestConfig(BaseConfig):
-
+    """
+    Test Configuration.
+    """
     def __init__(self):
         super().__init__()
 
@@ -124,16 +130,27 @@ class TestConfig(BaseConfig):
 
 
 class BuildConfig(BaseConfig):
-
+    """
+    Bespoke Config.
+    """
     def __init__(
             self,
             input_dir: Path = Path('inputs'),
             output_dir: Path = Path('outputs'),
-            sample: float=0.01,
-            subpops: Tuple[str]=('low', 'medium', 'high', 'default'),
-            modes: Tuple[str]=('car', 'pt', 'bike', 'walk'),
-            acts: Tuple[str]=('home', 'work', 'education', 'other')
+            sample: float = 0.01,
+            subpops: Tuple[str] = ('low', 'medium', 'high', 'default'),
+            modes: Tuple[str] = ('car', 'pt', 'bike', 'walk'),
+            acts: Tuple[str] = ('home', 'work', 'education', 'other')
     ):
+        """
+        Config Builder.
+        :param input_dir: Path
+        :param output_dir: Path
+        :param sample: float
+        :param subpops: tuple[str]
+        :param modes: tuple[str]
+        :param acts: tuple[str]
+        """
 
         super().__init__()
 
@@ -273,15 +290,8 @@ class BuildConfig(BaseConfig):
         self['transitRouter']['searchRadius'] = '1000'
 
 
-config_map = {
+CONFIG_MAP = {
     'empty': Config,
     'test': TestConfig,
     'default': DefaultConfig,
 }
-
-
-
-
-
-
-
