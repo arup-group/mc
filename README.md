@@ -3,7 +3,7 @@
 Tools for making MATSim configuration less painful.
 
 Generate default configs, cookie-cut new configs, diff and debug existing configs from the 
-command line. Also load and interact with configs for as dictionary like python3 objects with built-in
+command line. Also build and interact with configs as dictionary like python3 objects with built-in
 key and value assurance.
 
 Got a `config.xml` that you love? Let me know and get it added to the CLI generator so that it's always available.
@@ -57,14 +57,18 @@ Commands:
 ## Programming Interface
 ```
 from mc import build
-from pathlib import Path
 ```
 
-To facilitate a beautiful future where humans never need edit xml and machines start to explore MATSim simulation config parameter spaces themselves, mc makes a dictionary-like `mc.build.Config` object available. `Config` objects can read and write to MATSim valid `.xml` input (and `.json`).
+To facilitate a beautiful future where humans never need edit xml and machines start to explore MATSim simulation config parameter spaces themselves, mc makes a dictionary-like `mc.build.Config` object available. `Config` objects can read and write to MATSim `.xml` config format (and `.json` just in case).
 
 ```
-config = build.Config(path=Path('default.xml'))
-config.write(path=Path('temp.xml'))
+config = build.Config(path='default.xml')
+config.write(path='temp.json')
+config2 = build.Config(path='temp.json')
+config == config2
+```
+```
+True
 ```
 
 `Config` objects consist of nested `Modules`, `ParamSets` and `Params`. All of which will behave like a nested set of dicts. For example supporting getting and setting methods:
@@ -72,7 +76,8 @@ config.write(path=Path('temp.xml'))
 ```
 # get and print module contents:
 config['plans'].print()
-
+```
+```
 module {'name': 'plans'}
     param {'name': 'inputPlansFile', 'value': 'test_inputs/population.xml'}
     param {'name': 'inputPersonAttributesFile', 'value': 'test_inputs/attributes.xml'}
@@ -83,7 +88,8 @@ module {'name': 'plans'}
  # set and print a single param:
 config['plans']['inputPlansFile'] = 'test_inputs/new_population.xml'
 print(config['plans']['inputPlansFile'])
-
+```
+```
 test_inputs/new_population.xml
 ```
 
@@ -93,9 +99,10 @@ Nested setting is allowed, for example for an empty `Config` a new module, param
 ```
 empty_config = build.Config()
 empty_config['global']['coordinateSystem'] = 'EPSG:27700'
-INFO creating new empty module: global
+...
 empty_config.print()
-
+```
+```
 module {'name': 'global'}
     param {'name': 'coordinateSystem', 'value': 'EPSG:27700'}
 ```
@@ -105,6 +112,8 @@ providing that all keys and values are valid:
 ```
 empty_config = build.Config()
 empty_config['NotAModule']['coordinateSystem'] = 'EPSG:27700'
+```
+```
 ...
 KeyError: "key:'NotAModule' not found in modules"
 ```
@@ -112,6 +121,8 @@ KeyError: "key:'NotAModule' not found in modules"
 ```
 empty_config['global']['coordinateSystem'] = 2700
 INFO creating new empty module: global
+```
+```
 ...
 ValueError: Please use value of either type ParamSet, Param or str
 ```
@@ -123,6 +134,8 @@ subpopulation, mode or activity:
 ```
 empty_config.write(path=Path('temp.xml'))
 empty_config['planCalcScore']['scoringParameters:high_income']['modeParams:car']['monetaryDistanceRate'] = '-0.0001'
+```
+```
 INFO creating new empty module: planCalcScore
 INFO creating new empty parameterset: scoringParameters:high_income
 INFO creating new empty parameterset: modeParams:car

@@ -17,9 +17,9 @@ from lxml import etree as et
 from lxml.etree import Element
 from pathlib import Path
 import json
+from typing import Tuple
 from mc.debugging import BaseDebug
 from mc.valid import VALID_MAP
-from typing import Tuple
 
 
 class Base:
