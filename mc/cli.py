@@ -63,6 +63,7 @@ def generate_config(
 @click.option('--input_dir', '-i', type=click.Path(), default=Path('inputs'))
 @click.option('--output_dir', '-o', type=click.Path(), default=Path('outputs'))
 @click.option('--sample', '-%', type=float, default=0.1)
+@click.option('--epsg', '-s', type=int, default=27700)
 @click.option('--subpops', '-s', type=str, default='high_income,medium_income,low_income,freight')
 @click.option('--modes', '-m', type=str, default='car,pt,walk,bike')
 @click.option('--activities', '-a', type=str, default='home,work,education,other')
