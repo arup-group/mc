@@ -73,6 +73,7 @@ def build_config(
         input_dir: Path,
         output_dir: Path,
         sample: float,
+        epsg: int,
         subpops: str,
         modes: str,
         activities: str,
@@ -89,6 +90,7 @@ def build_config(
         input_dir=input_dir,
         output_dir=output_dir,
         sample=sample,
+        epsg=epsg,
         subpops=subpops,
         modes=modes,
         acts=activities
