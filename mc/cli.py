@@ -17,8 +17,8 @@ def cli():
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.argument('write_path', type=click.Path(writable=True))
-@click.option('--debugger', '-d', is_flag=True, default=False)
-@click.option('--show', '-p', is_flag=True, default=False)
+@click.option('--debugger', '-d', is_flag=True, default=False, show_default=True)
+@click.option('--show', '-p', is_flag=True, default=False, show_default=True)
 def convert(
         read_path: Path,
         write_path: Path,
@@ -39,8 +39,8 @@ def convert(
 @cli.command(name='gen')
 @click.argument('config', type=click.Choice(list(CONFIG_MAP)))
 @click.argument('write_path', type=click.Path(writable=True))
-@click.option('--debugger', '-d', is_flag=True, default=False)
-@click.option('--show', '-p', is_flag=True, default=False)
+@click.option('--debugger', '-d', is_flag=True, default=False, show_default=True)
+@click.option('--show', '-p', is_flag=True, default=False, show_default=True)
 def generate_config(
         config: str,
         write_path: Path,
@@ -60,15 +60,15 @@ def generate_config(
 
 @cli.command(name='build')
 @click.argument('write_path', type=click.Path(writable=True))
-@click.option('--input_dir', '-i', type=click.Path(), default=Path('inputs'))
-@click.option('--output_dir', '-o', type=click.Path(), default=Path('outputs'))
-@click.option('--sample', '-%', type=float, default=0.1)
-@click.option('--epsg', '-e', type=int, default=27700)
-@click.option('--subpops', '-s', type=str, default='high_income,medium_income,low_income,freight')
-@click.option('--modes', '-m', type=str, default='car,pt,walk,bike')
-@click.option('--activities', '-a', type=str, default='home,work,education,other')
-@click.option('--debugger', '-d', is_flag=True, default=False)
-@click.option('--show', '-p', is_flag=True, default=False)
+@click.option('--input_dir', '-i', type=click.Path(), default=Path('inputs'), show_default=True)
+@click.option('--output_dir', '-o', type=click.Path(), default=Path('outputs'), show_default=True)
+@click.option('--sample', '-%', type=float, default=0.1, show_default=True)
+@click.option('--epsg', '-e', type=int, default=27700, show_default=True)
+@click.option('--subpops', '-s', type=str, default='high_income,medium_income,low_income,freight', show_default=True)
+@click.option('--modes', '-m', type=str, default='car,pt,walk,bike', show_default=True)
+@click.option('--activities', '-a', type=str, default='home,work,education,other', show_default=True)
+@click.option('--debugger', '-d', is_flag=True, default=False, show_default=True)
+@click.option('--show', '-p', is_flag=True, default=False, show_default=True)
 def build_config(
         write_path: Path,
         input_dir: Path,
@@ -122,7 +122,7 @@ def difference(
 
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
-@click.option('--show', '-p', is_flag=True, default=False)
+@click.option('--show', '-p', is_flag=True, default=False, show_default=True)
 def debug(
         read_path: Path,
         show: bool

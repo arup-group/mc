@@ -205,6 +205,8 @@ def calc_cost(logger, dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode)
         'bike': 4.2,
         'piggyback': 0.6,
         'walk': 0.83,
+        'access_walk': 0.83,
+        'egress_walk': 0.83,
         'pt': 10,
         'car': 10
     }

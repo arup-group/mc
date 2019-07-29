@@ -158,6 +158,15 @@ class BuildConfig(BaseConfig):
 
         defaults_config = BaseConfig(path=get_default_path())
 
+        subpops = list(subpops)
+        if 'default' not in subpops:
+            subpops += ['default']
+
+        modes = list(modes)
+        for critical_mode in ['walk', 'access_walk', 'egress_walk']:
+            if critical_mode not in modes:
+                modes += [critical_mode]
+
         default_mode_scoring = {
             'car': {
                 'mut_hr': '-6',
@@ -168,6 +177,14 @@ class BuildConfig(BaseConfig):
                 'mdr': '-0.0005'
             },
             'walk': {
+                'mut_hr': '-12',
+                'mdr': '0'
+            },
+            'access_walk': {
+                'mut_hr': '-12',
+                'mdr': '0'
+            },
+            'egress_walk': {
                 'mut_hr': '-12',
                 'mdr': '0'
             },
@@ -193,6 +210,10 @@ class BuildConfig(BaseConfig):
             'depo': {
                 'typ_dur': '12:00:00',
                 'min_dur': '08:00:00'
+            },
+            'delivery': {
+                'typ_dur': '00:20:00',
+                'min_dur': '00:10:00'
             },
             'other': {
                 'typ_dur': '00:15:00',
@@ -291,6 +312,8 @@ class BuildConfig(BaseConfig):
         self['transitRouter']['extensionRadius'] = '100'
         self['transitRouter']['maxBeelineWalkConnectionDistance'] = '500'
         self['transitRouter']['searchRadius'] = '1000'
+
+        self['planscalcroute']['teleportedModeParameters:access_walk'] = defaults_config['planscalcroute']['teleportedModeParameters:access_walk']
 
 
 CONFIG_MAP = {
