@@ -7,31 +7,6 @@ import click
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 
 
-def careful_write(config: BaseConfig, write_path: Path) -> None:
-    """
-    Write config to path, check overwrite and get user confirmation.
-    :param config: Config
-    :param write_path: Path
-    """
-    if Path(write_path).exists():
-        value = click.prompt(f'Are you sure you want to overwrite {write_path}? y/n', default='n')
-        if value.lower() == 'y':
-            config.write(Path(write_path))
-    else:
-        config.write(Path(write_path))
-
-
-def string_to_tuple(string: str) -> Tuple[str]:
-    """
-    Parse argument/option comma separated string into tuples.
-    :param string: str
-    :return: tuple[str]
-    """
-    if string and isinstance(string, str):
-        return tuple(string.split(','))
-    raise TypeError('Function expects str')
-
-
 @click.group()
 def cli():
     """
@@ -168,3 +143,28 @@ def print_config(
     """
     config = Config(path=Path(read_path))
     config.print()
+
+
+def careful_write(config: BaseConfig, write_path: Path) -> None:
+    """
+    Write config to path, check overwrite and get user confirmation.
+    :param config: Config
+    :param write_path: Path
+    """
+    if Path(write_path).exists():
+        value = click.prompt(f'Are you sure you want to overwrite {write_path}? y/n', default='n')
+        if value.lower() == 'y':
+            config.write(Path(write_path))
+    else:
+        config.write(Path(write_path))
+
+
+def string_to_tuple(string: str) -> Tuple[str]:
+    """
+    Parse argument/option comma separated string into tuples.
+    :param string: str
+    :return: tuple[str]
+    """
+    if string and isinstance(string, str):
+        return tuple(string.split(','))
+    raise TypeError('Function expects str')

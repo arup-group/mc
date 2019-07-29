@@ -138,6 +138,7 @@ class BuildConfig(BaseConfig):
             input_dir: Path = Path('inputs'),
             output_dir: Path = Path('outputs'),
             sample: float = 0.01,
+            epsg: int = 27700,
             subpops: Tuple[str] = ('low', 'medium', 'high', 'default'),
             modes: Tuple[str] = ('car', 'pt', 'bike', 'walk'),
             acts: Tuple[str] = ('home', 'work', 'education', 'other')
@@ -147,6 +148,7 @@ class BuildConfig(BaseConfig):
         :param input_dir: Path
         :param output_dir: Path
         :param sample: float
+        :param epsg: int
         :param subpops: tuple[str]
         :param modes: tuple[str]
         :param acts: tuple[str]
@@ -158,12 +160,12 @@ class BuildConfig(BaseConfig):
 
         default_mode_scoring = {
             'car': {
-                'mut_hr': '-5',
-                'mdr': '-0.0005'
+                'mut_hr': '-6',
+                'mdr': '-0.0002'
             },
             'pt': {
-                'mut_hr': '-5',
-                'mdr': '-0.001'
+                'mut_hr': '-6',
+                'mdr': '-0.0005'
             },
             'walk': {
                 'mut_hr': '-12',
@@ -207,6 +209,7 @@ class BuildConfig(BaseConfig):
 
         # build config
         self['global'] = defaults_config['global']
+        self['global']['coordinateSystem'] = f"EPSG:{epsg}"
 
         self['network']['inputNetworkFile'] = network_path.as_posix()
 
@@ -245,12 +248,12 @@ class BuildConfig(BaseConfig):
         for subpop in subpops:
 
             self['planCalcScore'][f'scoringParameters:{subpop}']['lateArrival'] = '-18'
-            self['planCalcScore'][f'scoringParameters:{subpop}']['earlyDeparture'] = '-0.0'
+            self['planCalcScore'][f'scoringParameters:{subpop}']['earlyDeparture'] = '-18.0'
             self['planCalcScore'][f'scoringParameters:{subpop}']['marginalUtilityOfMoney'] = '1'
             self['planCalcScore'][f'scoringParameters:{subpop}']['performing'] = '+6'
             self['planCalcScore'][f'scoringParameters:{subpop}']['subpopulation'] = subpop
-            self['planCalcScore'][f'scoringParameters:{subpop}']['waiting'] = '-0'
-            self['planCalcScore'][f'scoringParameters:{subpop}']['waitingPt'] = '-2'
+            self['planCalcScore'][f'scoringParameters:{subpop}']['waiting'] = '-1'
+            self['planCalcScore'][f'scoringParameters:{subpop}']['waitingPt'] = '-1'
             self['planCalcScore'][f'scoringParameters:{subpop}']['utilityOfLineSwitch'] = '-1'
 
             for mode in modes:
