@@ -48,3 +48,12 @@ def test_mode_validate_bad():
     bad_config = BaseConfig(path=env.test_bad_config_path)
     assert bad_config.log_bad_scoring()
 
+
+def test_find_missing_modes_good():
+    test_config = BaseConfig(path=env.test_xml_path)
+    assert len(test_config.log_missing_modes()) == 0
+
+
+def test_find_missing_modes_bad():
+    bad_config = BaseConfig(path=env.test_bad_config_path)
+    assert(bad_config.log_missing_modes())

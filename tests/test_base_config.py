@@ -109,7 +109,7 @@ def test_print(capfd):
 def test_diff():
     test_config1 = BaseConfig(path=env.test_json_path)
     test_config2 = BaseConfig(path=env.test_bad_config_path)
-    assert len(test_config1.diff(test_config2)) == 15
+    assert len(test_config1.diff(test_config2)) == 18
 
 
 def test_config_dict_navigation():

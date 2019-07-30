@@ -19,6 +19,7 @@ class BaseDebug:
         logger.extend(self.log_bad_paths())
         logger.extend(self.log_bad_subpopulations())
         logger.extend(self.log_bad_scoring())
+        logger.extend(self.log_missing_modes())
 
         if verbose and len(logger):
             print('---VALIDATION FAILURE---')
@@ -103,10 +104,6 @@ class BaseDebug:
         """
         logger = []
 
-        # change_modes = self['changeMode']['modes'].split(',')
-        # qsim_main_modes = self['qsim']['mainMode'].split(',')
-        # network_modes = self['planscalcroute']['networkModes'].split(',')
-
         # Scoring:
         scoring_modes = {}
         scoring_acts = {}
@@ -149,6 +146,73 @@ class BaseDebug:
             log_consistency(logger, ml, all_modes, 'MODES', subpopulation)
         for subpopulation, al in scoring_acts.items():
             log_consistency(logger, al, all_acts, 'ACTIVITIES', subpopulation)
+
+        return logger
+
+    def log_missing_modes(self) -> list:
+        """
+        build debug messages for missing modes.
+        :return: list
+        """
+        logger = []
+
+        # build set of observed modes from config
+        all_modes = set()
+
+        # look for modes in qsim module
+        # if 'qsim' not in self:
+        #     logger.append(
+        #         "MISSING MODULE: 'qsim' module not found"
+        #     )
+        # elif 'mainMode' not in list(self['qsim'].params):
+        #     logger.append(
+        #         "MISSING MODES: 'mainMode' param not found in: qsim"
+        #     )
+        # else:
+        #     all_modes.update(self['qsim']['mainMode'].split(','))
+
+        # look for modes in subtourModeChoice module
+        if 'subtourModeChoice' not in self:
+            logger.append(
+                "MISSING MODULE: 'subtourModeChoice' module not found"
+            )
+        elif 'modes' not in list(self['subtourModeChoice'].params):
+            logger.append(
+                "MISSING MODES: 'modes' param not found in: subtourModeChoice"
+            )
+        else:
+            all_modes.update(self['subtourModeChoice']['modes'].split(','))
+
+        # look for modes in planscalcroute module
+        if 'planscalcroute' not in self:
+            logger.append(
+                "MISSING MODULE: 'planscalcroute' module not found - need 'access_walk' config"
+            )
+
+            # Additionally check that access walk has been set up in plancalcroute
+            if 'teleportedModeParameters:access_walk' not in list(
+                    self['planscalcroute'].parametersets
+            ):
+                logger.append(f"MISSING MODE: access_walk mode not found in: planscalcroute")
+
+        elif 'networkModes' in list(self['planscalcroute'].params):
+            all_modes.update(self['planscalcroute']['networkModes'].split(','))
+
+        all_modes.update(['access_walk'])
+
+        # check for scoring configuration of all modes across all subpopulations
+        modes = []
+        for subpop_paramset in self['planCalcScore'].parametersets.values():
+            subpopulation = subpop_paramset['subpopulation']
+            for paramset in subpop_paramset.parametersets.values():
+                mode = paramset.get("mode")
+                if mode:
+                    modes.append(mode)
+            for _mode in all_modes:
+                if _mode not in modes:
+                    logger.append(
+                        f"MISSING MODE SCORING: {_mode} not found in: planCalcScore:{subpopulation}"
+                    )
 
         return logger
 
