@@ -1,0 +1,11 @@
+image: python:3
+
+pipelines:
+  branches:
+    master:
+      - step:
+          deployment : production
+          script:
+            - pip install -r requirements.txt
+            - python -m pytest -vvv tests
+            - echo $BITBUCKET_COMMIT > release
