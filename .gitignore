@@ -6,15 +6,8 @@ resources/
 reports/
 *_dump/
 *.log.gz
-*.json
-*.json.gz
 .DS_Store
-<<<<<<< HEAD
 .idea/*
-=======
-.idea/
-*.xml
->>>>>>> bd75b584955c22dc88aa357c237d5b1b5f9cd90b
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
