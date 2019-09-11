@@ -1,0 +1,504 @@
+{
+  "modules": {
+    "JDEQSim": {
+      "params": {
+        "carSize": "7.5",
+        "endTime": "undefined",
+        "flowCapacityFactor": "1.0",
+        "gapTravelSpeed": "15.0",
+        "minimumInFlowCapacity": "1800.0",
+        "squeezeTime": "1800.0",
+        "storageCapacityFactor": "1.0"
+      }
+    },
+    "TimeAllocationMutator": {
+      "params": {
+        "mutationAffectsDuration": "true",
+        "mutationRange": "1000.0",
+        "useIndividualSettingsForSubpopulations": "false"
+      }
+    },
+    "changeMode": {
+      "params": {
+        "ignoreCarAvailability": "true",
+        "modes": "car,pt,walk"
+      }
+    },
+    "controler": {
+      "params": {
+        "createGraphs": "true",
+        "dumpDataAtEnd": "true",
+        "enableLinkToLinkRouting": "false",
+        "eventsFileFormat": "xml",
+        "firstIteration": "0",
+        "lastIteration": "100",
+        "mobsim": "qsim",
+        "outputDirectory": "home/arup/tii/1p_models/3_default_config/model_out",
+        "overwriteFiles": "failIfDirectoryExists",
+        "routingAlgorithmType": "Dijkstra",
+        "runId": "null",
+        "snapshotFormat": "",
+        "writeEventsInterval": "1",
+        "writePlansInterval": "50",
+        "writeSnapshotsInterval": "1"
+      }
+    },
+    "counts": {
+      "params": {
+        "analyzedModes": "car",
+        "averageCountsOverIterations": "5",
+        "countsScaleFactor": "1.0",
+        "distanceFilter": "null",
+        "distanceFilterCenterNode": "null",
+        "filterModes": "false",
+        "inputCRS": "null",
+        "inputCountsFile": "null",
+        "outputformat": "txt",
+        "writeCountsInterval": "10"
+      }
+    },
+    "facilities": {
+      "params": {
+        "addEmptyActivityOption": "false",
+        "assigningLinksToFacilitiesIfMissing": "true",
+        "assigningOpeningTime": "false",
+        "facilitiesSource": "none",
+        "idPrefix": "",
+        "inputCRS": "null",
+        "inputFacilitiesFile": "null",
+        "inputFacilityAttributesFile": "null",
+        "oneFacilityPerLink": "true",
+        "removingLinksAndCoordinates": "true"
+      }
+    },
+    "global": {
+      "params": {
+        "coordinateSystem": "EPSG:27700",
+        "insistingOnDeprecatedConfigVersion": "true",
+        "numberOfThreads": "32",
+        "randomSeed": "4711"
+      }
+    },
+    "households": {
+      "params": {
+        "inputFile": "null",
+        "inputHouseholdAttributesFile": "null"
+      }
+    },
+    "linkStats": {
+      "params": {
+        "averageLinkStatsOverIterations": "5",
+        "writeLinkStatsInterval": "10"
+      }
+    },
+    "network": {
+      "params": {
+        "inputCRS": "null",
+        "inputChangeEventsFile": "null",
+        "inputNetworkFile": "~/tii/network.xml",
+        "laneDefinitionsFile": "null",
+        "timeVariantNetwork": "false"
+      }
+    },
+    "parallelEventHandling": {
+      "params": {
+        "estimatedNumberOfEvents": "null",
+        "numberOfThreads": "32",
+        "oneThreadPerHandler": "false",
+        "synchronizeOnSimSteps": "true"
+      }
+    },
+    "planCalcScore": {
+      "params": {
+        "BrainExpBeta": "1.0",
+        "PathSizeLogitBeta": "1.0",
+        "fractionOfIterationsToStartScoreMSA": "null",
+        "learningRate": "1.0",
+        "usingOldScoringBelowZeroUtilityDuration": "false",
+        "writeExperiencedPlans": "false"
+      },
+      "parametersets": {
+        "scoringParameters:default": {
+          "params": {
+            "earlyDeparture": "-0.0",
+            "lateArrival": "-18.0",
+            "marginalUtilityOfMoney": "0.0",
+            "performing": "6.0",
+            "subpopulation": "default",
+            "utilityOfLineSwitch": "-1.0",
+            "waiting": "-1.0",
+            "waitingPt": "-1.0"
+          },
+          "parametersets": {
+            "activityParams:education": {
+              "params": {
+                "activityType": "education",
+                "closingTime": "17:00:00",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "06:00:00",
+                "openingTime": "08:30:00",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "06:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "activityParams:home": {
+              "params": {
+                "activityType": "home",
+                "closingTime": "undefined",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "01:00:00",
+                "openingTime": "undefined",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "12:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "activityParams:work": {
+              "params": {
+                "activityType": "work",
+                "closingTime": "19:00:00",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "08:00:00",
+                "openingTime": "08:00:00",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "09:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "modeParams:car": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "0.0",
+                "marginalUtilityOfTraveling_util_hr": "-6.0",
+                "mode": "car",
+                "monetaryDistanceRate": "-0.0"
+              }
+            },
+            "modeParams:pt": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "0.0",
+                "marginalUtilityOfTraveling_util_hr": "-6.0",
+                "mode": "pt",
+                "monetaryDistanceRate": "-0.0"
+              }
+            },
+            "modeParams:walk": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "-0.0",
+                "marginalUtilityOfTraveling_util_hr": "-12.0",
+                "mode": "walk",
+                "monetaryDistanceRate": "0.0"
+              }
+            },
+            "modeParams:bike": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "-0.0",
+                "marginalUtilityOfTraveling_util_hr": "-12.0",
+                "mode": "bike",
+                "monetaryDistanceRate": "-0.0"
+              }
+            }
+          }
+        },
+        "scoringParameters:unknown": {
+          "params": {
+            "earlyDeparture": "-0.0",
+            "lateArrival": "-18.0",
+            "marginalUtilityOfMoney": "0.0",
+            "performing": "6.0",
+            "subpopulation": "unknown",
+            "utilityOfLineSwitch": "-1.0",
+            "waiting": "-1.0",
+            "waitingPt": "-1.0"
+          },
+          "parametersets": {
+            "activityParams:education": {
+              "params": {
+                "activityType": "education",
+                "closingTime": "17:00:00",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "06:00:00",
+                "openingTime": "08:30:00",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "06:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "activityParams:home": {
+              "params": {
+                "activityType": "home",
+                "closingTime": "undefined",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "01:00:00",
+                "openingTime": "undefined",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "12:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "activityParams:work": {
+              "params": {
+                "activityType": "work",
+                "closingTime": "19:00:00",
+                "earliestEndTime": "undefined",
+                "latestStartTime": "undefined",
+                "minimalDuration": "08:00:00",
+                "openingTime": "08:00:00",
+                "priority": "1.0",
+                "scoringThisActivityAtAll": "true",
+                "typicalDuration": "09:00:00",
+                "typicalDurationScoreComputation": "relative"
+              }
+            },
+            "modeParams:car": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "0.0",
+                "marginalUtilityOfTraveling_util_hr": "-6.0",
+                "mode": "car",
+                "monetaryDistanceRate": "-0.0"
+              }
+            },
+            "modeParams:pt": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "0.0",
+                "marginalUtilityOfTraveling_util_hr": "-6.0",
+                "mode": "pt",
+                "monetaryDistanceRate": "-0.0"
+              }
+            },
+            "modeParams:walk": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "-0.0",
+                "marginalUtilityOfTraveling_util_hr": "-12.0",
+                "mode": "walk",
+                "monetaryDistanceRate": "0.0"
+              }
+            },
+            "modeParams:bike": {
+              "params": {
+                "constant": "0.0",
+                "marginalUtilityOfDistance_util_m": "-0.0",
+                "marginalUtilityOfTraveling_util_hr": "-12.0",
+                "mode": "bike",
+                "monetaryDistanceRate": "-0.0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "plans": {
+      "params": {
+        "activityDurationInterpretation": "tryEndTimeThenDuration",
+        "inputCRS": "null",
+        "inputPersonAttributesFile": "~/tii/1p_models/population_attributes.xml.gz",
+        "inputPlansFile": "~/tii/1p_models/population.xml.gz",
+        "networkRouteType": "LinkNetworkRoute",
+        "removingUnnecessaryPlanAttributes": "false",
+        "subpopulationAttributeName": "subpopulation"
+      }
+    },
+    "planscalcroute": {
+      "params": {
+        "networkModes": "car"
+      },
+      "parametersets": {
+        "teleportedModeParameters:bike": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "bike",
+            "teleportedModeFreespeedFactor": "null",
+            "teleportedModeSpeed": "4.166666666666667"
+          }
+        },
+        "teleportedModeParameters:walk": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "walk",
+            "teleportedModeFreespeedFactor": "null",
+            "teleportedModeSpeed": "0.8333333333333333"
+          }
+        },
+        "teleportedModeParameters:access_walk": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "access_walk",
+            "teleportedModeFreespeedFactor": "null",
+            "teleportedModeSpeed": "0.8333333333333333"
+          }
+        },
+        "teleportedModeParameters:egress_walk": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "egress_walk",
+            "teleportedModeFreespeedFactor": "null",
+            "teleportedModeSpeed": "0.8333333333333333"
+          }
+        },
+        "teleportedModeParameters:undefined": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "undefined",
+            "teleportedModeFreespeedFactor": "null",
+            "teleportedModeSpeed": "13.88888888888889"
+          }
+        },
+        "teleportedModeParameters:ride": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "ride",
+            "teleportedModeFreespeedFactor": "1.0",
+            "teleportedModeSpeed": "null"
+          }
+        },
+        "teleportedModeParameters:pt": {
+          "params": {
+            "beelineDistanceFactor": "1.3",
+            "mode": "pt",
+            "teleportedModeFreespeedFactor": "2.0",
+            "teleportedModeSpeed": "null"
+          }
+        }
+      }
+    },
+    "ptCounts": {
+      "params": {
+        "countsScaleFactor": "1.0",
+        "distanceFilter": "null",
+        "distanceFilterCenterNode": "null",
+        "inputAlightCountsFile": "null",
+        "inputBoardCountsFile": "null",
+        "inputOccupancyCountsFile": "null",
+        "outputformat": "null",
+        "ptCountsInterval": "10"
+      }
+    },
+    "qsim": {
+      "params": {
+        "creatingVehiclesForAllNetworkModes": "true",
+        "endTime": "24:00:00",
+        "flowCapacityFactor": "0.01",
+        "insertingWaitingVehiclesBeforeDrivingVehicles": "false",
+        "isRestrictingSeepage": "true",
+        "isSeepModeStorageFree": "false",
+        "linkDynamics": "FIFO",
+        "linkWidth": "30.0",
+        "mainMode": "bus,car,rail,tram",
+        "nodeOffset": "0.0",
+        "numberOfThreads": "32",
+        "removeStuckVehicles": "false",
+        "seepMode": "bike",
+        "simEndtimeInterpretation": "null",
+        "simStarttimeInterpretation": "maxOfStarttimeAndEarliestActivityEnd",
+        "snapshotStyle": "equiDist",
+        "snapshotperiod": "00:00:00",
+        "startTime": "00:00:00",
+        "storageCapacityFactor": "0.01",
+        "stuckTime": "10.0",
+        "timeStepSize": "00:00:01",
+        "trafficDynamics": "queue",
+        "useLanes": "false",
+        "usePersonIdForMissingVehicleId": "true",
+        "usingFastCapacityUpdate": "true",
+        "usingThreadpool": "true",
+        "vehicleBehavior": "teleport",
+        "vehiclesSource": "defaultVehicle"
+      }
+    },
+    "scenario": {},
+    "strategy": {
+      "params": {
+        "ExternalExeConfigTemplate": "null",
+        "ExternalExeTimeOut": "3600",
+        "ExternalExeTmpFileRootDir": "null",
+        "fractionOfIterationsToDisableInnovation": "0.9",
+        "maxAgentPlanMemorySize": "5",
+        "planSelectorForRemoval": "WorstPlanSelector"
+      },
+      "parametersets": {
+        "strategysettings:unknown": {
+          "params": {
+            "disableAfterIteration": "-1",
+            "executionPath": "null",
+            "strategyName": "SelectExpBeta",
+            "subpopulation": "unknown",
+            "weight": "0.6"
+          }
+        }
+      }
+    },
+    "subtourModeChoice": {
+      "params": {
+        "chainBasedModes": "car,bike",
+        "considerCarAvailability": "false",
+        "modes": "car,pt,walk,bike"
+      }
+    },
+    "transit": {
+      "params": {
+        "inputScheduleCRS": "null",
+        "transitLinesAttributesFile": "null",
+        "transitModes": "pt",
+        "transitScheduleFile": "~/tii/schedule-merged.xml",
+        "transitStopsAttributesFile": "null",
+        "useTransit": "true",
+        "vehiclesFile": "~/tii/vehicles.xml"
+      }
+    },
+    "transitRouter": {
+      "params": {
+        "additionalTransferTime": "0.0",
+        "directWalkFactor": "1.0",
+        "extensionRadius": "100.0",
+        "maxBeelineWalkConnectionDistance": "100.0",
+        "searchRadius": "1000.0"
+      }
+    },
+    "travelTimeCalculator": {
+      "params": {
+        "analyzedModes": "car",
+        "calculateLinkToLinkTravelTimes": "false",
+        "calculateLinkTravelTimes": "true",
+        "filterModes": "false",
+        "maxTime": "108000",
+        "separateModes": "false",
+        "travelTimeAggregator": "optimistic",
+        "travelTimeBinSize": "900",
+        "travelTimeCalculator": "TravelTimeCalculatorArray",
+        "travelTimeGetter": "average"
+      }
+    },
+    "vehicles": {
+      "params": {
+        "vehiclesFile": "null"
+      }
+    },
+    "vspExperimental": {
+      "params": {
+        "isAbleToOverwritePtInteractionParams": "false",
+        "isGeneratingBoardingDeniedEvent": "false",
+        "isUsingOpportunityCostOfTimeForLocationChoice": "true",
+        "logitScaleParamForPlansRemoval": "1.0",
+        "vspDefaultsCheckingLevel": "ignore",
+        "writingOutputEvents": "true"
+      }
+    }
+  }
+}
