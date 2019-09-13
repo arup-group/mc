@@ -151,7 +151,17 @@ objects via `.valid_keys`.
 
 
 ## Tests
-It's broken? Yes there are some tests via `pytest`, although coverage is "variable". 
+
+
+Run the tests (from root dir)
+----
+    python -m pytest -vv tests
+
+Generate a code coverage report
+----
+To generate XML & HTML coverage reports to `reports/coverage`:
+
+    ./scripts/code-coverage.sh
 
 
 ## Contact
