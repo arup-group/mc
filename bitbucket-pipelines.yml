@@ -7,5 +7,5 @@ pipelines:
           deployment : production
           script:
             - pip install -r requirements.txt
-            - python -m pytest -vvv tests
+            - ./scripts/code-coverage.sh
             - echo $BITBUCKET_COMMIT > release
