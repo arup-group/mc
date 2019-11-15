@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Tuple
 import click
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
+from mc.wildcards import update_config
 
 
 @click.group()
@@ -12,6 +13,21 @@ def cli():
     """
     Command line interface for MC.
     """
+
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.argument('write_path', type=click.Path(writable=True))
+@click.argument('overrides', type=str)
+def fill(
+        read_path: Path,
+        write_path: Path,
+        overrides: str
+) -> None:
+    """
+    Read an existing config, fill in the target variables and write out
+    """
+    override_map = dict(overrides)
+    update_config(read_path, write_path, overrides)
 
 
 @cli.command()
