@@ -27,7 +27,7 @@ def fill(
     Read an existing config, fill in the target variables and write out
     """
     override_map = dict(overrides)
-    update_config(read_path, write_path, overrides)
+    update_config(read_path, write_path, override_map)
 
 
 @cli.command()
