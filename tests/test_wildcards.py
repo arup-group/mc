@@ -13,3 +13,14 @@ def test_update_config_one_wildcard():
 
     assert filecmp.cmp(out_file, correct_ouput)
     os.remove(out_file)
+
+
+def test_update_config_no_match():
+    in_file = "tests/test_data/test_wildcard.json"
+    out_file = "tests/test_data/test_wildcard_out.json"
+    overrides = "{'matchless': 'filled'}"
+
+    update_config_wildcards(in_file, out_file, overrides)
+
+    assert filecmp.cmp(out_file, in_file)
+    os.remove(out_file)
