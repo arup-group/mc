@@ -52,6 +52,7 @@ Commands:
   diff     Simple diff two configs.
   gen      Generate a template config: |empty|default|test|.
   print    Print a config to terminal.
+  fill     Read an existing config, fill in the override wildcard variables, and write out the updated config
 ```
 
 ## Programming Interface
