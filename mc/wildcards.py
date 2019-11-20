@@ -1,5 +1,6 @@
 import ast
 import logging
+import os
 
 def update_config_wildcards(input_file: str, output_file: str, overrides: str):
     '''
@@ -13,6 +14,14 @@ def update_config_wildcards(input_file: str, output_file: str, overrides: str):
 
     with open(input_file, 'r') as f:
         input_lines = f.readlines()
+
+    # Create target directory & all intermediate directories if they don't exist
+    intermediate_dir = os.path.dirname(output_file)
+    try:
+        os.makedirs(intermediate_dir)
+        logging.info("Directory {} Created".format(intermediate_dir))
+    except FileExistsError:
+        logging.warning("Directory {} already exists".format(intermediate_dir))
 
     with open(output_file, 'w') as o:
         for line in input_lines:
