@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE transitSchedule SYSTEM "http://www.matsim.org/files/dtd/transitSchedule_v2.dtd">
+<transitSchedule>
+<transitStops>
+<stopFacility id="home_stop_out" x="50" y="50" linkRefId="1-3" name="home_stop_out" isBlocking="false"/>
+<stopFacility id="work_stop_in" x="5050" y="800" linkRefId="4-5" name="work_stop_arr" isBlocking="false"/>
+<stopFacility id="home_stop_in" x="50" y="50" linkRefId="3-2" name="home_stop_in" isBlocking="false"/>
+<stopFacility id="work_stop_out" x="5050" y="800" linkRefId="5-4" name="work_stop_out" isBlocking="false"/>
+</transitStops>
+<transitLine id="city_line" name="city_line">
+  <transitRoute id="work_bound">
+    <transportMode>bus</transportMode>
+    <routeProfile>
+      <stop refId="home_stop_out" departureOffset="00:05:00" awaitDeparture="true"/>
+      <stop refId="work_stop_in"  departureOffset="00:15:00" awaitDeparture="true"/>
+      <stop refId="work_stop_out"  departureOffset="00:20:00" awaitDeparture="true"/>
+      <stop refId="home_stop_in" arrivalOffset="00:35:00" awaitDeparture="true"/>
+    </routeProfile>
+    <route>
+      <link refId="1-3"/>
+      <link refId="3-4"/>
+      <link refId="4-5"/>
+      <link refId="5-4"/>
+      <link refId="4-3"/>
+      <link refId="3-2"/>
+    </route>
+    <departures>
+      <departure id="early_work_bound" departureTime="07:30:00" vehicleRefId="bus1"/>
+      <departure id="mid_work_bound" departureTime="08:00:00" vehicleRefId="bus2"/>
+      <departure id="late_work_bound" departureTime="08:30:00" vehicleRefId="bus3"/>
+    </departures>
+  </transitRoute>
+  <transitRoute id="home_bound">
+    <transportMode>bus</transportMode>
+    <routeProfile>
+      <stop refId="work_stop_out" departureOffset="00:05:00" awaitDeparture="true"/>
+      <stop refId="home_stop_in" arrivalOffset="00:15:00" awaitDeparture="true"/>
+    </routeProfile>
+    <route>
+      <link refId="5-4"/>
+      <link refId="4-3"/>
+      <link refId="3-2"/>
+    </route>
+    <departures>
+      <departure id="early_home_bound" departureTime="17:30:00" vehicleRefId="bus4"/>
+      <departure id="late_home_bound" departureTime="18:30:00" vehicleRefId="bus5"/>
+    </departures>
+  </transitRoute>
+</transitLine>
+</transitSchedule>

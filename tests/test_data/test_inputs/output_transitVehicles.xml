@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vehicleDefinitions xmlns="http://www.matsim.org/files/dtd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.matsim.org/files/dtd http://www.matsim.org/files/dtd/vehicleDefinitions_v1.0.xsd">
+
+<vehicleType id="Bus">
+   <capacity>
+      <seats persons="50"/>
+      <standingRoom persons="20"/>
+   </capacity>
+   <length meter="12"/>
+   <width meter="2.8"/>
+	<accessTime secondsPerPerson="0.25"/>
+	<egressTime secondsPerPerson="0.25"/>
+	<doorOperation mode="serial"/>
+	<passengerCarEquivalents pce="27.1"/>
+</vehicleType>
+
+<vehicle id="bus1" type="Bus"/>
+<vehicle id="bus2" type="Bus"/>
+<vehicle id="bus3" type="Bus"/>
+<vehicle id="bus4" type="Bus"/>
+<vehicle id="bus5" type="Bus"/>
+
+</vehicleDefinitions>

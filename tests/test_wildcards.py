@@ -7,7 +7,7 @@ def test_update_config_update_one_matching_wildcard():
     in_file = "tests/test_data/test_wildcard.json"
     out_file = "tests/test_data/test_wildcard_out.json"
     correct_ouput = "tests/test_data/test_wildcard_filled.json"
-    overrides = "{'wildcard': 'filled'}"
+    overrides = ["wildcard", "filled"]
 
     update_config_wildcards(in_file, out_file, overrides)
 
@@ -18,7 +18,7 @@ def test_update_config_update_one_matching_wildcard_xml():
     in_file = "tests/test_data/test_wildcard.xml"
     out_file = "tests/test_data/test_wildcard_out.xml"
     correct_ouput = "tests/test_data/test_wildcard_filled.xml"
-    overrides = "{'wildcard': 'filled'}"
+    overrides = ["wildcard", "filled"]
 
     update_config_wildcards(in_file, out_file, overrides)
 
@@ -29,7 +29,7 @@ def test_update_config_update_one_matching_wildcard_xml():
 def test_update_config_no_update_when_no_match():
     in_file = "tests/test_data/test_wildcard.json"
     out_file = "tests/test_data/test_wildcard_out.json"
-    overrides = "{'matchless': 'filled'}"
+    overrides = ["matchless", "filled"]
 
     update_config_wildcards(in_file, out_file, overrides)
 

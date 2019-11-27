@@ -17,11 +17,11 @@ def cli():
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.argument('write_path', type=click.Path(writable=True))
-@click.argument('overrides', type=str)
+@click.argument('overrides', nargs=-1)
 def fill(
         read_path: Path,
         write_path: Path,
-        overrides: str
+        overrides
 ) -> None:
     """
     Read an existing config, fill in the target variables and write out
