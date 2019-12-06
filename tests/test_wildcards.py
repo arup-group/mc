@@ -1,7 +1,9 @@
 import filecmp
 import os
+from pathlib import Path
 
-from mc.wildcards import update_config_wildcards
+from mc.base import BaseConfig
+from mc.wildcards import update_config_wildcards, update_write_path, update_read_paths
 
 
 def test_update_config_update_one_matching_wildcard():
@@ -37,3 +39,35 @@ def test_update_config_no_update_when_no_match():
 
     assert filecmp.cmp(out_file, in_file)
     os.remove(out_file)
+
+
+def test_update_config_update_paths_override():
+    in_file = Path("tests/test_data/test_config.xml")
+    out_file = Path("tests/test_data/new_dir/test_config_out.xml")
+    correct_ouput = Path("tests/test_data/test_config_new_paths.xml")
+    override = "tests/test_data/new_dir"
+
+    config = BaseConfig(in_file)
+
+    update_read_paths(config, out_file, override)
+    update_write_path(config, out_file, override)
+
+    # don't write for test
+
+    assert config == BaseConfig(correct_ouput)
+
+
+def test_update_config_update_paths_auto():
+    in_file = Path("tests/test_data/test_config.xml")
+    out_file = Path("tests/test_data/new_dir/test_config_out.xml")
+    correct_ouput = Path("tests/test_data/test_config_new_paths.xml")
+    override = None
+
+    config = BaseConfig(in_file)
+
+    update_read_paths(config, out_file, override)
+    update_write_path(config, out_file, override)
+
+    # don't write for test
+
+    assert config == BaseConfig(correct_ouput)

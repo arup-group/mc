@@ -273,7 +273,7 @@ class Base:
         Default string return.
         :return: str
         """
-        return f"{self.class_type} (use .print() to print full contents)"
+        return f"{self.class_type}: {self.name}"
 
     def __eq__(self, other) -> bool:
         """
@@ -382,6 +382,7 @@ class BaseConfig(Base, BaseDebug):
         Base configuration object, containing dict of Modules.
         :param path: Path, optional
         """
+        self.path = path
         self.modules = {}
         self.ident = 'config'
         self.data = {'name': 'config'}
@@ -430,6 +431,15 @@ class BaseConfig(Base, BaseDebug):
 
     def __iter__(self):
         return iter(self.modules)
+
+    def keys(self):
+        return iter(self.modules.keys())
+
+    def values(self):
+        return iter(self.modules.values())
+
+    def items(self):
+        return iter(self.modules.items())
 
     def __eq__(self, other):
         if not isinstance(other, BaseConfig):
@@ -559,7 +569,20 @@ class Module(Base):
             self.params[key] = Param(key, value)
 
     def __iter__(self):
-        return iter(self.params)
+        # todo update to iterate through params and paramsets
+        return iter(self.parametersets.values())
+
+    def keys(self):
+        # todo update to iterate through params and paramsets
+        return iter(self.parametersets.keys())
+
+    def values(self):
+        # todo update to iterate through params and paramsets
+        return iter(self.parametersets.values())
+
+    def items(self):
+        # todo update to iterate through params and paramsets
+        return iter(self.parametersets.items())
 
 
 class ParamSet(Base):
@@ -635,6 +658,15 @@ class ParamSet(Base):
 
     def __iter__(self):
         return iter(self.params)
+
+    def keys(self):
+        return iter(self.params.keys())
+
+    def values(self):
+        return iter(self.params.values())
+
+    def items(self):
+        return iter(self.params.items())
 
     def get(self, key, default=None):
 

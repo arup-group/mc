@@ -57,9 +57,11 @@ def test_mode_validate_bad():
 
 def test_find_missing_modes_good():
     test_config = BaseConfig(path=env.test_xml_path)
+    print(len(test_config.log_missing_modes()))
     assert len(test_config.log_missing_modes()) == 0
 
 
 def test_find_missing_modes_bad():
     bad_config = BaseConfig(path=env.test_bad_config_path)
+    print(len(bad_config.log_missing_modes()))
     assert(bad_config.log_missing_modes())
