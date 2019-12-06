@@ -174,6 +174,8 @@ def careful_write(config: BaseConfig, write_path: Path) -> None:
         value = click.prompt(f'Are you sure you want to overwrite {write_path}? y/n', default='n')
         if value.lower() == 'y':
             config.write(Path(write_path))
+        else:
+            print('aborted.')
     else:
         config.write(Path(write_path))
 

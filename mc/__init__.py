@@ -1,20 +1,13 @@
 """
-Source module.
+Init/Source module.
 """
 import os
 from pathlib import Path
 
 
 __version__ = "0.0.0"
+_ROOT = Path(os.path.abspath(os.path.dirname(__file__)))
 
-
-def get_default_path():
-    """
-    Get default configuration path.
-    :return: Path
-    """
-    root = Path(os.path.abspath(os.path.dirname(__file__)))
-    path = root / 'default_data' / 'default_config.xml'
-    if not path.is_file():
-        raise FileNotFoundError(f"Default data not found at {path}")
-    return path
+_DEFAULTS_DIR = _ROOT / 'default_data'
+if not _DEFAULTS_DIR.is_dir():
+    raise NotADirectoryError(f"Default data dir not found at {path}")

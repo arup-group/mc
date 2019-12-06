@@ -9,6 +9,9 @@ class BaseDebug:
     Debugging Base class.
     """
 
+    def get(self, key, default):
+        raise NotImplementedError
+
     def debug(self, verbose=True) -> Tuple[bool, list]:
         """
         Build a list of debug messages.
@@ -16,18 +19,61 @@ class BaseDebug:
         :return: tuple[bool, list]
         """
         logger = list()
+        logger.extend(self.log_multimodal_module())
         logger.extend(self.log_bad_paths())
         logger.extend(self.log_bad_subpopulations())
         logger.extend(self.log_bad_scoring())
         logger.extend(self.log_missing_modes())
 
         if verbose and len(logger):
-            print('---VALIDATION FAILURE---')
+            print('\n---VALIDATION FAILURE---')
             for log in logger:
                 print(log)
             print('----------DONE----------')
 
         return len(logger) < 1, logger
+
+    def log_multimodal_module(self) -> list:
+        """
+        Report if multimodal module may be being used incorrectly.
+        :return: list
+        """
+        logger = []
+        if self.get('multimodal'):
+
+            modes = self['multimodal']['simulatedModes'].split(",")
+
+            if (not self['multimodal'].get('createMultiModalNetwork'))\
+                    or self['multimodal']['createMultiModalNetwork'] != "true":
+                logger.append(f"MULTIMODAL: auto multimodal network disabled, input network must "
+                              f"include all modes: {modes}")
+
+            if not self.get('travelTimeCalculator'):
+                logger.append(f"MULTIMODAL: multimodal module requires travelTimeCalculator module")
+
+            else:
+                if not self['travelTimeCalculator'].get('analyzedModes'):
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires "
+                        f"list of modes at analyzedModes@travelTimeCalculator")
+
+                if not self['travelTimeCalculator'].get('filterModes') == 'true':
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires filterModes@travelTimeCalculator"
+                        f" set to 'true'")
+
+                if not self['travelTimeCalculator'].get('separateModes') == 'false':
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires separateModes@travelTimeCalculator"
+                        f" set to 'false'")
+
+            for m in modes:
+                if not self['planscalcroute'].get(f'teleportedModeParameters:{m}'):
+                    logger.append(
+                        f"MULTIMODAL: depending on the MATSim version, multimodal module requires "
+                        f"mode:{m} teleport speed to be set in planscalcroute module.")
+
+        return logger
 
     def log_bad_paths(self) -> list:
         """
