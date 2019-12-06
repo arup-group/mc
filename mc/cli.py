@@ -2,10 +2,11 @@
 Command line interface for MC.
 """
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Optional
 import click
+
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
-from mc.wildcards import update_config_wildcards
+from mc.wildcards import update_config_wildcards, update_read_paths, update_write_path
 
 
 @click.group()
@@ -28,6 +29,24 @@ def fill(
     Read an existing config, fill in the target variables and write out
     """
     update_config_wildcards(read_path, write_path, overrides)
+
+
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.argument('write_path', type=click.Path(writable=True))
+@click.argument('override', type=Optional[str])
+def update_paths(
+        read_path: Path,
+        write_path: Path,
+        override: Optional[str]
+) -> None:
+    """
+    Read an existing config, update paths as per new path or overwrite and write out
+    """
+    config = BaseConfig(read_path)
+    update_read_paths(config, write_path, override)
+    update_write_path(config, write_path, override)
+    config.write(write_path)
 
 
 @cli.command()
