@@ -1,0 +1,293 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+  <module name="global">
+    <param name="coordinateSystem" value="EPSG:27700"/>
+    <param name="insistingOnDeprecatedConfigVersion" value="true"/>
+    <param name="numberOfThreads" value="32"/>
+    <param name="randomSeed" value="4711"/>
+  </module>
+  <module name="network">
+    <param name="inputNetworkFile" value="inputs/network.xml.gz"/>
+  </module>
+  <module name="plans">
+    <param name="inputPlansFile" value="inputs/plans.xml.gz"/>
+    <param name="inputPersonAttributesFile" value="inputs/attributes.xml.gz"/>
+    <param name="subpopulationAttributeName" value="subpopulation"/>
+  </module>
+  <module name="transit">
+    <param name="useTransit" value="true"/>
+    <param name="transitScheduleFile" value="inputs/schedule.xml.gz"/>
+    <param name="vehiclesFile" value="inputs/vehicles.xml.gz"/>
+    <param name="transitModes" value="pt"/>
+  </module>
+  <module name="TimeAllocationMutator">
+    <param name="mutationRange" value="1000.0"/>
+  </module>
+  <module name="controler">
+    <param name="createGraphs" value="true"/>
+    <param name="firstIteration" value="0"/>
+    <param name="lastIteration" value="100"/>
+    <param name="mobsim" value="qsim"/>
+    <param name="outputDirectory" value="outputs"/>
+    <param name="overwriteFiles" value="failIfDirectoryExists"/>
+    <param name="routingAlgorithmType" value="Dijkstra"/>
+    <param name="runId" value="null"/>
+    <param name="snapshotFormat" value=""/>
+    <param name="writeEventsInterval" value="1"/>
+    <param name="writePlansInterval" value="50"/>
+    <param name="writeSnapshotsInterval" value="1"/>
+  </module>
+  <module name="subtourModeChoice">
+    <param name="chainBasedModes" value=""/>
+    <param name="modes" value="heli,piggyback,sliding,pt"/>
+  </module>
+  <module name="qsim">
+    <param name="startTime" value="00:00:00"/>
+    <param name="endTime" value="24:00:00"/>
+    <param name="flowCapacityFactor" value="0.01"/>
+    <param name="storageCapacityFactor" value="0.01"/>
+    <param name="mainMode" value="car,bus"/>
+    <param name="numberOfThreads" value="32"/>
+  </module>
+  <module name="planCalcScore">
+    <param name="BrainExpBeta" value="1"/>
+    <parameterset type="scoringParameters">
+      <param name="lateArrival" value="-18"/>
+      <param name="earlyDeparture" value="-0.0"/>
+      <param name="marginalUtilityOfMoney" value="1"/>
+      <param name="performing" value="+6"/>
+      <param name="subpopulation" value="MI"/>
+      <param name="waiting" value="-0"/>
+      <param name="waitingPt" value="-2"/>
+      <param name="utilityOfLineSwitch" value="-1"/>
+      <parameterset type="modeParams">
+        <param name="mode" value="heli"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="piggyback"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="sliding"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="pt"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.001"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="crying"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="smiling"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="joshing_around"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+    </parameterset>
+    <parameterset type="scoringParameters">
+      <param name="lateArrival" value="-18"/>
+      <param name="earlyDeparture" value="-0.0"/>
+      <param name="marginalUtilityOfMoney" value="1"/>
+      <param name="performing" value="+6"/>
+      <param name="subpopulation" value="TCS"/>
+      <param name="waiting" value="-0"/>
+      <param name="waitingPt" value="-2"/>
+      <param name="utilityOfLineSwitch" value="-1"/>
+      <parameterset type="modeParams">
+        <param name="mode" value="heli"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="piggyback"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="sliding"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="pt"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.001"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="crying"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="smiling"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="joshing_around"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+    </parameterset>
+    <parameterset type="scoringParameters">
+      <param name="lateArrival" value="-18"/>
+      <param name="earlyDeparture" value="-0.0"/>
+      <param name="marginalUtilityOfMoney" value="1"/>
+      <param name="performing" value="+6"/>
+      <param name="subpopulation" value="outsiderz"/>
+      <param name="waiting" value="-0"/>
+      <param name="waitingPt" value="-2"/>
+      <param name="utilityOfLineSwitch" value="-1"/>
+      <parameterset type="modeParams">
+        <param name="mode" value="heli"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="piggyback"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="sliding"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.0005"/>
+      </parameterset>
+      <parameterset type="modeParams">
+        <param name="mode" value="pt"/>
+        <param name="constant" value="0"/>
+        <param name="marginalUtilityOfDistance_util_m" value="0"/>
+        <param name="marginalUtilityOfTraveling_util_hr" value="-5"/>
+        <param name="monetaryDistanceRate" value="-0.001"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="crying"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="smiling"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+      <parameterset type="activityParams">
+        <param name="activityType" value="joshing_around"/>
+        <param name="priority" value="1"/>
+        <param name="typicalDuration" value="00:15:00"/>
+        <param name="minimalDuration" value="00:10:00"/>
+      </parameterset>
+    </parameterset>
+  </module>
+  <module name="strategy">
+    <param name="maxAgentPlanMemorySize" value="5"/>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="SubtourModeChoice"/>
+      <param name="subpopulation" value="MI"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ReRoute"/>
+      <param name="subpopulation" value="MI"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="TimeAllocationMutator"/>
+      <param name="subpopulation" value="MI"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ChangeExpBeta"/>
+      <param name="subpopulation" value="MI"/>
+      <param name="weight" value="0.7"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="SubtourModeChoice"/>
+      <param name="subpopulation" value="TCS"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ReRoute"/>
+      <param name="subpopulation" value="TCS"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="TimeAllocationMutator"/>
+      <param name="subpopulation" value="TCS"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ChangeExpBeta"/>
+      <param name="subpopulation" value="TCS"/>
+      <param name="weight" value="0.7"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="SubtourModeChoice"/>
+      <param name="subpopulation" value="outsiderz"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ReRoute"/>
+      <param name="subpopulation" value="outsiderz"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="TimeAllocationMutator"/>
+      <param name="subpopulation" value="outsiderz"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="strategyName" value="ChangeExpBeta"/>
+      <param name="subpopulation" value="outsiderz"/>
+      <param name="weight" value="0.7"/>
+    </parameterset>
+  </module>
+  <module name="transitRouter">
+    <param name="additionalTransferTime" value="1"/>
+    <param name="extensionRadius" value="100"/>
+    <param name="maxBeelineWalkConnectionDistance" value="500"/>
+    <param name="searchRadius" value="1000"/>
+  </module>
+</config>

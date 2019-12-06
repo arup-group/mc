@@ -11,15 +11,15 @@ from pathlib import Path
 env.set_module()
 from mc.base import BaseConfig, get_params_search, get_paramsets_search, get_paramset_type
 from mc.build import BaseConfig, DefaultConfig, BuildConfig
-from mc import get_default_path
+from mc import _DEFAULTS_DIR
 
 
 def test_default_config_path():
-    assert os.path.exists(get_default_path())
+    assert os.path.exists(_DEFAULTS_DIR / 'default_config.xml')
 
 
 def test_load_config():
-    config = BaseConfig(path=get_default_path())
+    config = BaseConfig(path=_DEFAULTS_DIR / 'default_config.xml')
     assert config["planCalcScore"]['scoringParameters:default']["lateArrival"]
 
 
