@@ -14,6 +14,7 @@ def cli():
     Command line interface for MC.
     """
 
+
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.argument('write_path', type=click.Path(writable=True))

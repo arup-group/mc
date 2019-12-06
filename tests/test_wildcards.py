@@ -3,6 +3,7 @@ import os
 
 from mc.wildcards import update_config_wildcards
 
+
 def test_update_config_update_one_matching_wildcard():
     in_file = "tests/test_data/test_wildcard.json"
     out_file = "tests/test_data/test_wildcard_out.json"
@@ -13,6 +14,7 @@ def test_update_config_update_one_matching_wildcard():
 
     assert filecmp.cmp(out_file, correct_ouput)
     os.remove(out_file)
+
 
 def test_update_config_update_one_matching_wildcard_xml():
     in_file = "tests/test_data/test_wildcard.xml"
