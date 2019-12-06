@@ -46,8 +46,8 @@
 
 	<module name="subtourModeChoice">
         <!--"car,pt,walk,bike"-->
-        <param name="chainBasedModes" value="car,cycle" />
-        <param name="modes" value="car,pt,walk,cycle" />
+        <param name="chainBasedModes" value="car,bike" />
+        <param name="modes" value="car,pt,walk,bike" />
        </module>
 
 	<module name="parallelEventHandling">
@@ -63,7 +63,7 @@
 		<param name="endTime" value="24:00:00" />
 
 		<!-- The list of modes found in the inputted vehicle schedule file -->
-		<param name="mainMode" value="car,bus,cycle" />
+		<param name="mainMode" value="car,bus" />
 
 		<param name="numberOfThreads" value="1" />
 
@@ -79,17 +79,25 @@
 
 	</module>
 
-	<!-- <module name="multimodal" >
+	<module name="multimodal" >
 		<param name="createMultiModalNetwork" value="true" />
+		<param name="numberOfThreads" value="1" />
 		<param name="cuttoffValueForNonCarModes" value="25.0" />
 		<param name="dropNonCarRoutes" value="true" />
 		<param name="multiModalSimulationEnabled" value="true" />
-		<param name="simulatedModes" value="bike,walk" />
+		<param name="simulatedModes" value="walk,bike" />
 		<param name="ensureActivityReachability" value ="true" />
-	</module> -->
+	</module>
+
+	<module name="travelTimeCalculator" >
+        <param name="analyzedModes" value="car,bus,walk" />
+        <param name="filterModes" value="true" />
+        <param name="separateModes" value="false" />
+    </module>
 
 	<module name="planscalcroute" >
-		<param name="networkModes" value="car,cycle" />
+		<param name="networkModes" value="car" />
+
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="access_walk" />
@@ -100,9 +108,21 @@
 			<!-- Speed for a teleported mode. Travel time = (<beeline distance> * beelineDistanceFactor) / teleportedModeSpeed. Insert a line like this for every such mode. -->
 			<param name="teleportedModeSpeed" value="0.8333333333333333" />
 		</parameterset>
+
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="walk" />
+
+			<!-- Free-speed factor for a teleported mode. Travel time = teleportedModeFreespeedFactor * <freespeed car travel time>. Insert a line like this for every such mode. Please do not set teleportedModeFreespeedFactor as well as teleportedModeSpeed for the same mode, but if you do, +teleportedModeFreespeedFactor wins over teleportedModeSpeed. -->
+			<param name="teleportedModeFreespeedFactor" value="null" />
+
+			<!-- Speed for a teleported mode. Travel time = (<beeline distance> * beelineDistanceFactor) / teleportedModeSpeed. Insert a line like this for every such mode. -->
+			<param name="teleportedModeSpeed" value="0.8333333333333333" />
+		</parameterset>
+
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="bike" />
 
 			<!-- Free-speed factor for a teleported mode. Travel time = teleportedModeFreespeedFactor * <freespeed car travel time>. Insert a line like this for every such mode. Please do not set teleportedModeFreespeedFactor as well as teleportedModeSpeed for the same mode, but if you do, +teleportedModeFreespeedFactor wins over teleportedModeSpeed. -->
 			<param name="teleportedModeFreespeedFactor" value="null" />
@@ -169,7 +189,7 @@
 			</parameterset>
 
      			 <parameterset type="modeParams">
-				<param name="mode" value="cycle"/>
+				<param name="mode" value="bike"/>
 				<param name="constant" value="0.0" />
 				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
 				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
@@ -245,7 +265,7 @@
       			</parameterset>
 
       			<parameterset type="modeParams">
-				<param name="mode" value="cycle"/>
+				<param name="mode" value="bike"/>
 				<param name="constant" value="0.0" />
 				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
 				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
@@ -321,7 +341,7 @@
       			</parameterset>
 
       			<parameterset type="modeParams">
-				<param name="mode" value="cycle"/>
+				<param name="mode" value="bike"/>
 				<param name="constant" value="0.0" />
 				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
 				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
@@ -397,7 +417,7 @@
       			</parameterset>
 
       			<parameterset type="modeParams">
-				<param name="mode" value="cycle"/>
+				<param name="mode" value="bike"/>
 				<param name="constant" value="0.0" />
 				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
 				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
@@ -486,7 +506,7 @@
       			</parameterset>
 
       			<parameterset type="modeParams">
-				<param name="mode" value="cycle"/>
+				<param name="mode" value="bike"/>
 				<param name="constant" value="0.0" />
 				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
 				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
@@ -647,4 +667,4 @@
 		<!-- <param name="searchRadius" value="1000.0" /> -->
 
 	<!-- </module> -->
-	</config>
+</config>

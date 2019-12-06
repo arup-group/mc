@@ -3,7 +3,79 @@ Dictionary of valid config names for modules, paramsets and params.
 """
 
 VALID_MAP = {
+
     "modules": {
+
+        "global": {
+                "params": {
+                    "coordinateSystem": "EPSG:27700",
+                    "numberOfThreads": "32",
+                    "randomSeed": "4711",
+                    "insistingOnDeprecatedConfigVersion": "true",
+                }
+            },
+
+        "network": {
+            "params": {
+                "inputCRS": "null",
+                "inputChangeEventsFile": "null",
+                "inputNetworkFile": "./output_network.xml.gz",
+                "laneDefinitionsFile": "null",
+                "timeVariantNetwork": "false"
+            }
+        },
+
+        "plans": {
+            "params": {
+                "inputPlansFile": "./output_plans.xml.gz",
+                "inputPersonAttributesFile": "./output_personAttributes.xml.gz",
+                "subpopulationAttributeName": "subpopulation",
+                "activityDurationInterpretation": "tryEndTimeThenDuration",
+                "inputCRS": "null",
+                "networkRouteType": "LinkNetworkRoute",
+                "removingUnnecessaryPlanAttributes": "false",
+            }
+        },
+
+        "transit": {
+            "params": {
+                "useTransit": "true",
+                "transitScheduleFile": "./output_transitSchedule.xml.gz",
+                "vehiclesFile": "./output_transitVehicles.xml",
+                "inputScheduleCRS": "null",
+                "transitLinesAttributesFile": "null",
+                "transitModes": "pt",
+                "transitStopsAttributesFile": "null",
+            }
+        },
+
+        "multimodal": {
+            "params": {
+                "createMultiModalNetwork": "true",
+                "numberOfThreads": "1",
+                "cuttoffValueForNonCarModes": "25.0",
+                "dropNonCarRoutes": "true",
+                "multiModalSimulationEnabled": "true",
+                "simulatedModes": "walk,bike",
+                "ensureActivityReachability": "true",
+            }
+        },
+
+        "travelTimeCalculator": {
+            "params": {
+                "analyzedModes": "car,bus,walk",
+                "filterModes": "true",
+                "separateModes": "false",
+                "calculateLinkToLinkTravelTimes": "false",
+                "calculateLinkTravelTimes": "true",
+                "maxTime": "108000",
+                "travelTimeAggregator": "optimistic",
+                "travelTimeBinSize": "900",
+                "travelTimeCalculator": "TravelTimeCalculatorArray",
+                "travelTimeGetter": "average"
+            }
+        },
+
         "JDEQSim": {
             "params": {
                 "carSize": "7.5",
@@ -15,6 +87,7 @@ VALID_MAP = {
                 "storageCapacityFactor": "1.0"
             }
         },
+
         "TimeAllocationMutator": {
             "params": {
                 "mutationAffectsDuration": "true",
@@ -22,12 +95,14 @@ VALID_MAP = {
                 "useIndividualSettingsForSubpopulations": "false"
             }
         },
+
         "changeMode": {
             "params": {
                 "ignoreCarAvailability": "true",
                 "modes": "car,pt"
             }
         },
+
         "controler": {
             "params": {
                 "createGraphs": "true",
@@ -47,6 +122,7 @@ VALID_MAP = {
                 "writeSnapshotsInterval": "1"
             }
         },
+
         "counts": {
             "params": {
                 "analyzedModes": "car",
@@ -61,6 +137,7 @@ VALID_MAP = {
                 "writeCountsInterval": "10"
             }
         },
+
         "facilities": {
             "params": {
                 "addEmptyActivityOption": "false",
@@ -75,35 +152,21 @@ VALID_MAP = {
                 "removingLinksAndCoordinates": "true"
             }
         },
-        "global": {
-            "params": {
-                "coordinateSystem": "EPSG:27700",
-                "insistingOnDeprecatedConfigVersion": "true",
-                "numberOfThreads": "32",
-                "randomSeed": "4711"
-            }
-        },
+
         "households": {
             "params": {
                 "inputFile": "null",
                 "inputHouseholdAttributesFile": "null"
             }
         },
+
         "linkStats": {
             "params": {
                 "averageLinkStatsOverIterations": "5",
                 "writeLinkStatsInterval": "10"
             }
         },
-        "network": {
-            "params": {
-                "inputCRS": "null",
-                "inputChangeEventsFile": "null",
-                "inputNetworkFile": "~/tii/network.xml",
-                "laneDefinitionsFile": "null",
-                "timeVariantNetwork": "false"
-            }
-        },
+
         "parallelEventHandling": {
             "params": {
                 "estimatedNumberOfEvents": "null",
@@ -112,6 +175,7 @@ VALID_MAP = {
                 "synchronizeOnSimSteps": "true"
             }
         },
+
         "planCalcScore": {
             "params": {
                 "BrainExpBeta": "1.0",
@@ -121,6 +185,7 @@ VALID_MAP = {
                 "usingOldScoringBelowZeroUtilityDuration": "false",
                 "writeExperiencedPlans": "false"
             },
+
             "parametersets": {
                 "scoringParameters": {
                     "params": {
@@ -133,6 +198,7 @@ VALID_MAP = {
                         "waiting": "-1.0",
                         "waitingPt": "-1.0"
                     },
+
                     "parametersets": {
                         "activityParams": {
                             "params": {
@@ -162,21 +228,12 @@ VALID_MAP = {
                 }
             }
         },
-        "plans": {
-            "params": {
-                "activityDurationInterpretation": "tryEndTimeThenDuration",
-                "inputCRS": "null",
-                "inputPersonAttributesFile": "~/tii/1p_models/population_attributes.xml.gz",
-                "inputPlansFile": "~/tii/1p_models/population.xml.gz",
-                "networkRouteType": "LinkNetworkRoute",
-                "removingUnnecessaryPlanAttributes": "false",
-                "subpopulationAttributeName": "subpopulation"
-            }
-        },
+
         "planscalcroute": {
             "params": {
                 "networkModes": "car"
             },
+
             "parametersets": {
                 "teleportedModeParameters": {
                     "params": {
@@ -188,6 +245,7 @@ VALID_MAP = {
                 }
             }
         },
+
         "ptCounts": {
             "params": {
                 "countsScaleFactor": "1.0",
@@ -200,6 +258,7 @@ VALID_MAP = {
                 "ptCountsInterval": "10"
             }
         },
+
         "qsim": {
             "params": {
                 "creatingVehiclesForAllNetworkModes": "true",
@@ -232,6 +291,7 @@ VALID_MAP = {
                 "vehiclesSource": "defaultVehicle"
             }
         },
+
         "scenario": {},
         "strategy": {
             "params": {
@@ -242,6 +302,7 @@ VALID_MAP = {
                 "maxAgentPlanMemorySize": "5",
                 "planSelectorForRemoval": "WorstPlanSelector"
             },
+
             "parametersets": {
                 "strategysettings": {
                     "params": {
@@ -254,6 +315,7 @@ VALID_MAP = {
                 }
             }
         },
+
         "subtourModeChoice": {
             "params": {
                 "chainBasedModes": "car,bike",
@@ -261,17 +323,7 @@ VALID_MAP = {
                 "modes": "car,pt,walk,bike"
             }
         },
-        "transit": {
-            "params": {
-                "inputScheduleCRS": "null",
-                "transitLinesAttributesFile": "null",
-                "transitModes": "pt",
-                "transitScheduleFile": "~/tii/schedule-merged.xml",
-                "transitStopsAttributesFile": "null",
-                "useTransit": "true",
-                "vehiclesFile": "~/tii/vehicles.xml"
-            }
-        },
+
         "transitRouter": {
             "params": {
                 "additionalTransferTime": "0.0",
@@ -281,25 +333,13 @@ VALID_MAP = {
                 "searchRadius": "1000.0"
             }
         },
-        "travelTimeCalculator": {
-            "params": {
-                "analyzedModes": "car",
-                "calculateLinkToLinkTravelTimes": "false",
-                "calculateLinkTravelTimes": "true",
-                "filterModes": "false",
-                "maxTime": "108000",
-                "separateModes": "false",
-                "travelTimeAggregator": "optimistic",
-                "travelTimeBinSize": "900",
-                "travelTimeCalculator": "TravelTimeCalculatorArray",
-                "travelTimeGetter": "average"
-            }
-        },
+
         "vehicles": {
             "params": {
                 "vehiclesFile": "null"
             }
         },
+
         "vspExperimental": {
             "params": {
                 "isAbleToOverwritePtInteractionParams": "false",

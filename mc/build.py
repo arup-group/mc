@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import Tuple
 from mc.base import BaseConfig
-from . import get_default_path
+from . import _DEFAULTS_DIR
 
 
 class Config(BaseConfig):
@@ -22,7 +22,28 @@ class DefaultConfig(BaseConfig):
     Default configuration.
     """
     def __init__(self):
-        super().__init__(path=get_default_path())
+        super().__init__(path=_DEFAULTS_DIR / 'default_config.xml')
+
+
+class MultiModalDefaultConfig(BaseConfig):
+    """
+    Default configuration.
+    """
+    def __init__(self):
+        super().__init__(path=_DEFAULTS_DIR / 'multimodal_default_config.xml')
+
+
+class MultiModalTestTownConfig(BaseConfig):
+    """
+    Test config used for Multi-modal Test Town (C) scenario.
+    """
+    def __init__(self):
+        super().__init__(path=_DEFAULTS_DIR / 'multimodal_test_town_C_config.xml')
+
+
+"""
+The following are demonstrations of building a config from scratch.
+"""
 
 
 class TestConfig(BaseConfig):
@@ -156,7 +177,7 @@ class BuildConfig(BaseConfig):
 
         super().__init__()
 
-        defaults_config = BaseConfig(path=get_default_path())
+        defaults_config = BaseConfig(path=_DEFAULTS_DIR / 'default_config.xml')
 
         subpops = list(subpops)
         if 'default' not in subpops:
@@ -318,6 +339,8 @@ class BuildConfig(BaseConfig):
 
 CONFIG_MAP = {
     'empty': Config,
-    'test': TestConfig,
     'default': DefaultConfig,
+    'multimodal_default': MultiModalDefaultConfig,
+    'test': TestConfig,
+    'multimodal_test': MultiModalTestTownConfig,
 }
