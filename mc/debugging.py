@@ -51,11 +51,27 @@ class BaseDebug:
             if not self.get('travelTimeCalculator'):
                 logger.append(f"MULTIMODAL: multimodal module requires travelTimeCalculator module")
 
+            else:
+                if not self['travelTimeCalculator'].get('analyzedModes'):
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires "
+                        f"list of modes at analyzedModes@travelTimeCalculator")
+
+                if not self['travelTimeCalculator'].get('filterModes') == 'true':
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires filterModes@travelTimeCalculator"
+                        f" set to 'true'")
+
+                if not self['travelTimeCalculator'].get('separateModes') == 'false':
+                    logger.append(
+                        f"MULTIMODAL: multimodal module requires separateModes@travelTimeCalculator"
+                        f" set to 'false'")
+
             for m in modes:
                 if not self['planscalcroute'].get(f'teleportedModeParameters:{m}'):
                     logger.append(
-                        f"MULTIMODAL: multimodal module requires mode:{m} teleport speed to be set "
-                        f"in planscalcroute module.")
+                        f"MULTIMODAL: depending on the MATSim version, multimodal module requires "
+                        f"mode:{m} teleport speed to be set in planscalcroute module.")
 
         return logger
 

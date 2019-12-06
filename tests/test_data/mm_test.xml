@@ -61,6 +61,10 @@
     <param name="simulatedModes" value="walk,bike"/>
     <param name="ensureActivityReachability" value="true"/>
   </module>
+  <module name="travelTimeCalculator" >
+        <param name="analyzedModes" value="car,bus,walk" />
+        <param name="filterModes" value="false" />
+    </module>
   <module name="planscalcroute">
     <param name="networkModes" value="car"/>
     <parameterset type="teleportedModeParameters">

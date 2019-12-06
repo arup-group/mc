@@ -22,7 +22,7 @@ def test_path_good():
 def test_multimodal_validate():
     test_config = BaseConfig(path=env.test_mm_path)
     logs = test_config.log_multimodal_module()
-    assert len(logs) == 2
+    assert len(logs) == 3
 
 
 def test_path_validate():
