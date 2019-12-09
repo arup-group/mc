@@ -6,7 +6,8 @@ from typing import Tuple, Optional
 import click
 
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
-from mc.wildcards import update_config_wildcards, update_read_paths, update_write_path
+from mc.wildcards import update_config_wildcards
+from mc import iterate
 
 
 @click.group()
@@ -32,20 +33,23 @@ def fill(
 
 
 @cli.command()
-@click.argument('read_path', type=click.Path(exists=True))
-@click.argument('write_path', type=click.Path(writable=True))
-@click.argument('override', type=Optional[str])
-def update_paths(
-        read_path: Path,
-        write_path: Path,
-        override: Optional[str]
+@click.argument('parent_config_path', type=click.Path(exists=True))
+@click.argument('current_dir', type=click.Path(writable=True))
+@click.argument('next_dir', type=click.Path(writable=True))
+def step_config_paths(
+        parent_config_path: Path,
+        current_dir: Path,
+        next_dir: Path
 ) -> None:
     """
-    Read an existing config, update paths as per new path or overwrite and write out
+    Read an existing config (parent) and update config paths:
+    Input paths: update to current_dir
+    Write path: update to write_path
     """
-    config = BaseConfig(read_path)
-    update_read_paths(config, write_path, override)
-    update_write_path(config, write_path, override)
+    config = BaseConfig(parent_config_path)
+    iterate.write_path(config, current_dir, next_dir)
+    iterate.input_paths(config, current_dir, next_dir)
+    write_path = next_dir / parent_config_path.name
     config.write(write_path)
 
 

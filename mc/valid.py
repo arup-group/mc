@@ -2,6 +2,7 @@
 Dictionary of valid config names for modules, paramsets and params.
 """
 
+
 VALID_MAP = {
 
     "modules": {
