@@ -36,9 +36,9 @@ class Base:
     name = ''
     value = ''
     data = {}
-    valid_keys = []
-    valid_param_keys = []
-    valid_paramset_keys = []
+    valid_map = {}
+    valid_param_map = {}
+    valid_paramset_map = {}
     modules = {}
     params = {}
     parametersets = {}
@@ -88,43 +88,37 @@ class Base:
         """
         raise NotImplementedError
 
-    def valid_param_key(self, key: str) -> bool:
-        """
-        Check for valid param key.
-        :param key: str
-        :return: bool
-        """
-        if key in self.valid_param_keys:
-            return True
-        return False
+    def is_valid_param_key(self, key) -> bool:
+        return key in self.valid_param_map
 
-    def is_valid_param_key(self, key) -> None:
+    def validate_param(self, key: str, value) -> None:
         """
         Raise KeyError if not valid param key.
         :param key: str
+        :param value: str
         """
-        if not self.valid_param_key(key):
-            raise KeyError(f"'{key}' is not a valid param key for this module")
+        if isinstance(value, Param):
+            value = value.value
 
-    def valid_paramset_key(self, key) -> bool:
-        """
-        Check for valid parameterset key.
-        :param key: str
-        :return: bool
-        """
-        if get_paramset_type(key) in self.valid_paramset_keys:
-            return True
-        return False
+        if not self.is_valid_param_key(key):
+            print(self.valid_param_map)
+            raise KeyError(f"'{key}' is not a valid param key for module: '{self.name}'")
 
-    def is_valid_paramset_key(self, key) -> None:
+        valid_type = self.valid_param_map[key]
+        if not valid_type.is_valid(value):
+            raise ValueError(
+                f"value: '{value}' is not valid for {self.name} (should be {valid_type.__name__})")
+
+    def is_valid_paramset_key(self, key: str) -> bool:
+        return get_base(key) in self.valid_paramset_map
+
+    def validate_paramset_key(self, key: str) -> None:
         """
         Raise KeyError if not valid parameterset key.
         :param key: str
         """
-        if not self.valid_paramset_key(key):
+        if not self.is_valid_paramset_key(key):
             raise KeyError(f"'{key}' is not a valid paramset key for this module")
-
-    # Reading/building config from input:
 
     def build_from_xml(self, xml_object: Element):
         """
@@ -138,15 +132,15 @@ class Base:
             if sub_object.tag == "param":
                 key = attributes["name"]
                 value = attributes["value"]
-                self.params[key] = Param(key, value)
+                self.params[key] = Param(key, value, parent=self)
 
             elif sub_object.tag == "module":
                 key = attributes["name"]
-                self.modules[key] = Module(key, xml_object=sub_object)
+                self[key] = Module(key, xml_object=sub_object, parent=self)
 
             elif sub_object.tag == "parameterset":
                 _, key = build_paramset_key(sub_object)
-                self.parametersets[key] = ParamSet(key, xml_object=sub_object)
+                self[key] = ParamSet(key, xml_object=sub_object, parent=self)
 
             else:
                 continue
@@ -160,13 +154,13 @@ class Base:
 
             if key == "params":
                 for key2, value2 in value.items():
-                    self.params[key2] = Param(key2, value2)
+                    self.params[key2] = Param(key2, value2, parent=self)
             elif key == "modules":
                 for key2, module in value.items():
-                    self.modules[key2] = Module(key2, json_object=module)
+                    self.modules[key2] = Module(key2, json_object=module, parent=self)
             elif key == "parametersets":
                 for ps_name, paramset in value.items():
-                    self.parametersets[ps_name] = ParamSet(ps_name, json_object=paramset)
+                    self.parametersets[ps_name] = ParamSet(ps_name, json_object=paramset, parent=self)
 
     # Writing configuration to path
 
@@ -312,7 +306,9 @@ class Base:
             diffs = []
 
         if not isinstance(other, Base):
-            raise NotImplementedError("__eq__ only implemented for comparison between same base class")
+            raise NotImplementedError(
+                "__eq__ only implemented for comparison between same base class"
+            )
 
         if self.class_type == "config":
 
@@ -386,7 +382,7 @@ class BaseConfig(Base, BaseDebug):
         self.modules = {}
         self.ident = 'config'
         self.data = {'name': 'config'}
-        self.valid_keys = list(VALID_MAP['modules'])
+        self.valid_map = VALID_MAP['modules']
 
         if isinstance(path, str):
             path = Path(path)
@@ -413,6 +409,11 @@ class BaseConfig(Base, BaseDebug):
         if self.valid_key(key):
             print(f"INFO creating new empty module: {key}")
             self.modules[key] = Module(name=key)
+
+            self.modules[key].valid_map = self.valid_map[key]
+            self.modules[key].valid_param_map = self.valid_map[key].get('params', {})
+            self.modules[key].valid_paramset_map = self.valid_map[key].get('parametersets', {})
+
             return self.modules[key]
 
         raise KeyError(f"key:'{key}' not found in modules and not valid")
@@ -421,10 +422,13 @@ class BaseConfig(Base, BaseDebug):
         del self.modules[key]
 
     def __setitem__(self, key, value):
+
         if not isinstance(value, Module):
-            raise ValueError("Invalid value: config dict must contain Modules")
-        self.is_valid_key(key)
+            raise ValueError("Invalid value type: config dict must contain Modules")
+        self.validate_key(key)
         self.modules[key] = value
+        self.modules[key].valid_param_map = self.valid_map[key].get('params', {})
+        self.modules[key].valid_paramset_map = self.valid_map[key].get('parametersets', {})
 
     def get(self, key, default=None):
         return self.modules.get(key, default)
@@ -472,11 +476,11 @@ class BaseConfig(Base, BaseDebug):
         :param key: str
         :return: bool
         """
-        if key in self.valid_keys:
+        if key in self.valid_map:
             return True
         return False
 
-    def is_valid_key(self, key: str) -> None:
+    def validate_key(self, key: str) -> None:
         """
         Raises KeyError if key is not valid.
         :param key: str
@@ -492,7 +496,7 @@ class Module(Base):
 
     class_type = "module"
 
-    def __init__(self, name, xml_object=None, json_object=None) -> None:
+    def __init__(self, name, xml_object=None, json_object=None, parent=None) -> None:
         """
         Module object contains nested parametersets and params.
         :param name: str
@@ -505,12 +509,14 @@ class Module(Base):
         self.params = {}
         self.parametersets = {}
 
-        self.valid_param_keys = list(VALID_MAP['modules'][name].get('params', []))
-        self.valid_paramset_keys = [
-            get_paramset_type(t) for t in list(VALID_MAP['modules'][name].get('parametersets', []))
-        ]
-        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
-                           'valid_paramset_keys': self.valid_paramset_keys}
+        if parent:
+            self.valid_param_map = parent.valid_map.get(name).get('params', {})
+            self.valid_paramset_map = parent.valid_map.get(name).get('parametersets', {})
+
+        else:
+            self.valid_map = {}
+            self.valid_param_map = {}
+            self.valid_paramset_map = {}
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -536,9 +542,10 @@ class Module(Base):
             return collected
 
         # build and return new paramset if valid
-        if self.valid_paramset_key(key):
+        if self.is_valid_paramset_key(key):
             print(f"INFO creating new empty parameterset: {key}")
-            self.parametersets[key] = ParamSet(ident=key)
+            self.parametersets[key] = ParamSet(name=key, parent=self)
+
             return self.parametersets[key]
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
@@ -559,13 +566,17 @@ class Module(Base):
             raise ValueError(f"Please use value of either type ParamSet, Param or str")
 
         if isinstance(value, ParamSet):
+            base_key = get_base(key)
             self.is_valid_paramset_key(key)
             self.parametersets[key] = value
+            self.parametersets[key].valid_param_map = self.valid_paramset_map[base_key].get('params', {})
+            self.parametersets[key].valid_paramset_map = self.valid_paramset_map[base_key].get('parametersets', {})
+
         elif isinstance(value, Param):
-            self.is_valid_param_key(key)
+            self.validate_param(key, value)
             self.params[key] = value
         else:
-            self.is_valid_param_key(key)
+            self.validate_param(key, value)
             self.params[key] = Param(key, value)
 
     def __iter__(self):
@@ -592,23 +603,27 @@ class ParamSet(Base):
 
     class_type = "paramset"
 
-    def __init__(self, ident, xml_object=None, json_object=None) -> None:
+    def __init__(self, name, xml_object=None, json_object=None, parent=None) -> None:
         """
         Parameterset object, holding nested parametersets and params.
-        :param ident: str
+        :param name: str
         :param xml_object: Element
         :param json_object: dict
         """
-        self.ident = ident
-        self.type = get_paramset_type(ident)
+        self.ident = name
+        self.type = get_base(name)
         self.data = {'type': self.type}
         self.params = {}
         self.parametersets = {}
-        self.valid_param_keys = list(get_params_search(VALID_MAP, self.type))
-        self.valid_paramset_keys = \
-            [get_paramset_type(t) for t in list(get_paramsets_search(VALID_MAP, self.type))]
-        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
-                           'valid_paramset_keys': self.valid_paramset_keys}
+
+        if parent:
+            base_name = get_base(name)
+            self.valid_param_map = parent.valid_paramset_map[base_name].get('params', {})
+            self.valid_paramset_map = parent.valid_paramset_map[base_name].get('parametersets', {})
+
+        else:
+            self.valid_param_map = {}
+            self.valid_paramset_map = {}
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -635,9 +650,9 @@ class ParamSet(Base):
             return collected
 
         # build and return new paramset if valid
-        if self.valid_paramset_key(key):
+        if self.is_valid_paramset_key(key):
             print(f"INFO creating new empty parameterset: {key}")
-            self.parametersets[key] = ParamSet(ident=key)
+            self.parametersets[key] = ParamSet(name=key, parent=self)
             return self.parametersets[key]
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
@@ -647,13 +662,18 @@ class ParamSet(Base):
         if not isinstance(value, (str, ParamSet, Param)):
             raise ValueError(f"Please use value of either type ParamSet, Param or str")
         if isinstance(value, ParamSet):
+            base_key = get_base(key)
             self.is_valid_paramset_key(key)
             self.parametersets[key] = value
+            self.parametersets[key].valid_param_map = self.valid_paramset_map[base_key].get('params', {})
+            self.parametersets[key].valid_paramset_map = self.valid_paramset_map[base_key].get('parametersets', {})
+
         elif isinstance(value, Param):
-            self.is_valid_param_key(key)
+            self.validate_param(key, value)
             self.params[key] = value
+
         else:
-            self.is_valid_param_key(key)
+            self.validate_param(key, value)
             self.params[key] = Param(key, value)
 
     def __iter__(self):
@@ -688,7 +708,7 @@ class Param(Base):
 
     class_type = "param"
 
-    def __init__(self, name: str, value: str) -> None:
+    def __init__(self, name: str, value: str, parent=None) -> None:
         """
         Parameter object.
         :param name: str
@@ -799,7 +819,7 @@ def sets_diff(self: list, other: list, name: str, loc: str) -> list:
     return diffs
 
 
-def get_paramset_type(key: str) -> str:
+def get_base(key: str) -> str:
     """
     Return parameterset type from unique key.
     :param key: str
@@ -815,7 +835,7 @@ def get_params_search(dic: dict, target: str) -> dict:
     :param target: str
     :return: dict
     """
-    target = get_paramset_type(target)
+    target = get_base(target)
 
     if target in dic:
         if 'params' in dic[target]:
@@ -835,7 +855,7 @@ def get_paramsets_search(dic: dict, target: str) -> dict:
     :param target: str
     :return: dict
     """
-    target = get_paramset_type(target)
+    target = get_base(target)
 
     if target in dic:
         if 'parametersets' in dic[target]:

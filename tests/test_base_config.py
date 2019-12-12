@@ -166,17 +166,17 @@ def test_param_dict_set():
 def test_module_key_valid():
     test_config = BaseConfig(path=env.test_json_path)
     with pytest.raises(KeyError):
-        test_config.is_valid_key('NOTVALID')
+        test_config.validate_key('NOTVALID')
 
 
 def test_paramset_level_1_key_valid():
     test_config = BaseConfig(path=env.test_json_path)
     with pytest.raises(KeyError):
-        test_config['planCalcScore'].is_valid_paramset_key('NOTVALID')
+        test_config['planCalcScore'].validate_paramset_key('NOTVALID')
 
 
 def test_param_level_1_key_valid():
     test_config = BaseConfig(path=env.test_json_path)
     with pytest.raises(KeyError):
-        test_config['planCalcScore']['scoringParameters:default'].is_valid_param_key('NOTVALID')
+        test_config['planCalcScore']['scoringParameters:default'].validate_param('NOTVALID', 1)
 

@@ -8,7 +8,7 @@ import env
 
 
 env.set_module()
-from mc.base import BaseConfig, ParamSet, Param, get_params_search, get_paramsets_search, get_paramset_type
+from mc.base import BaseConfig, ParamSet, Param, get_params_search, get_paramsets_search, get_base
 from mc.debugging import *
 from mc.valid import VALID_MAP
 
@@ -16,13 +16,13 @@ from mc.valid import VALID_MAP
 
 def test_module_valid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_module_keys = test_config.valid_keys
+    valid_module_keys = test_config.valid_map
     assert valid_module_keys
 
 
 def test_module_param_valid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_param_keys = test_config['planCalcScore'].valid_param_keys
+    valid_param_keys = list(test_config['planCalcScore'].valid_param_map)
     assert valid_param_keys
 
 
@@ -43,37 +43,41 @@ def test_get_params_type_search():
 
 def test_module_paramset_level_1_valid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_paramset_keys = test_config['planCalcScore'].valid_paramset_keys
+    valid_paramset_keys = list(test_config['planCalcScore'].valid_paramset_map)
     assert valid_paramset_keys
 
 
 def test_module_param_level_1_valid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_param_keys = test_config['planCalcScore']["scoringParameters:default"].valid_param_keys
+    valid_param_keys = list(test_config['planCalcScore'][
+        "scoringParameters:default"].valid_param_map)
     assert valid_param_keys
 
 
 def test_module_paramset_level_2_valid_key_construction_():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_paramset_keys = test_config['planCalcScore']["scoringParameters:default"].valid_paramset_keys
+    valid_paramset_keys = list(test_config['planCalcScore'][
+        "scoringParameters:default"].valid_paramset_map)
     assert valid_paramset_keys
 
 
 def test_module_paramset_level_2_keys():
     test_config = BaseConfig(path=env.test_json_path)
-    paramset_keys = test_config['planCalcScore']["scoringParameters:default"].parametersets
+    paramset_keys = list(test_config['planCalcScore']["scoringParameters:default"].parametersets)
     assert paramset_keys
 
 
 def test_module_paramset_level_3_invalid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_paramset_keys = test_config['planCalcScore']["scoringParameters:default"]["modeParams:car"].valid_paramset_keys
+    valid_paramset_keys = list(test_config['planCalcScore']["scoringParameters:default"][
+        "modeParams:car"].valid_paramset_map)
     assert len(valid_paramset_keys) == 0
 
 
 def test_module_param_level_2_valid_key_construction():
     test_config = BaseConfig(path=env.test_json_path)
-    valid_param_keys = test_config['planCalcScore']["scoringParameters:default"]["modeParams:car"].valid_param_keys
+    valid_param_keys = list(test_config['planCalcScore']["scoringParameters:default"][
+        "modeParams:car"].valid_param_map)
     assert valid_param_keys
 
 

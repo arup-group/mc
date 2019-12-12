@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from mc.base import BaseConfig
-from mc import iterate
+from mc import step
 
 
 def test_update_config_update_paths_override():
@@ -12,8 +12,8 @@ def test_update_config_update_paths_override():
     current_dir = Path("tests/test_data/new_dir/")
     next_dir = Path("tests/test_data/new_dir")
 
-    iterate.write_path(config, current_dir, next_dir)
-    iterate.input_paths(config, current_dir, next_dir)
+    step.write_path(config, next_dir)
+    step.input_paths(config, current_dir)
 
     # don't write for test
     correct_ouput = Path("tests/test_data/test_config_new_paths.xml")

@@ -7,7 +7,7 @@ import click
 
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.wildcards import update_config_wildcards
-from mc import iterate
+from mc import step, mutate
 
 
 @click.group()
@@ -33,23 +33,64 @@ def fill(
 
 
 @cli.command()
-@click.argument('parent_config_path', type=click.Path(exists=True))
-@click.argument('current_dir', type=click.Path(writable=True))
-@click.argument('next_dir', type=click.Path(writable=True))
-def step_config_paths(
+@click.option('--parent_config_path', '-pc', type=click.Path(exists=True))
+@click.option('--parent_dir', '-pd', type=click.Path(writable=True))
+@click.option('--current_dir', '-cd', type=click.Path(writable=True))
+def step_matsim_config_paths(
         parent_config_path: Path,
-        current_dir: Path,
-        next_dir: Path
+        parent_dir: Path,
+        current_dir: Path
 ) -> None:
     """
     Read an existing config (parent) and update config paths:
-    Input paths: update to current_dir
-    Write path: update to write_path
+    Input paths: update to parent_dir
+    Write path: update to current_dir
     """
+    if None in [parent_config_path, parent_dir, current_dir]:
+        raise ValueError("Missing argument/s.")
+
     config = BaseConfig(parent_config_path)
-    iterate.write_path(config, current_dir, next_dir)
-    iterate.input_paths(config, current_dir, next_dir)
-    write_path = next_dir / parent_config_path.name
+    step.write_path(config, current_dir)
+    step.input_paths(config, parent_dir)
+
+    write_path = current_dir / parent_config_path.name
+    config.write(write_path)
+
+
+@cli.command()
+@click.option('--iteration', '-i', type=str)
+@click.option('--step_size', '-s', type=str)
+@click.option('--parent_config_path', '-pc', type=click.Path(exists=True))
+@click.option('--mutate_config_path', '-m', type=click.Path(writable=True))
+@click.option('--parent_dir', '-pd', type=click.Path(writable=True))
+@click.option('--current_dir', '-cd', type=click.Path(writable=True))
+def step_matsim_config_paths_and_mutate(
+        iteration: str,
+        step_size: str,
+        parent_config_path: Path,
+        parent_dir: Path,
+        current_dir: Path,
+        mutate_config_path: Path,
+) -> None:
+    """
+    Read an existing config (parent) and update config paths:
+    Mutate params: if iteration 0, mutate params according to mutation config
+    Input paths: update to parent_dir
+    Write path: update to current_dir
+    """
+    if None in [iteration, step_size, parent_config_path, parent_dir, current_dir]:
+        raise ValueError("Missing argument/s.")
+
+    config = BaseConfig(parent_config_path)
+    mutate_config = BaseConfig(mutate_config_path)
+
+    if iteration == step_size:  # then equals first step so swarm params
+        mutate.find_and_mutate(config, mutate_config)
+
+    step.write_path(config, current_dir)
+    step.input_paths(config, parent_dir)
+
+    write_path = current_dir / parent_config_path.name
     config.write(write_path)
 
 

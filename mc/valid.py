@@ -1,6 +1,112 @@
+from pathlib import Path
+
 """
 Dictionary of valid config names for modules, paramsets and params.
 """
+
+
+class ValidParam:
+    def __init__(self, default):
+        self.default = default
+        self.value = default
+
+    @staticmethod
+    def is_valid(value):
+        raise NotImplementedError
+
+
+class Str(ValidParam):
+    __name__ = 'Str'
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        return isinstance(value, str)
+
+
+class ValidPath(ValidParam):
+    __name__ = 'ValidPath'
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        if value in ["null", "undefined"]:
+            return True
+
+        try:
+            Path(value)
+            return True
+        except ValueError:
+            return False
+
+
+class Int(ValidParam):
+    __name__ = 'Int'
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        if value in ["null", "undefined"]:
+            return True
+
+        try:
+            int(value)
+            return True
+        except ValueError:
+            return False
+
+
+class Float(ValidParam):
+    __name__ = 'Float'
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        if value in ["null", "undefined"]:
+            return True
+
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+
+
+class Bool(ValidParam):
+    __name__ = "'true','false'"
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        return value in ['true', 'false']
+
+
+class Time(ValidParam):
+    __name__ = "{hh:mm:ss}"
+
+    def __init__(self, default):
+        super().__init__(default)
+
+    @staticmethod
+    def is_valid(value):
+        if value in ["null", "undefined"]:
+            return True
+
+        try:
+            [int(v) for v in value.split(':')]
+            return True
+        except ValueError:
+            return False
 
 
 VALID_MAP = {
@@ -9,220 +115,222 @@ VALID_MAP = {
 
         "global": {
                 "params": {
-                    "coordinateSystem": "EPSG:27700",
-                    "numberOfThreads": "32",
-                    "randomSeed": "4711",
-                    "insistingOnDeprecatedConfigVersion": "true",
+                    "coordinateSystem": Str("EPSG:27700"),
+                    "numberOfThreads": Int("32"),
+                    "randomSeed": Int("4711"),
+                    "insistingOnDeprecatedConfigVersion": Bool("true"),
                 }
             },
 
         "network": {
             "params": {
-                "inputCRS": "null",
-                "inputChangeEventsFile": "null",
-                "inputNetworkFile": "./output_network.xml.gz",
-                "laneDefinitionsFile": "null",
-                "timeVariantNetwork": "false"
+                "inputCRS": Str("null"),
+                "inputChangeEventsFile": Str("null"),
+                "inputNetworkFile": ValidPath("./output_network.xml.gz"),
+                "laneDefinitionsFile": Str("null"),
+                "timeVariantNetwork": Bool("false"),
             }
         },
 
         "plans": {
             "params": {
-                "inputPlansFile": "./output_plans.xml.gz",
-                "inputPersonAttributesFile": "./output_personAttributes.xml.gz",
-                "subpopulationAttributeName": "subpopulation",
-                "activityDurationInterpretation": "tryEndTimeThenDuration",
-                "inputCRS": "null",
-                "networkRouteType": "LinkNetworkRoute",
-                "removingUnnecessaryPlanAttributes": "false",
+                "inputPlansFile": ValidPath("./output_plans.xml.gz"),
+                "inputPersonAttributesFile": ValidPath("./output_personAttributes.xml.gz"),
+                "subpopulationAttributeName": Str("subpopulation"),
+                "activityDurationInterpretation": Str("tryEndTimeThenDuration"),
+                "inputCRS": Str("null"),
+                "networkRouteType": Str("LinkNetworkRoute"),
+                "removingUnnecessaryPlanAttributes": Bool("false"),
             }
         },
 
         "transit": {
             "params": {
-                "useTransit": "true",
-                "transitScheduleFile": "./output_transitSchedule.xml.gz",
-                "vehiclesFile": "./output_transitVehicles.xml",
-                "inputScheduleCRS": "null",
-                "transitLinesAttributesFile": "null",
-                "transitModes": "pt",
-                "transitStopsAttributesFile": "null",
+                "useTransit": Bool("true"),
+                "transitScheduleFile": ValidPath("./output_transitSchedule.xml.gz"),
+                "vehiclesFile": ValidPath("./output_transitVehicles.xml"),
+                "inputScheduleCRS": Str("null"),
+                "transitLinesAttributesFile": ValidPath("null"),
+                "transitModes": Str("pt"),
+                "transitStopsAttributesFile": ValidPath("null"),
             }
         },
 
         "multimodal": {
             "params": {
-                "createMultiModalNetwork": "true",
-                "numberOfThreads": "1",
-                "cuttoffValueForNonCarModes": "25.0",
-                "dropNonCarRoutes": "true",
-                "multiModalSimulationEnabled": "true",
-                "simulatedModes": "walk,bike",
-                "ensureActivityReachability": "true",
+                "createMultiModalNetwork": Bool("true"),
+                "numberOfThreads": Int("1"),
+                "cuttoffValueForNonCarModes": Float("25.0"),
+                "dropNonCarRoutes": Bool("true"),
+                "multiModalSimulationEnabled": Bool("true"),
+                "simulatedModes": Str("walk,bike"),
+                "ensureActivityReachability": Bool("true"),
             }
         },
 
         "travelTimeCalculator": {
             "params": {
-                "analyzedModes": "car,bus,walk",
-                "filterModes": "true",
-                "separateModes": "false",
-                "calculateLinkToLinkTravelTimes": "false",
-                "calculateLinkTravelTimes": "true",
-                "maxTime": "108000",
-                "travelTimeAggregator": "optimistic",
-                "travelTimeBinSize": "900",
-                "travelTimeCalculator": "TravelTimeCalculatorArray",
-                "travelTimeGetter": "average"
+                "analyzedModes": Str("car,bus,walk"),
+                "filterModes": Bool("true"),
+                "separateModes": Bool("false"),
+                "calculateLinkToLinkTravelTimes": Bool("false"),
+                "calculateLinkTravelTimes": Bool("true"),
+                "maxTime": Int("108000"),
+                "travelTimeAggregator": Str("optimistic"),
+                "travelTimeBinSize": Int("900"),
+                "travelTimeCalculator": Str("TravelTimeCalculatorArray"),
+                "travelTimeGetter": Str("average"),
             }
         },
 
         "JDEQSim": {
             "params": {
-                "carSize": "7.5",
-                "endTime": "undefined",
-                "flowCapacityFactor": "1.0",
-                "gapTravelSpeed": "15.0",
-                "minimumInFlowCapacity": "1800.0",
-                "squeezeTime": "1800.0",
-                "storageCapacityFactor": "1.0"
+                "carSize": Float("7.5"),
+                "endTime": Str("undefined"),
+                "flowCapacityFactor": Float("1.0"),
+                "gapTravelSpeed": Float("15.0"),
+                "minimumInFlowCapacity": Float("1800.0"),
+                "squeezeTime": Float("1800.0"),
+                "storageCapacityFactor": Float("1.0"),
             }
         },
 
         "TimeAllocationMutator": {
             "params": {
-                "mutationAffectsDuration": "true",
-                "mutationRange": "1000.0",
-                "useIndividualSettingsForSubpopulations": "false"
+                "mutationAffectsDuration": Bool("true"),
+                "mutationRange": Float("1000.0"),
+                "useIndividualSettingsForSubpopulations": Bool("false"),
             }
         },
 
         "changeMode": {
             "params": {
-                "ignoreCarAvailability": "true",
-                "modes": "car,pt"
+                "ignoreCarAvailability": Bool("true"),
+                "modes": Str("car,pt"),
             }
         },
 
         "controler": {
             "params": {
-                "createGraphs": "true",
-                "dumpDataAtEnd": "true",
-                "enableLinkToLinkRouting": "false",
-                "eventsFileFormat": "xml",
-                "firstIteration": "0",
-                "lastIteration": "100",
-                "mobsim": "qsim",
-                "outputDirectory": "home/arup/tii/1p_models/3_default_config/model_out",
-                "overwriteFiles": "failIfDirectoryExists",
-                "routingAlgorithmType": "Dijkstra",
-                "runId": "null",
-                "snapshotFormat": "",
-                "writeEventsInterval": "1",
-                "writePlansInterval": "50",
-                "writeSnapshotsInterval": "1"
+                "createGraphs": Bool("true"),
+                "dumpDataAtEnd": Bool("true"),
+                "enableLinkToLinkRouting": Bool("false"),
+                "eventsFileFormat": Str("xml"),
+                "firstIteration": Int("0"),
+                "lastIteration": Int("100"),
+                "mobsim": Str("qsim"),
+                "outputDirectory": ValidPath("home/arup/tii/1p_models/3_default_config/model_out"),
+                "overwriteFiles": Str("failIfDirectoryExists"),
+                "routingAlgorithmType": Str("Dijkstra"),
+                "runId": Str("null"),
+                "snapshotFormat": Str(""),
+                "writeEventsInterval": Int("1"),
+                "writePlansInterval": Int("50"),
+                "writeSnapshotsInterval": Int("1"),
             }
         },
 
         "counts": {
             "params": {
-                "analyzedModes": "car",
-                "averageCountsOverIterations": "5",
-                "countsScaleFactor": "1.0",
-                "distanceFilter": "null",
-                "distanceFilterCenterNode": "null",
-                "filterModes": "false",
-                "inputCRS": "null",
-                "inputCountsFile": "null",
-                "outputformat": "txt",
-                "writeCountsInterval": "10"
+                "analyzedModes": Str("car"),
+                "averageCountsOverIterations": Int("5"),
+                "countsScaleFactor": Float("1.0"),
+                "distanceFilter": Str("null"),
+                "distanceFilterCenterNode": Str("null"),
+                "filterModes": Bool("false"),
+                "inputCRS": Str("null"),
+                "inputCountsFile": ValidPath("null"),
+                "outputformat": Str("txt"),
+                "writeCountsInterval": Int("10"),
             }
         },
 
         "facilities": {
             "params": {
-                "addEmptyActivityOption": "false",
-                "assigningLinksToFacilitiesIfMissing": "true",
-                "assigningOpeningTime": "false",
-                "facilitiesSource": "none",
-                "idPrefix": "",
-                "inputCRS": "null",
-                "inputFacilitiesFile": "null",
-                "inputFacilityAttributesFile": "null",
-                "oneFacilityPerLink": "true",
-                "removingLinksAndCoordinates": "true"
+                "addEmptyActivityOption": Bool("false"),
+                "assigningLinksToFacilitiesIfMissing": Bool("true"),
+                "assigningOpeningTime": Bool("false"),
+                "facilitiesSource": Str("none"),
+                "idPrefix": Str(""),
+                "inputCRS": Str("null"),
+                "inputFacilitiesFile": Str("null"),
+                "inputFacilityAttributesFile": ValidPath("null"),
+                "oneFacilityPerLink": Bool("true"),
+                "removingLinksAndCoordinates": Bool("true"),
             }
         },
 
         "households": {
             "params": {
-                "inputFile": "null",
-                "inputHouseholdAttributesFile": "null"
+                "inputFile": ValidPath("null"),
+                "inputHouseholdAttributesFile": ValidPath("null"),
             }
         },
 
         "linkStats": {
             "params": {
-                "averageLinkStatsOverIterations": "5",
-                "writeLinkStatsInterval": "10"
+                "averageLinkStatsOverIterations": Int("5"),
+                "writeLinkStatsInterval": Int("10"),
             }
         },
 
         "parallelEventHandling": {
             "params": {
-                "estimatedNumberOfEvents": "null",
-                "numberOfThreads": "32",
-                "oneThreadPerHandler": "false",
-                "synchronizeOnSimSteps": "true"
+                "estimatedNumberOfEvents": Str("null"),
+                "numberOfThreads": Int("32"),
+                "oneThreadPerHandler": Bool("false"),
+                "synchronizeOnSimSteps": Bool("true"),
             }
         },
 
         "planCalcScore": {
             "params": {
-                "BrainExpBeta": "1.0",
-                "PathSizeLogitBeta": "1.0",
-                "fractionOfIterationsToStartScoreMSA": "null",
-                "learningRate": "1.0",
-                "usingOldScoringBelowZeroUtilityDuration": "false",
-                "writeExperiencedPlans": "false"
+                "BrainExpBeta": Float("1.0"),
+                "ValidPathSizeLogitBeta": Float("1.0"),
+                "fractionOfIterationsToStartScoreMSA": Float("null"),
+                "learningRate": Float("1.0"),
+                "usingOldScoringBelowZeroUtilityDuration": Bool("false"),
+                "writeExperiencedPlans": Bool("false"),
             },
 
             "parametersets": {
                 "scoringParameters": {
                     "params": {
-                        "earlyDeparture": "-0.0",
-                        "lateArrival": "-18.0",
-                        "marginalUtilityOfMoney": "0.0",
-                        "performing": "6.0",
-                        "subpopulation": "default",
-                        "utilityOfLineSwitch": "-1.0",
-                        "waiting": "-1.0",
-                        "waitingPt": "-1.0"
+                        "earlyDeparture": Float("-0.0"),
+                        "lateArrival": Float("-18.0"),
+                        "marginalUtilityOfMoney":
+                            Float("20.0"),
+                        "performing":
+                            Float("6.0"),
+                        "subpopulation": Str("default"),
+                        "utilityOfLineSwitch": Float("-1.0"),
+                        "waiting": Float("-1.0"),
+                        "waitingPt": Float("-1.0"),
                     },
 
                     "parametersets": {
                         "activityParams": {
                             "params": {
-                                "activityType": "education",
-                                "closingTime": "17:00:00",
-                                "earliestEndTime": "undefined",
-                                "latestStartTime": "undefined",
-                                "minimalDuration": "06:00:00",
-                                "openingTime": "08:30:00",
-                                "priority": "1.0",
-                                "scoringThisActivityAtAll": "true",
-                                "typicalDuration": "06:00:00",
-                                "typicalDurationScoreComputation": "relative"
+                                "activityType": Str("education"),
+                                "closingTime": Time("17:00:00"),
+                                "earliestEndTime": Time("undefined"),
+                                "latestStartTime": Time("undefined"),
+                                "minimalDuration": Time("06:00:00"),
+                                "openingTime": Time("08:30:00"),
+                                "priority": Float("1.0"),
+                                "scoringThisActivityAtAll": Bool("true"),
+                                "typicalDuration": Time("06:00:00"),
+                                "typicalDurationScoreComputation": Str("relative"),
                             }
                         },
 
                         "modeParams": {
                             "params": {
-                                "constant": "0.0",
-                                "marginalUtilityOfDistance_util_m": "0.0",
-                                "marginalUtilityOfTraveling_util_hr": "-6.0",
-                                "mode": "car",
-                                "monetaryDistanceRate": "-0.0"
+                                "constant": Float("0.0"),
+                                "marginalUtilityOfDistance_util_m": Float("0.0"),
+                                "marginalUtilityOfTraveling_util_hr": Float("-6.0"),
+                                "mode": Str("car"),
+                                "monetaryDistanceRate": Float("-0.0"),
                             }
                         }
                     }
@@ -232,16 +340,16 @@ VALID_MAP = {
 
         "planscalcroute": {
             "params": {
-                "networkModes": "car"
+                "networkModes": Str("car"),
             },
 
             "parametersets": {
                 "teleportedModeParameters": {
                     "params": {
-                        "beelineDistanceFactor": "1.3",
-                        "mode": "bike",
-                        "teleportedModeFreespeedFactor": "null",
-                        "teleportedModeSpeed": "4.166666666666667"
+                        "beelineDistanceFactor": Float("1.3"),
+                        "mode": Str("bike"),
+                        "teleportedModeFreespeedFactor": Float("null"),
+                        "teleportedModeSpeed": Float("4.166666666666667"),
                     }
                 }
             }
@@ -249,69 +357,69 @@ VALID_MAP = {
 
         "ptCounts": {
             "params": {
-                "countsScaleFactor": "1.0",
-                "distanceFilter": "null",
-                "distanceFilterCenterNode": "null",
-                "inputAlightCountsFile": "null",
-                "inputBoardCountsFile": "null",
-                "inputOccupancyCountsFile": "null",
-                "outputformat": "null",
-                "ptCountsInterval": "10"
+                "countsScaleFactor": Float("1.0"),
+                "distanceFilter": Str("null"),
+                "distanceFilterCenterNode": Str("null"),
+                "inputAlightCountsFile": ValidPath("null"),
+                "inputBoardCountsFile": ValidPath("null"),
+                "inputOccupancyCountsFile": ValidPath("null"),
+                "outputformat": Str("null"),
+                "ptCountsInterval": Float("10"),
             }
         },
 
         "qsim": {
             "params": {
-                "creatingVehiclesForAllNetworkModes": "true",
-                "endTime": "24:00:00",
-                "flowCapacityFactor": "0.01",
-                "insertingWaitingVehiclesBeforeDrivingVehicles": "false",
-                "isRestrictingSeepage": "true",
-                "isSeepModeStorageFree": "false",
-                "linkDynamics": "FIFO",
-                "linkWidth": "30.0",
-                "mainMode": "bus,car,rail,tram",
-                "nodeOffset": "0.0",
-                "numberOfThreads": "32",
-                "removeStuckVehicles": "false",
-                "seepMode": "bike",
-                "simEndtimeInterpretation": "null",
-                "simStarttimeInterpretation": "maxOfStarttimeAndEarliestActivityEnd",
-                "snapshotStyle": "equiDist",
-                "snapshotperiod": "00:00:00",
-                "startTime": "00:00:00",
-                "storageCapacityFactor": "0.01",
-                "stuckTime": "10.0",
-                "timeStepSize": "00:00:01",
-                "trafficDynamics": "queue",
-                "useLanes": "false",
-                "usePersonIdForMissingVehicleId": "true",
-                "usingFastCapacityUpdate": "true",
-                "usingThreadpool": "true",
-                "vehicleBehavior": "teleport",
-                "vehiclesSource": "defaultVehicle"
+                "creatingVehiclesForAllNetworkModes": Bool("true"),
+                "endTime": Time("24:00:00"),
+                "flowCapacityFactor": Float("0.01"),
+                "insertingWaitingVehiclesBeforeDrivingVehicles": Bool("false"),
+                "isRestrictingSeepage": Bool("true"),
+                "isSeepModeStorageFree": Bool("false"),
+                "linkDynamics": Str("FIFO"),
+                "linkWidth": Float("30.0"),
+                "mainMode": Str("bus,car,rail,tram"),
+                "nodeOffset": Float("0.0"),
+                "numberOfThreads": Int("32"),
+                "removeStuckVehicles": Bool("false"),
+                "seepMode": Str("bike"),
+                "simEndtimeInterpretation": Str("null"),
+                "simStarttimeInterpretation": Str("maxOfStarttimeAndEarliestActivityEnd"),
+                "snapshotStyle": Str("equiDist"),
+                "snapshotperiod": Time("00:00:00"),
+                "startTime": Time("00:00:00"),
+                "storageCapacityFactor": Float("0.01"),
+                "stuckTime": Float("10.0"),
+                "timeStepSize": Time("00:00:01"),
+                "trafficDynamics": Str("queue"),
+                "useLanes": Bool("false"),
+                "usePersonIdForMissingVehicleId": Bool("true"),
+                "usingFastCapacityUpdate": Bool("true"),
+                "usingThreadpool": Bool("true"),
+                "vehicleBehavior": Str("teleport"),
+                "vehiclesSource": Str("defaultVehicle"),
             }
         },
 
         "scenario": {},
         "strategy": {
             "params": {
-                "ExternalExeConfigTemplate": "null",
-                "ExternalExeTimeOut": "3600",
-                "ExternalExeTmpFileRootDir": "null",
-                "fractionOfIterationsToDisableInnovation": "0.9",
-                "maxAgentPlanMemorySize": "5",
-                "planSelectorForRemoval": "WorstPlanSelector"
+                "ExternalExeConfigTemplate": Str("null"),
+                "ExternalExeTimeOut": Int("3600"),
+                "ExternalExeTmpFileRootDir": ValidPath("null"),
+                "fractionOfIterationsToDisableInnovation": Float("0.9"),
+                "maxAgentPlanMemorySize": Int("5"),
+                "planSelectorForRemoval": Str("WorstPlanSelector"),
             },
 
             "parametersets": {
                 "strategysettings": {
                     "params": {
-                        "disableAfterIteration": "-1",
-                        "executionPath": "null",
-                        "strategyName": "SelectExpBeta",
-                        "subpopulation": "unknown",
-                        "weight": "0.6"
+                        "disableAfterIteration": Int("-1"),
+                        "executionValidPath": ValidPath("null"),
+                        "strategyName": Str("SelectExpBeta"),
+                        "subpopulation": Str("unknown"),
+                        "weight": Float("0.6"),
                     }
                 }
             }
@@ -319,36 +427,36 @@ VALID_MAP = {
 
         "subtourModeChoice": {
             "params": {
-                "chainBasedModes": "car,bike",
-                "considerCarAvailability": "false",
-                "modes": "car,pt,walk,bike"
+                "chainBasedModes": Str("car,bike"),
+                "considerCarAvailability": Bool("false"),
+                "modes": Str("car,pt,walk,bike"),
             }
         },
 
         "transitRouter": {
             "params": {
-                "additionalTransferTime": "0.0",
-                "directWalkFactor": "1.0",
-                "extensionRadius": "100.0",
-                "maxBeelineWalkConnectionDistance": "100.0",
-                "searchRadius": "1000.0"
+                "additionalTransferTime": Float("0.0"),
+                "directWalkFactor": Float("1.0"),
+                "extensionRadius": Float("100.0"),
+                "maxBeelineWalkConnectionDistance": Float("100.0"),
+                "searchRadius": Float("1000.0"),
             }
         },
 
         "vehicles": {
             "params": {
-                "vehiclesFile": "null"
+                "vehiclesFile": ValidPath("null"),
             }
         },
 
         "vspExperimental": {
             "params": {
-                "isAbleToOverwritePtInteractionParams": "false",
-                "isGeneratingBoardingDeniedEvent": "false",
-                "isUsingOpportunityCostOfTimeForLocationChoice": "true",
-                "logitScaleParamForPlansRemoval": "1.0",
-                "vspDefaultsCheckingLevel": "ignore",
-                "writingOutputEvents": "true"
+                "isAbleToOverwritePtInteractionParams": Bool("false"),
+                "isGeneratingBoardingDeniedEvent": Bool("false"),
+                "isUsingOpportunityCostOfTimeForLocationChoice": Bool("true"),
+                "logitScaleParamForPlansRemoval": Float("1.0"),
+                "vspDefaultsCheckingLevel": Str("ignore"),
+                "writingOutputEvents": Bool("true"),
             }
         }
     }
