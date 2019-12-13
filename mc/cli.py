@@ -53,7 +53,7 @@ def step_matsim_config_paths(
     config.write(write_path)
 
 
-@cli.command(name='mutator')
+@cli.command(name='mutate')
 @click.option('--iteration', '-i', required=True, type=str)
 @click.option('--step_size', '-s', required=True, type=str)
 @click.option('--parent_config_path', '-pc', required=True, type=PathPath(exists=True))
