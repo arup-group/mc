@@ -26,7 +26,7 @@
                   "distribution": "normal",
                   "mu": -0.0002,
                   "upper_conf": -0.00015,
-                  "lower": 0.001,
+                  "lower": -0.001,
                   "upper": 0,
                   "digits": 5
                 }
@@ -39,7 +39,7 @@
                   "distribution": "normal",
                   "mu": -0.001,
                   "upper_conf": -0.0005,
-                  "lower": 0.01,
+                  "lower": -0.01,
                   "upper": 0,
                   "digits": 5
                 }

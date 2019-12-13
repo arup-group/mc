@@ -3,31 +3,26 @@ BaseConfig slicing and making tests.
 """
 
 import pytest
-import os
-import env
 
-
-env.set_module()
+from . import test_data_dir
 from mc.base import BaseConfig, ParamSet, Param, get_params_search, get_paramsets_search, get_base
-from mc.debugging import *
 from mc.valid import VALID_MAP
 
 
-
 def test_module_valid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_module_keys = test_config.valid_map
     assert valid_module_keys
 
 
 def test_module_param_valid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_param_keys = list(test_config['planCalcScore'].valid_param_map)
     assert valid_param_keys
 
 
 def test_paramset_names_and_types():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     ident = test_config['planCalcScore']['scoringParameters:default'].ident
     ty = test_config['planCalcScore']['scoringParameters:default'].type
     assert not ident == ty
@@ -42,97 +37,97 @@ def test_get_params_type_search():
 
 
 def test_module_paramset_level_1_valid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_paramset_keys = list(test_config['planCalcScore'].valid_paramset_map)
     assert valid_paramset_keys
 
 
 def test_module_param_level_1_valid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_param_keys = list(test_config['planCalcScore'][
         "scoringParameters:default"].valid_param_map)
     assert valid_param_keys
 
 
 def test_module_paramset_level_2_valid_key_construction_():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_paramset_keys = list(test_config['planCalcScore'][
         "scoringParameters:default"].valid_paramset_map)
     assert valid_paramset_keys
 
 
 def test_module_paramset_level_2_keys():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     paramset_keys = list(test_config['planCalcScore']["scoringParameters:default"].parametersets)
     assert paramset_keys
 
 
 def test_module_paramset_level_3_invalid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_paramset_keys = list(test_config['planCalcScore']["scoringParameters:default"][
         "modeParams:car"].valid_paramset_map)
     assert len(valid_paramset_keys) == 0
 
 
 def test_module_param_level_2_valid_key_construction():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     valid_param_keys = list(test_config['planCalcScore']["scoringParameters:default"][
         "modeParams:car"].valid_param_map)
     assert valid_param_keys
 
 
 def test_invalid_module_invalid_name():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     with pytest.raises(KeyError):
         test_config['NOTVALID'] = test_config["planCalcScore"]
 
 
 def test_parameterset_level_1_invalid_name():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     paramset = test_config["planCalcScore"]["scoringParameters:default"]
     with pytest.raises(KeyError):
         test_config["planCalcScore"]['NOTVALID'] = paramset
 
 
 def test_param_level_1_invalid_name():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     param = test_config["planCalcScore"]["BrainExpBeta"]
     with pytest.raises(KeyError):
         test_config["planCalcScore"]['NOTVALID'] = param
 
 
 def test_parameterset_level_2_invalid_name():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     with pytest.raises(KeyError):
         test_config["planCalcScore"]['scoringParameters:default']['NOTVALID'] = test_config["planCalcScore"]['scoringParameters:default']["activityParams:education"]
 
 
 def test_param_level_2_invalid_name():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     with pytest.raises(KeyError):
         test_config["planCalcScore"]['scoringParameters:default']['NOTVALID'] = test_config["planCalcScore"]['scoringParameters:default']["lateArrival"]
 
 
 def test_param_level_2_invalid_value():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     with pytest.raises(ValueError):
         test_config["planCalcScore"]['scoringParameters:default']['closingTime'] = 4
 
 
 def test_param_level_2_invalid_key():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     with pytest.raises(KeyError):
         test_config["planCalcScore"]['scoringParameters:default']['cloPPingTime'] = '4'
 
 
 def test_get_default_to_default():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     v = test_config["planCalcScore"]['scoringParameters']["lateArrival"]
     assert v == '-18.0'
 
 
 def test_get_default_to_list():
-    test_config = BaseConfig(path=env.test_json_path)
+    test_config = BaseConfig(path=test_data_dir() / 'test_config.json')
     v = test_config["planCalcScore"]['scoringParameters']["activityParams"]
     assert isinstance(v, list)
 

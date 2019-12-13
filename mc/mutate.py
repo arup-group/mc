@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Tuple
+from copy import copy
 
 from mc.base import Base, BaseConfig, Param
 
@@ -33,10 +34,11 @@ def normal(mu=0.0, sigma=1.0, upper_conf=None, lower=float('-inf'), upper=float(
     """
     if upper_conf:
         sigma = (upper_conf - mu) / 3
-    while True:
+    for _ in range(1000):
         s = np.random.normal(mu, sigma)
         if (s >= lower) and (s <= upper):
             return str(round(s, digits))
+    raise StopIteration(f"Normal distribution failed to sample")
 
 
 def exponential(beta=1.0, scale=1.0, base=0.0, lower=float('-inf'), upper=float('inf'), digits=1):
@@ -52,10 +54,11 @@ def exponential(beta=1.0, scale=1.0, base=0.0, lower=float('-inf'), upper=float(
     :param digits: int
     :return: str
     """
-    while True:
+    for _ in range(1000):
         s = scale * (np.random.exponential(1/beta) + base)
         if (s >= lower) and (s <= upper):
             return str(round(s, digits))
+    raise StopIteration(f"Exponential distribution failed to sample")
 
 
 DISTRIBUTION_MAP = {
@@ -65,8 +68,9 @@ DISTRIBUTION_MAP = {
 }
 
 
-def mutate(param: Param, mutator_params: dict):
+def mutate(param: Param, mutator: Param):
 
+        mutator_params = copy(mutator.value)
         distribution_key = mutator_params.get('distribution')
         if not distribution_key:
             raise IOError(f"Cannot find distribution key in mutator config: {mutator_params}")
@@ -79,10 +83,12 @@ def mutate(param: Param, mutator_params: dict):
                 f"use: {DISTRIBUTION_MAP}"
             )
 
+        print(f"mutate {distribution_key} @ {param.name}")
+
         param.value = distribution(**mutator_params)
 
 
-def yield_pairs(master: Base, slave: Base) -> Tuple[Param, Param]:
+def yield_pairs_safe(master: Base, slave: Base) -> Tuple[Param, Param]:
     """
     Traverses through master config yielding param objects with matching slave param object.
     If slave object is unavailable, raises a KeyError.
@@ -106,7 +112,7 @@ def yield_pairs(master: Base, slave: Base) -> Tuple[Param, Param]:
             if m not in slave.modules:
                 raise KeyError(f"module '{m}' not found in target config")
 
-            yield from yield_pairs(mutate_module, slave.modules[m])
+            yield from yield_pairs_safe(mutate_module, slave.modules[m])
 
     if master.parametersets:
         for ps, mutate_paramset in master.parametersets.items():
@@ -114,13 +120,54 @@ def yield_pairs(master: Base, slave: Base) -> Tuple[Param, Param]:
             if ps.split(':')[-1] == '*':  # need to iterate through all slave paramsets
                 for cps, config_parameterset in slave.parametersets.items():
                     if ps.split(':')[0] == cps.split(':')[0]:
-                        yield from yield_pairs(mutate_paramset, config_parameterset)
+                        yield from yield_pairs_safe(mutate_paramset, config_parameterset)
 
             else:
                 if ps not in slave.parametersets:
                     raise KeyError(f"parameterset '{ps}' not found in target config")
 
-                yield from yield_pairs(mutate_paramset, slave.parametersets[ps])
+                yield from yield_pairs_safe(mutate_paramset, slave.parametersets[ps])
+
+
+# def yield_pairs(master: Base, slave: Base) -> Tuple[Param, Param]:
+#     """
+#     Traverses through master config yielding param objects with matching slave param object.
+#     If slave object is unavailable, raises a KeyError.
+#     Supports key suffix ":*" for parametersets, used to match all slave paramsets with same name.
+#     This is used for matching scoring sets for all subpopulations for example.
+#     :param master: BaseConfig
+#     :param slave: BaseConfig
+#     :return: yield Tuple(Param, Param)
+#     """
+#     if master.params:
+#         for p, mutate_param in master.params.items():
+#
+#             if p not in slave.params:
+#                 slave.params[p] = Param(p, 'null')
+#
+#             yield mutate_param, slave.params[p]
+#
+#     if master.modules:
+#         for m, mutate_module in master.modules.items():
+#
+#             if m not in slave.modules:
+#                 raise KeyError(f"module '{m}' not found in target config")
+#
+#             yield from yield_pairs_safe(mutate_module, slave.modules[m])
+#
+#     if master.parametersets:
+#         for ps, mutate_paramset in master.parametersets.items():
+#
+#             if ps.split(':')[-1] == '*':  # need to iterate through all slave paramsets
+#                 for cps, config_parameterset in slave.parametersets.items():
+#                     if ps.split(':')[0] == cps.split(':')[0]:
+#                         yield from yield_pairs_safe(mutate_paramset, config_parameterset)
+#
+#             else:
+#                 if ps not in slave.parametersets:
+#                     raise KeyError(f"parameterset '{ps}' not found in target config")
+#
+#                 yield from yield_pairs_safe(mutate_paramset, slave.parametersets[ps])
 
 
 def find_and_mutate(config: BaseConfig, mutate_config: BaseConfig):
@@ -132,5 +179,6 @@ def find_and_mutate(config: BaseConfig, mutate_config: BaseConfig):
     :return: None
     """
 
-    for mutate_param, config_param in yield_pairs(mutate_config, config):
+    for mutate_param, config_param in yield_pairs_safe(mutate_config, config):
+        print('yield')
         mutate(config_param, mutate_param)

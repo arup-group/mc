@@ -15,7 +15,7 @@ def write_path(config: BaseConfig, current_dir: Path) -> None:
     logging.info(f"Write path override to config")
 
     old_path = Path(config['controler']['outputDirectory'])
-    logging.info(f"Write file path override: {str(old_path)} to: {str(next_dir)}")
+    logging.info(f"Write file path override: {str(old_path)} to: {str(current_dir)}")
 
     config['controler']['outputDirectory'] = str(current_dir)
 

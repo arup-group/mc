@@ -1,0 +1,81 @@
+{
+  "modules": {
+
+    "planCalcScore": {
+
+      "parametersets": {
+
+        "scoringParameters:*": {
+
+          "params": {
+            "marginalUtilityOfMoney": {
+              "distribution": "normal",
+              "mu": 20,
+              "upper_conf": 50,
+              "lower": 0,
+              "upper": 100,
+              "digits": 1
+            }
+          },
+
+          "parametersets": {
+
+            "modeParams:car": {
+              "params": {
+                "monetaryDistanceRate": {
+                  "distribution": "normal",
+                  "mu": -0.0002,
+                  "upper_conf": -0.00015,
+                  "lower": -0.001,
+                  "upper": 0,
+                  "digits": 5
+                }
+              }
+            },
+
+            "modeParams:pt": {
+              "params": {
+                "monetaryDistanceRate": {
+                  "distribution": "normal",
+                  "mu": -0.001,
+                  "upper_conf": -0.0005,
+                  "lower": -0.01,
+                  "upper": 0,
+                  "digits": 5
+                }
+              }
+            },
+
+
+            "modeParams:walk": {
+              "params": {
+                "marginalUtilityOfTraveling_util_hr": {
+                  "distribution": "normal",
+                  "mu": -6,
+                  "sigma": 2,
+                  "lower": -12,
+                  "upper": 0,
+                  "digits": 0
+                }
+              }
+            },
+
+            "modeParams:bike": {
+              "params": {
+
+                "marginalUtilityOfTraveling_util_hr": {
+                  "distribution": "normal",
+                  "mu": -6,
+                  "sigma": 2,
+                  "lower": -12,
+                  "upper": 0,
+                  "digits": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

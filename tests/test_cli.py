@@ -1,9 +1,7 @@
 """
 CLI function tests.
 """
-import env
-env.set_module()
-from mc import cli, build
+from mc import cli
 
 
 def test_string_to_tuple():

@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Tuple, Optional
 import click
 
+from . import PathPath
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.wildcards import update_config_wildcards
 from mc import step, mutate
@@ -32,23 +33,18 @@ def fill(
     update_config_wildcards(read_path, write_path, overrides)
 
 
-@cli.command()
-@click.option('--parent_config_path', '-pc', type=click.Path(exists=True))
-@click.option('--parent_dir', '-pd', type=click.Path(writable=True))
-@click.option('--current_dir', '-cd', type=click.Path(writable=True))
+@cli.command(name='step')
+@click.option('--parent_config_path', '-pc', required=True, type=PathPath(exists=True))
+@click.option('--parent_dir', '-pd', required=True, type=PathPath(writable=True))
+@click.option('--current_dir', '-cd', required=True, type=PathPath(writable=True))
 def step_matsim_config_paths(
         parent_config_path: Path,
         parent_dir: Path,
         current_dir: Path
 ) -> None:
     """
-    Read an existing config (parent) and update config paths:
-    Input paths: update to parent_dir
-    Write path: update to current_dir
+    Read an existing config (parent) and update config paths for current dir
     """
-    if None in [parent_config_path, parent_dir, current_dir]:
-        raise ValueError("Missing argument/s.")
-
     config = BaseConfig(parent_config_path)
     step.write_path(config, current_dir)
     step.input_paths(config, parent_dir)
@@ -57,13 +53,13 @@ def step_matsim_config_paths(
     config.write(write_path)
 
 
-@cli.command()
-@click.option('--iteration', '-i', type=str)
-@click.option('--step_size', '-s', type=str)
-@click.option('--parent_config_path', '-pc', type=click.Path(exists=True))
-@click.option('--mutate_config_path', '-m', type=click.Path(writable=True))
-@click.option('--parent_dir', '-pd', type=click.Path(writable=True))
-@click.option('--current_dir', '-cd', type=click.Path(writable=True))
+@cli.command(name='mutator')
+@click.option('--iteration', '-i', required=True, type=str)
+@click.option('--step_size', '-s', required=True, type=str)
+@click.option('--parent_config_path', '-pc', required=True, type=PathPath(exists=True))
+@click.option('--mutate_config_path', '-m', required=True, type=PathPath(writable=True))
+@click.option('--parent_dir', '-pd', required=True, type=PathPath(writable=True))
+@click.option('--current_dir', '-cd', required=True, type=PathPath(writable=True))
 def step_matsim_config_paths_and_mutate(
         iteration: str,
         step_size: str,
@@ -73,18 +69,14 @@ def step_matsim_config_paths_and_mutate(
         mutate_config_path: Path,
 ) -> None:
     """
-    Read an existing config (parent) and update config paths:
-    Mutate params: if iteration 0, mutate params according to mutation config
-    Input paths: update to parent_dir
-    Write path: update to current_dir
+    Path update plus step zero param mutation
     """
-    if None in [iteration, step_size, parent_config_path, parent_dir, current_dir]:
-        raise ValueError("Missing argument/s.")
 
     config = BaseConfig(parent_config_path)
     mutate_config = BaseConfig(mutate_config_path)
 
     if iteration == step_size:  # then equals first step so swarm params
+        print("mutate")
         mutate.find_and_mutate(config, mutate_config)
 
     step.write_path(config, current_dir)

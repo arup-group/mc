@@ -18,7 +18,4 @@ def test_update_config_update_paths_override():
     # don't write for test
     correct_ouput = Path("tests/test_data/test_config_new_paths.xml")
 
-    for line in config.diff(BaseConfig(correct_ouput)):
-        print(line)
-
     assert config == BaseConfig(correct_ouput)

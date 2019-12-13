@@ -53,6 +53,8 @@ Commands:
   gen      Generate a template config: |empty|default|test|.
   print    Print a config to terminal.
   fill     Read an existing config, fill in the override wildcard variables, and write out the updated config
+  step     Read an existing config (parent) and update config paths for current dir
+  mutator  Path update plus step zero param mutation
 ```
 
 ## Programming Interface

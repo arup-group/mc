@@ -2,14 +2,9 @@
 Build Module tests.
 """
 
-import pytest
 import os
-import env
 from pathlib import Path
 
-
-env.set_module()
-from mc.base import BaseConfig, get_params_search, get_paramsets_search, get_base
 from mc.build import BaseConfig, DefaultConfig, BuildConfig
 from mc import _DEFAULTS_DIR
 
