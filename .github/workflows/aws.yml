@@ -21,9 +21,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
     - name: Zip and Send to S3
-      run: 
-        echo $GITHUB_REPOSITORY
-        echo $GITHUB_SHA
-        echo $GITHUB_SHA > release
-        zip -r app.zip .
-        aws s3 cp app.zip s3://arup-arup-ukimea-tcs-dev-test-code/$GITHUB_REPOSITORY.zip
+      run: echo $GITHUB_REPOSITORY
+      run: echo $GITHUB_SHA
+      run: echo $GITHUB_SHA > release
+      run: zip -r app.zip .
+      run: aws s3 cp app.zip s3://arup-arup-ukimea-tcs-dev-test-code/$GITHUB_REPOSITORY.zip
