@@ -23,7 +23,9 @@ jobs:
     - name: Zip and Send to S3
       run: |
         echo $GITHUB_REPOSITORY
+        repo_slug=`echo $GITHUB_REPOSITORY | awk -F '/' '{print $2}'`;
+        echo $repo_slug
         echo $GITHUB_SHA
         echo $GITHUB_SHA > release
         zip -r app.zip .
-        aws s3 cp app.zip s3://arup-arup-ukimea-tcs-dev-test-code/$GITHUB_REPOSITORY.zip
+        aws s3 cp app.zip s3://arup-arup-ukimea-tcs-dev-test-code/$repo_slug.zip
