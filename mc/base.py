@@ -124,7 +124,6 @@ class Base:
         if not self.valid_paramset_key(key):
             raise KeyError(f"'{key}' is not a valid paramset key for this module")
 
-
     # Reading/building config from input:
 
     def build_from_xml(self, xml_object: Element):
@@ -497,8 +496,9 @@ class Module(Base):
         self.parametersets = {}
 
         self.valid_param_keys = list(VALID_MAP['modules'][name].get('params', []))
-        self.valid_paramset_keys = [get_paramset_type(t) for t in list(VALID_MAP['modules'][name].
-                                                                       get('parametersets', []))]
+        self.valid_paramset_keys = [
+            get_paramset_type(t) for t in list(VALID_MAP['modules'][name].get('parametersets', []))
+        ]
         self.valid_keys = {'valid_params_keys': self.valid_param_keys,
                            'valid_paramset_keys': self.valid_paramset_keys}
 
@@ -524,6 +524,7 @@ class Module(Base):
         if collected:
             print("INFO returning list of collected parametersets")
             return collected
+
         # build and return new paramset if valid
         if self.valid_paramset_key(key):
             print(f"INFO creating new empty parameterset: {key}")

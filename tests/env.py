@@ -25,13 +25,4 @@ test_temp_xml_path = this_dir() / 'test_data' / 'test_temp_config.xml'
 test_temp_json_path = this_dir() / 'test_data' / 'test_temp_config.json'
 test_bad_config_path = this_dir() / 'test_data' / 'test_diff.json'
 temp_xml_path_write = this_dir() / 'test_data' / 'temp.xml'
-
-
-# # # append module root directory to sys.path
-# # sys.path.append(
-# #     os.path.dirname(
-# #         os.path.dirname(
-# #             os.path.abspath(__file__)
-# #         )
-# #     )
-# # )
+test_mm_path = this_dir() / 'test_data' / 'mm_test.xml'

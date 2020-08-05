@@ -1,0 +1,238 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+
+	<module name="global">
+		<param name="randomSeed" value="4711" />
+		<param name="coordinateSystem" value="EPSG:27700" />
+	        <param name="numberOfThreads" value="4" />
+	</module>
+
+	<module name="network">
+		<param name="inputNetworkFile" value="./output_network.xml.gz" />
+	</module>
+
+	<module name="plans">
+		<param name="inputPlansFile" value="./output_plans.xml.gz" />
+		<param name="inputPersonAttributesFile" value="./output_personAttributes.xml.gz" />
+		<param name="subpopulationAttributeName" value="subpopulation" />
+	</module>
+
+	<module name="transit">
+		<param name="useTransit" value="true" />
+		<param name="transitScheduleFile" value="./output_transitSchedule.xml.gz" />
+		<param name="vehiclesFile" value="./output_transitVehicles.xml.gz" />
+		<param name="transitModes" value="pt" />
+	</module>
+
+	<module name="TimeAllocationMutator">
+	        <param name="mutationRange" value="1800.0"/>
+	</module>
+
+	<module name="controler">
+    <param name="createGraphs" value="true" />
+		<param name="outputDirectory" value="multimodal_town_C/out" />
+		<param name="firstIteration" value="1" />
+		<param name="lastIteration" value="50" />
+		<param name="eventsFileFormat" value="xml" />
+		<param name="writeEventsInterval" value="1" />
+		<param name="writePlansInterval" value="1" />
+		<param name="mobsim" value="qsim" />
+   	<param name="snapshotFormat" value="" />
+
+		<!-- Possible values: failIfDirectoryExists, overwriteExistingFiles, deleteDirectoryIfExists -->
+		<param name="overwriteFiles" value="overwriteExistingFiles" />
+	</module>
+
+	<module name="parallelEventHandling">
+		<param name = "estimatedNumberOfEvents" value="null"/>
+		<param name = "numberOfThreads" value="1"/>
+	</module>
+
+	<module name="qsim">
+
+		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
+
+		<param name="startTime" value="00:00:00" />
+		<param name="endTime" value="24:00:00" />
+
+		<!-- The list of modes found in the inputted vehicle schedule file -->
+		<param name="mainMode" value="car,bus,cycle" />
+
+		<param name="numberOfThreads" value="1" />
+
+		<param name = "flowCapacityFactor" value = "1"/> <!-- Don't forget to change this to match sample-->
+		<param name = "storageCapacityFactor" value = "1"/> <!-- Don't forget to change this to -->
+
+		<param name = "usingFastCapacityUpdate" value="true"/>
+
+		<!-- <param name="snapshotperiod" value="00:00:00"/>  -->
+		<!-- <param name="removeStuckVehicles" value="false" /> -->
+		<!--<param name="vehicleBehavior" value="wait" />-->
+		<!-- <param name="snapshotStyle" value="queue" /> -->
+
+	</module>
+
+	<!-- <module name="multimodal" >
+		<param name="createMultiModalNetwork" value="true" />
+		<param name="cuttoffValueForNonCarModes" value="25.0" />
+		<param name="dropNonCarRoutes" value="true" />
+		<param name="multiModalSimulationEnabled" value="true" />
+		<param name="simulatedModes" value="bike,walk" />
+		<param name="ensureActivityReachability" value ="true" />
+	</module> -->
+
+	<module name="planscalcroute" >
+		<param name="networkModes" value="car,cycle" />
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="access_walk" />
+
+			<!-- Free-speed factor for a teleported mode. Travel time = teleportedModeFreespeedFactor * <freespeed car travel time>. Insert a line like this for every such mode. Please do not set teleportedModeFreespeedFactor as well as teleportedModeSpeed for the same mode, but if you do, +teleportedModeFreespeedFactor wins over teleportedModeSpeed. -->
+			<param name="teleportedModeFreespeedFactor" value="null" />
+
+			<!-- Speed for a teleported mode. Travel time = (<beeline distance> * beelineDistanceFactor) / teleportedModeSpeed. Insert a line like this for every such mode. -->
+			<param name="teleportedModeSpeed" value="0.8333333333333333" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="walk" />
+
+			<!-- Free-speed factor for a teleported mode. Travel time = teleportedModeFreespeedFactor * <freespeed car travel time>. Insert a line like this for every such mode. Please do not set teleportedModeFreespeedFactor as well as teleportedModeSpeed for the same mode, but if you do, +teleportedModeFreespeedFactor wins over teleportedModeSpeed. -->
+			<param name="teleportedModeFreespeedFactor" value="null" />
+
+			<!-- Speed for a teleported mode. Travel time = (<beeline distance> * beelineDistanceFactor) / teleportedModeSpeed. Insert a line like this for every such mode. -->
+			<param name="teleportedModeSpeed" value="0.8333333333333333" />
+		</parameterset>
+	</module>
+
+	<module name="planCalcScore">
+
+		<param name="BrainExpBeta" value="1.0" />
+
+		<!--default -->
+		<parameterset type="scoringParameters">
+
+			<param name="lateArrival" value="-6.42" />
+			<param name="earlyDeparture" value="-0.0" />
+			<param name="marginalUtilityOfMoney" value="1.0" />
+			<param name="performing" value="+6" />
+			<param name="subpopulation" value="default" />
+			<param name="waiting" value="-0.0" />
+	    	<param name="waitingPt" value="-2.14" />
+			<param name="utilityOfLineSwitch" value="-1" />
+
+			<parameterset type="modeParams">
+				<param name="mode" value="car"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="0.0" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-6.0" />
+				<param name="monetaryDistanceRate" value="-0.0005" />
+			</parameterset>
+
+			<parameterset type="modeParams">
+				<param name="mode" value="pt"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="0.0" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-20.0" />
+				<param name="monetaryDistanceRate" value="-0.000" />
+			</parameterset>
+
+			<parameterset type="modeParams">
+				<param name="mode" value="cycle"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="-0.00" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
+				<param name="monetaryDistanceRate" value="-0.0000" />
+			</parameterset>
+
+		     <parameterset type="modeParams">
+				<param name="mode" value="access_walk"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="-0.0" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
+				<param name="monetaryDistanceRate" value="0.0" />
+			</parameterset>
+
+		      <parameterset type="modeParams">
+				<param name="mode" value="egress_walk"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="-0.0" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
+				<param name="monetaryDistanceRate" value="0.0" />
+			</parameterset>
+
+      		<parameterset type="modeParams">
+				<param name="mode" value="walk"/>
+				<param name="constant" value="0.0" />
+				<param name="marginalUtilityOfDistance_util_m" value="-0.0" />
+				<param name="marginalUtilityOfTraveling_util_hr" value="-12" />
+				<param name="monetaryDistanceRate" value="0.0" />
+      		</parameterset>
+
+			<parameterset type="activityParams">
+			    <param name="activityType"    value="home" />
+			    <param name="priority"        value="1" />
+			    <param name="typicalDuration" value="12:00:00" />
+			    <param name="minimalDuration" value="08:00:00" />
+			</parameterset>
+
+			<parameterset type="activityParams">
+			    <param name="activityType"    value="work" />
+			    <param name="priority"        value="1" />
+			    <param name="typicalDuration" value="09:00:00" />
+			    <param name="minimalDuration" value="08:00:00" />
+			    <param name="openingTime"     value="07:00:00" />
+				<param name="closingTime"     value="18:00:00" />
+			</parameterset>
+
+			<parameterset type="activityParams">
+			    <param name="activityType"    value="recreation" />
+			    <param name="priority"        value="1" />
+			    <param name="typicalDuration" value="02:00:00" />
+			    <param name="minimalDuration" value="02:00:00" />
+			    <param name="openingTime"     value="09:00:00" />
+				<param name="closingTime"     value="19:00:00" />
+			</parameterset>
+		</parameterset>
+	</module>
+
+	<module name="strategy">
+
+		<param name="maxAgentPlanMemorySize" value="5" />
+
+		<parameterset type="strategysettings">
+			<param name="strategyName" value="TimeAllocationMutator"/>
+			<param name="subpopulation" value="default"/>
+			<param name="weight" value="0.2"/>
+		</parameterset>
+
+		<parameterset type="strategysettings">
+			<param name="strategyName" value="ChangeSingleTripMode"/>
+			<param name="subpopulation" value="default"/>
+			<param name="weight" value="0.2"/>
+		</parameterset>
+
+		<parameterset type="strategysettings">
+			<param name="strategyName" value="ChangeExpBeta"/>
+			<param name="subpopulation" value="default"/>
+			<param name="weight" value="0.6"/>
+		</parameterset>
+
+	 </module>
+
+	<!-- <module name="transitRouter" > -->
+		<!-- additional time the router allocates when a line switch happens, Can be interpreted as a 'savity' time that agents need to savely transfer from one line to another -->
+		<!-- <param name="additionalTransferTime" value="1.0" /> -->
+
+		<!-- step size to increase searchRadius if no stops are found -->
+		<!-- <param name="extensionRadius" value="100.0" /> -->
+
+		<!-- maximum beeline distance between stops that agents could transfer to by walking -->
+		<!-- <param name="maxBeelineWalkConnectionDistance" value="500.0" /> -->
+
+		<!-- the radius in which stop locations are searched, given a start or target coordinate -->
+		<!-- <param name="searchRadius" value="1000.0" /> -->
+
+	<!-- </module> -->
+</config>

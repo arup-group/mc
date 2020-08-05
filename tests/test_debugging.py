@@ -19,6 +19,12 @@ def test_path_good():
     assert bad_path('test_path', 'bad.csv')
 
 
+def test_multimodal_validate():
+    test_config = BaseConfig(path=env.test_mm_path)
+    logs = test_config.log_multimodal_module()
+    assert len(logs) == 3
+
+
 def test_path_validate():
     test_config = BaseConfig(path=env.test_xml_path)
     logs = test_config.log_bad_paths()

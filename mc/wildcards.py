@@ -1,14 +1,15 @@
 import ast
 import logging
+from pathlib import Path
 import os
 
 def update_config_wildcards(input_file: str, output_file: str, overrides):
-    '''
+    """
     Overwrite wildcards in a passed input_file and output to output_file
     :param input_file: str path of input
     :param output_file: str path of output
     :param overrides: str representation of dictioary mapping wildcard to replacing values
-    '''
+    """
     logging.info("Writing overrides: {} to file: {}".format(overrides, input_file))
     override_map = construct_override_map_from_list(overrides)
 
