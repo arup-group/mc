@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE objectAttributes SYSTEM "http://matsim.org/files/dtd/objectattributes_v1.dtd">
+
+<objectAttributes>
+	<object id="chris">
+		<attribute name="subpopulation" class="java.lang.String">high income</attribute>
+	</object>
+	<object id="fatema">
+		<attribute name="subpopulation" class="java.lang.String">medium income</attribute>
+	</object>
+	<object id="gerry">
+		<attribute name="subpopulation" class="java.lang.String">medium income</attribute>
+	</object>
+	<object id="fred">
+		<attribute name="subpopulation" class="java.lang.String">low income</attribute>
+	</object>
+	<object id="nick">
+		<attribute name="subpopulation" class="java.lang.String">high income</attribute>
+	</object>
+
+	<object id="alex">
+		<attribute name="subpopulation" class="java.lang.String">low income</attribute>
+	</object>
+	<object id="rory">
+		<attribute name="subpopulation" class="java.lang.String">medium income</attribute>
+	</object>
+	<object id="johan">
+		<attribute name="subpopulation" class="java.lang.String">medium income</attribute>
+	</object>
+	<object id="kasia">
+		<attribute name="subpopulation" class="java.lang.String">low income</attribute>
+	</object>
+	<object id="delivery">
+		<attribute name="subpopulation" class="java.lang.String">freight</attribute>
+	</object>
+	</objectAttributes>
