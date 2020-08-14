@@ -6,14 +6,34 @@ VALID_MAP = {
 
     "modules": {
 
+        "swissRailRaptor": {
+		    "params": {
+		        "scoringParameters": "Default",
+		        "transferPenaltyBaseCost": "0.0",
+		        "transferPenaltyCostPerTravelTimeHour": "0.0",
+		        "transferPenaltyMaxCost": "Infinity",
+		        "transferPenaltyMinCost": "-Infinity",
+		        "useIntermodalAccessEgress": "false",
+		        "useModeMappingForPassengers": "false",
+		        "useRangeQuery": "false",
+            }
+        },
+
+        "SBBPt": {
+            "params": {
+                "createLinkEventsInterval": "0",
+                "deterministicServiceModes": "",
+            }
+        },
+
         "global": {
-                "params": {
-                    "coordinateSystem": "EPSG:27700",
-                    "numberOfThreads": "32",
-                    "randomSeed": "4711",
-                    "insistingOnDeprecatedConfigVersion": "true",
-                }
-            },
+            "params": {
+                "coordinateSystem": "EPSG:27700",
+                "numberOfThreads": "32",
+                "randomSeed": "4711",
+                "insistingOnDeprecatedConfigVersion": "true",
+            }
+        },
 
         "network": {
             "params": {
