@@ -26,7 +26,6 @@ Then (for a mac):
 ```
 pip3 install -e .
 cd mc
-pip3 install -r requirements.txt
 pytest
 ```
 
