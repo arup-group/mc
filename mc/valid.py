@@ -16,6 +16,14 @@ VALID_MAP = {
 		        "useIntermodalAccessEgress": "false",
 		        "useModeMappingForPassengers": "false",
 		        "useRangeQuery": "false",
+            },
+            "parametersets": {
+                "intermodalAccessEgress": {
+                    "params": {
+                        "mode": "walk",
+                        "radius": "1000"
+                    }
+                }
             }
         },
 

@@ -734,7 +734,7 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
         key = paramset_type + ":" + name
         return paramset_type, key
 
-    if paramset_type in ["modeParams", "teleportedModeParameters"]:
+    if paramset_type in ["modeParams", "teleportedModeParameters", "intermodalAccessEgress"]:
         name, = [p.attrib['value'] for p in elem.xpath("./param[@name='mode']")]
         key = paramset_type + ":" + name
         return paramset_type, key
