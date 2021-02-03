@@ -23,14 +23,20 @@ VALID_MAP = {
                         "mode": "walk",
                         "radius": "1000"
                     }
+                },
+                "modeMapping": {
+                    "params": {
+                        "routeMode": "bus",
+                        "passengerMode": "bus"
+                    }
                 }
             }
         },
 
         "SBBPt": {
             "params": {
-                "createLinkEventsInterval": "0",
-                "deterministicServiceModes": "",
+                "createLinkEventsInterval": "1",
+                "deterministicServiceModes": "train",
             }
         },
 
@@ -67,6 +73,7 @@ VALID_MAP = {
 
         "transit": {
             "params": {
+                "insistingOnUsingDeprecatedPersonAttributeFile":"true",
                 "useTransit": "true",
                 "transitScheduleFile": "./output_transitSchedule.xml.gz",
                 "vehiclesFile": "./output_transitVehicles.xml",

@@ -55,6 +55,28 @@
 		<param name = "numberOfThreads" value="1"/>
 	</module>
 
+
+	<module name="swissRailRaptor">
+		<param name="useModeMappingForPassengers" value="true" />
+		<parameterset type="intermodalAccessEgress">
+			<param name="mode" value="walk" />
+			<param name="maxRadius" value="1000" />
+		  </parameterset>
+		<parameterset type="modeMapping">
+		  <param name="routeMode" value="bus" />
+		  <param name="passengerMode" value="bus" />
+		</parameterset>
+		<parameterset type="modeMapping">
+		  <param name="routeMode" value="train" />
+		  <param name="passengerMode" value="train" />
+		</parameterset>
+	</module>
+
+	<module name="SBBPt" >
+		<param name="deterministicServiceModes" value="train" />
+		<param name="createLinkEventsInterval" value="1" />
+	</module>
+
 	<module name="qsim">
 
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
