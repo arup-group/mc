@@ -26,7 +26,7 @@ class BaseValidate:
         logger.extend(self.log_missing_modes())
 
         if verbose and len(logger):
-            print('\n---VALIDATION FAILURE---')
+            print('\n---------WARNING--------')
             for log in logger:
                 print(log)
             print('----------DONE----------')
