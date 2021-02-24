@@ -4,7 +4,7 @@ Class inherited by BaseConfig for carrying out debugging.
 from typing import Tuple
 
 
-class BaseValidate:
+class BaseDebug:
     """
     Debugging Base class.
     """
@@ -12,7 +12,7 @@ class BaseValidate:
     def get(self, key, default):
         raise NotImplementedError
 
-    def validate(self, verbose=True) -> Tuple[bool, list]:
+    def debug(self, verbose=True) -> Tuple[bool, list]:
         """
         Build a list of debug messages.
         :param verbose: bool

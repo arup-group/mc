@@ -47,7 +47,7 @@ def convert(
     if show:
         config.print()
     if debugger:
-        config.validate()
+        config.debug()
     careful_write(config, write_path)
 
 
@@ -114,7 +114,7 @@ def build_config(
     if show:
         config.print()
     if debugger:
-        config.validate()
+        config.debug()
     careful_write(config, write_path)
 
 
@@ -148,7 +148,7 @@ def validate(
     config = Config(path=Path(read_path))
     if show:
         config.print()
-    config.validate()
+    config.debug()
 
 
 @cli.command(name='print')

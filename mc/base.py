@@ -18,7 +18,7 @@ from lxml.etree import Element
 from pathlib import Path
 import json
 from typing import Tuple
-from mc.validating import BaseValidate
+from mc.debug import BaseDebug
 from mc.valid import VALID_MAP
 
 
@@ -371,7 +371,7 @@ class Base:
         return diffs
 
 
-class BaseConfig(Base, BaseValidate):
+class BaseConfig(Base, BaseDebug):
     """
     Base Configuration class.
     """
