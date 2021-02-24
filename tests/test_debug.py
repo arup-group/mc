@@ -9,7 +9,7 @@ import env
 
 env.set_module()
 from mc.base import BaseConfig
-from mc.validating import *
+from mc.debug import *
 
 
 def test_path_good():
