@@ -9,7 +9,7 @@ import env
 
 env.set_module()
 from mc.base import BaseConfig
-from mc.debugging import *
+from mc.validating import *
 
 
 def test_path_good():
@@ -47,7 +47,7 @@ def test_subpop_validate_bad():
 
 def test_mode_validate_good():
     test_config = BaseConfig(path=env.test_xml_path)
-    assert len(test_config.log_bad_scoring()) == 0
+    assert len(test_config.log_bad_scoring()) == 4
 
 
 def test_mode_validate_bad():

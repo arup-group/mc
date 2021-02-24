@@ -4,7 +4,7 @@ Class inherited by BaseConfig for carrying out debugging.
 from typing import Tuple
 
 
-class BaseDebug:
+class BaseValidate:
     """
     Debugging Base class.
     """
@@ -12,7 +12,7 @@ class BaseDebug:
     def get(self, key, default):
         raise NotImplementedError
 
-    def debug(self, verbose=True) -> Tuple[bool, list]:
+    def validate(self, verbose=True) -> Tuple[bool, list]:
         """
         Build a list of debug messages.
         :param verbose: bool
@@ -218,6 +218,10 @@ class BaseDebug:
         #     all_modes.update(self['qsim']['mainMode'].split(','))
 
         # look for modes in subtourModeChoice module
+        if 'SubtourModeChoice' in self:
+            logger.append(
+                "BAD MODULE SPELLING: 'SubtourModeChoice' => 'subtourModeChoice'"
+            )
         if 'subtourModeChoice' not in self:
             logger.append(
                 "MISSING MODULE: 'subtourModeChoice' module not found"
@@ -229,20 +233,26 @@ class BaseDebug:
         else:
             all_modes.update(self['subtourModeChoice']['modes'].split(','))
 
-        # look for modes in planscalcroute module
-        if 'planscalcroute' not in self:
-            logger.append(
-                "MISSING MODULE: 'planscalcroute' module not found - need 'access_walk' config"
-            )
+        if 'swissRailRaptor' in self:
+            all_modes.add('pt')
+            for name, paramset in self['swissRailRaptor'].parametersets.items():
+                if 'passengerMode' in paramset.params:
+                    all_modes.add(paramset['passengerMode'])
 
-            # Additionally check that access walk has been set up in plancalcroute
-            if 'teleportedModeParameters:access_walk' not in list(
-                    self['planscalcroute'].parametersets
-            ):
-                logger.append(f"MISSING MODE: access_walk mode not found in: planscalcroute")
+        # # look for modes in planscalcroute module
+        # if 'planscalcroute' not in self:
+        #     logger.append(
+        #         "MISSING MODULE: 'planscalcroute' module not found - need 'access_walk' config"
+        #     )
 
-        elif 'networkModes' in list(self['planscalcroute'].params):
-            all_modes.update(self['planscalcroute']['networkModes'].split(','))
+        #     # Additionally check that access walk has been set up in plancalcroute
+        #     if 'teleportedModeParameters:access_walk' not in list(
+        #             self['planscalcroute'].parametersets
+        #     ):
+        #         logger.append(f"MISSING MODE: access_walk mode not found in: planscalcroute")
+
+        # elif 'networkModes' in list(self['planscalcroute'].params):
+        #     all_modes.update(self['planscalcroute']['networkModes'].split(','))
 
         all_modes.update(['access_walk'])
 
@@ -321,7 +331,7 @@ def calc_cost(logger, dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode)
         'car': 10
     }
     if mode not in list(speed_map):
-        logger.append(f"MISSING COST: {mode} mode speed unknown, approximating as car speed: {speed_map['car']}")
+        logger.append(f"WARNING: {mode} mode speed unknown, approximating as car speed: {speed_map['car']}")
         mode = 'car'  # default to car speed
     dist_cost = (float(dist_cost_rate) * float(mum)) + float(dist_util_rate)
     time_cost = float(hour_util_rate) / (speed_map[mode] * 3600)

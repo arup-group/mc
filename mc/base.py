@@ -18,7 +18,7 @@ from lxml.etree import Element
 from pathlib import Path
 import json
 from typing import Tuple
-from mc.debugging import BaseDebug
+from mc.validating import BaseValidate
 from mc.valid import VALID_MAP
 
 
@@ -371,7 +371,7 @@ class Base:
         return diffs
 
 
-class BaseConfig(Base, BaseDebug):
+class BaseConfig(Base, BaseValidate):
     """
     Base Configuration class.
     """
@@ -741,6 +741,11 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
 
     if paramset_type in ["scoringParameters", "strategysettings"]:
         name, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+        key = paramset_type + ":" + name
+        return paramset_type, key
+
+    if paramset_type in ["modeMapping"]:
+        name, = [p.attrib['value'] for p in elem.xpath("./param[@name='passengerMode']")]
         key = paramset_type + ":" + name
         return paramset_type, key
 

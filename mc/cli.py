@@ -47,7 +47,7 @@ def convert(
     if show:
         config.print()
     if debugger:
-        config.debug()
+        config.validate()
     careful_write(config, write_path)
 
 
@@ -114,7 +114,7 @@ def build_config(
     if show:
         config.print()
     if debugger:
-        config.debug()
+        config.validate()
     careful_write(config, write_path)
 
 
@@ -138,7 +138,7 @@ def difference(
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.option('--show', '-p', is_flag=True, default=False, show_default=True)
-def debug(
+def validate(
         read_path: Path,
         show: bool
 ) -> None:
@@ -148,7 +148,7 @@ def debug(
     config = Config(path=Path(read_path))
     if show:
         config.print()
-    config.debug()
+    config.validate()
 
 
 @cli.command(name='print')
