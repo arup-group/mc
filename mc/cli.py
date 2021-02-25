@@ -6,6 +6,7 @@ from typing import Tuple
 import click
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.wildcards import update_config_wildcards
+from mc.bitsim import step_config
 
 
 @click.group()
@@ -13,6 +14,20 @@ def cli():
     """
     Command line interface for MC.
     """
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.argument('write_path', type=click.Path(writable=True))
+@click.argument('overrides', nargs=-1)
+def step(
+        read_path: Path,
+        write_path: Path,
+        overrides
+) -> None:
+    """
+    Read an existing config, fill in the target variables and write out.
+    """
+    step_config(read_path, write_path, overrides)
+
 
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
@@ -24,7 +39,7 @@ def fill(
         overrides
 ) -> None:
     """
-    Read an existing config, fill in the target variables and write out
+    Read an existing wildcarded config, fill in the target variables and write out.
     """
     update_config_wildcards(read_path, write_path, overrides)
 

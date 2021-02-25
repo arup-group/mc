@@ -330,6 +330,27 @@
     <parameterset type="strategysettings">
       <param name="disableAfterIteration" value="-1"/>
       <param name="executionPath" value="null"/>
+      <param name="strategyName" value="ChangeSingleTripMode"/>
+      <param name="subpopulation" value="unknown"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="disableAfterIteration" value="-1"/>
+      <param name="executionPath" value="null"/>
+      <param name="strategyName" value="ReRoute"/>
+      <param name="subpopulation" value="unknown"/>
+      <param name="weight" value="0.2"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="disableAfterIteration" value="-1"/>
+      <param name="executionPath" value="null"/>
+      <param name="strategyName" value="TimeAllocationMutator_ReRoute"/>
+      <param name="subpopulation" value="unknown"/>
+      <param name="weight" value="0.1"/>
+    </parameterset>
+    <parameterset type="strategysettings">
+      <param name="disableAfterIteration" value="-1"/>
+      <param name="executionPath" value="null"/>
       <param name="strategyName" value="SelectExpBeta"/>
       <param name="subpopulation" value="unknown"/>
       <param name="weight" value="0.6"/>
