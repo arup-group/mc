@@ -413,7 +413,34 @@
         "planSelectorForRemoval": "WorstPlanSelector"
       },
       "parametersets": {
-        "strategysettings:unknown": {
+        "strategysettings:unknown:ChangeSingleTripMode": {
+          "params": {
+            "disableAfterIteration": "-1",
+            "executionPath": "null",
+            "strategyName": "ChangeSingleTripMode",
+            "subpopulation": "unknown",
+            "weight": "0.1"
+          }
+        },
+        "strategysettings:unknown:ReRoute": {
+          "params": {
+            "disableAfterIteration": "-1",
+            "executionPath": "null",
+            "strategyName": "ReRoute",
+            "subpopulation": "unknown",
+            "weight": "0.2"
+          }
+        },
+        "strategysettings:unknown:TimeAllocationMutator_ReRoute": {
+          "params": {
+            "disableAfterIteration": "-1",
+            "executionPath": "null",
+            "strategyName": "TimeAllocationMutator_ReRoute",
+            "subpopulation": "unknown",
+            "weight": "0.1"
+          }
+        },
+        "strategysettings:unknown:SelectExpBeta": {
           "params": {
             "disableAfterIteration": "-1",
             "executionPath": "null",

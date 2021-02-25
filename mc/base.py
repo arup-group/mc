@@ -416,6 +416,33 @@ class BaseConfig(Base, BaseDebug):
 
         raise KeyError(f"key:'{key}' not found in modules and not valid")
 
+    def find(self, address: str) -> list:
+
+        list_address = address.strip("/").split("/")
+        
+        if len(list_address) == 1:  # reached end of address
+            address = list_address[0]
+            if address in self.modules:
+                return [self.modules[address]]
+            # if address == "*":
+            #     return list(self.modules.values())
+
+        if list_address[0] in self.modules:
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            search = [self.modules[found].find(address)]
+            return [f for g in search for f in g]  # flatten
+
+        if list_address[0] == "*":
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            search = [m.find(address) for m in self.modules.values()]
+            return [f for g in search for f in g]  # flatten
+
+        address = "/".join(list_address)
+        search = [m.find(address) for m in self.modules.values()]
+        return [f for g in search for f in g]  # flatten
+
     def __delitem__(self, key):
         del self.modules[key]
 
@@ -533,6 +560,53 @@ class Module(Base):
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
+    def find(self, address: str) -> list:
+
+        list_address = address.strip("/").split("/")
+
+        if len(list_address) == 1:  # reached end of address
+            address = list_address[0]
+            if address in self.params:
+                return [self.params[address]]
+            if address in self.parametersets:
+                return [self.parametersets[address]]
+            if address == "*":
+                search = [ps.find(address) for ps in self.parametersets.values()]
+                return [f for g in search for f in g]  # flatten
+            if "*" in address:
+                snaps = []
+                for candidate in self.parametersets:
+                    if specials_snap(candidate, address):
+                        snaps.append(self.parametersets[candidate])
+                return snaps
+
+        if list_address[0] in self.parametersets:  # regular find recurse
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            search = [self.parametersets[found].find(address)]
+            return [f for g in search for f in g]  # flatten
+
+        if list_address[0] == "*":
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            search = [ps.find(address) for ps in self.parametersets.values()]
+            return [f for g in search for f in g]  # flatten
+
+        if "*" in list_address[0]:  # special find recurse
+            snaps= []
+            for candidate in self.parametersets:
+                if specials_snap(candidate, list_address[0]):
+                    snaps.append(self.parametersets[candidate])
+            if snaps:
+                found = list_address.pop(0)
+                address = "/".join(list_address)
+                search = [ps.find(address) for ps in snaps]
+                return [f for g in search for f in g]  # flatten
+
+        address = "/".join(list_address)  # recurse through everything
+        search = [ps.find(address) for ps in self.parametersets.values()]
+        return [f for g in search for f in g]  # flatten
+
     def get(self, key, default=None):
         if key in self.params:
             return self.params[key].value
@@ -619,6 +693,60 @@ class ParamSet(Base):
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
+    def find(self, address: str) -> list:
+
+        list_address = address.strip("/").split("/")
+
+        if len(list_address) == 1:  # end recursion as address is all used
+            if address in self.params:
+                return [self.params[address]]
+            if address in self.parametersets:
+                return [self.parametersets[address]]
+            if address == "*":
+                search = [ps.find(address) for ps in self.parametersets.values()]
+                flatten = [f for g in search for f in g]  # flatten
+                return flatten + list(self.params.values())
+            if "*" in address:
+                snaps = []
+                for candidate in self.parametersets:
+                    if specials_snap(candidate, address):
+                        snaps.append(self.parametersets[candidate])
+                return snaps
+
+        if list_address[0] in self.parametersets:
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            return self.parametersets[found].find(address)
+
+        # not going to look through params as this isn't end of address
+
+        if list_address[0] == "*":
+            found = list_address.pop(0)
+            address = "/".join(list_address)
+            search = [ps.find(address) for ps in self.parametersets.values()]
+            return [f for g in search for f in g]  # flatten
+
+        if "*" in list_address[0]:  # special find recurse
+            snaps= []
+            for candidate in self.parametersets:
+                if specials_snap(candidate, list_address[0]):
+                    snaps.append(self.parametersets[candidate])
+            if snaps:
+                found = list_address.pop(0)
+                address = "/".join(list_address)
+                search = [m.find(address) for m in snaps]
+                return [f for g in search for f in g]  # flatten
+
+        address = "/".join(list_address)  # recurse through everything
+
+        # search = [m.find(address) for m in self.params.values()]
+        # flatten = [f for g in search for f in g]  # flatten
+        # if flatten:
+        #     return flatten
+
+        search = [m.find(address) for m in self.parametersets.values()]
+        return [f for g in search for f in g]  # flatten
+        
     def __setitem__(self, key, value):
 
         if not isinstance(value, (str, ParamSet, Param)):
@@ -683,6 +811,19 @@ class Param(Base):
         return True
 
 
+def specials_snap(a, b, divider=":", ignore="*"):
+    """
+    Special function to check for key matches with consideration of
+    special character '*' that represents 'all'.
+    """
+    list_a = a.split(divider)
+    list_b = b.split(divider)
+    for a, b in zip(list_a, list_b):
+        if not (a == ignore or b == ignore or a == b):
+            return False
+    return True
+
+
 def path_exists(path: Path) -> bool:
     """
     Check if path exists.
@@ -739,9 +880,15 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
         key = paramset_type + ":" + name
         return paramset_type, key
 
-    if paramset_type in ["scoringParameters", "strategysettings"]:
+    if paramset_type in ["scoringParameters"]:
         name, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
         key = paramset_type + ":" + name
+        return paramset_type, key
+
+    if paramset_type in ["strategysettings"]:
+        subpop, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+        strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
+        key = paramset_type + ":" + subpop + ":" + strategy
         return paramset_type, key
 
     if paramset_type in ["modeMapping"]:
