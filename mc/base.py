@@ -417,6 +417,16 @@ class BaseConfig(Base, BaseDebug):
         raise KeyError(f"key:'{key}' not found in modules and not valid")
 
     def find(self, address: str) -> list:
+        """
+        Given a string address (refer to the README) recursively search for 
+        list of matching config elements.
+
+        Args:
+            address (str): string formatted address
+
+        Returns:
+            list: found config elements
+        """
 
         list_address = address.strip("/").split("/")
         
@@ -561,6 +571,16 @@ class Module(Base):
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
     def find(self, address: str) -> list:
+        """
+        Given a string address (refer to the README) recursively search for 
+        list of matching config elements.
+
+        Args:
+            address (str): string formatted address
+
+        Returns:
+            list: found config elements
+        """
 
         list_address = address.strip("/").split("/")
 
@@ -694,6 +714,16 @@ class ParamSet(Base):
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
 
     def find(self, address: str) -> list:
+        """
+        Given a string address (refer to the README) recursively search for 
+        list of matching config elements.
+
+        Args:
+            address (str): string formatted address
+
+        Returns:
+            list: found config elements
+        """
 
         list_address = address.strip("/").split("/")
 
@@ -738,11 +768,6 @@ class ParamSet(Base):
                 return [f for g in search for f in g]  # flatten
 
         address = "/".join(list_address)  # recurse through everything
-
-        # search = [m.find(address) for m in self.params.values()]
-        # flatten = [f for g in search for f in g]  # flatten
-        # if flatten:
-        #     return flatten
 
         search = [m.find(address) for m in self.parametersets.values()]
         return [f for g in search for f in g]  # flatten
@@ -794,6 +819,9 @@ class Param(Base):
         self.name = name
         self.value = value
         self.data = {'name': self.name, 'value': self.value}
+    
+    def __str__(self) -> str:
+        return super().__str__()
 
     def __getitem__(self, key):
         return self.data[key]
@@ -815,6 +843,7 @@ def specials_snap(a, b, divider=":", ignore="*"):
     """
     Special function to check for key matches with consideration of
     special character '*' that represents 'all'.
+    Note that snaps will only be checked as far as the shorter string.
     """
     list_a = a.split(divider)
     list_b = b.split(divider)
