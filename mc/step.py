@@ -75,7 +75,7 @@ def set_input_paths(config: BaseConfig, overrides: dict) -> None:
             MATSim is being used.
             """
             if param_name[-4:] == 'File':
-                if param.value == 'null' or "":
+                if param.value in ['null', "", "true", "false"]:
                     continue
 
                 old_path = Path(param.value)
