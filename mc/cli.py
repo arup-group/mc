@@ -6,7 +6,7 @@ from typing import Tuple
 import click
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import fill_config
-from mc.bitsim import step_config
+from mc.step import step_config
 
 
 @click.group()
@@ -182,6 +182,7 @@ def print_config(
 
 @cli.command(name='find')
 @click.argument('read_path', type=click.Path(exists=True))
+@click.argument('address', type=str)
 def find(
         read_path: Path,
         address: str
