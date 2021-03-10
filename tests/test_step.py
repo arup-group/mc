@@ -4,7 +4,7 @@ from copy import deepcopy
 import os
 
 from mc.base import BaseConfig
-from mc import bitsim
+from mc import step
 
 
 @pytest.fixture()
@@ -14,12 +14,12 @@ def config():
 
 
 def test_set_write_path(config):
-    bitsim.set_write_path(config, {'outputDirectory': 'testing'})
+    step.set_write_path(config, {'outputDirectory': 'testing'})
     assert config['controler']['outputDirectory'] == 'testing'
 
 
 def test_set_input_paths(config):
-    bitsim.set_input_paths(config, {'matsim_source': 'test/ing'})
+    step.set_input_paths(config, {'matsim_source': 'test/ing'})
     assert config['network']['inputNetworkFile'] == 'test/ing/network.xml'
     assert config['plans']['inputPlansFile'] == 'test/ing/population.xml.gz'
     assert config['plans']['inputPersonAttributesFile'] == 'test/ing/population_attributes.xml.gz'
@@ -29,12 +29,12 @@ def test_set_input_paths(config):
 
 
 def test_set_step(config):
-    bitsim.set_last_iteration(config, {'step': '999'})
+    step.set_last_iteration(config, {'step': '999'})
     assert config['controler']['lastIteration'] == '999'
 
 
 def test_find_and_set_param(config):
-    bitsim.find_and_set_overrides(
+    step.find_and_set_overrides(
         config,
         {"modeParams:car/constant": "-1.0"}
         )
@@ -44,7 +44,7 @@ def test_find_and_set_param(config):
 
 
 def test_find_and_set_params(config):
-    bitsim.find_and_set_overrides(
+    step.find_and_set_overrides(
         config,
         {
             "modeParams:car/constant": "-1.0",
@@ -57,7 +57,7 @@ def test_find_and_set_params(config):
 
 def test_find_and_set_bad_param(config):
     cnfg = deepcopy(config)
-    bitsim.find_and_set_overrides(
+    step.find_and_set_overrides(
         config,
         {"modeParams:*/horseback": "-1.0"}
         )
@@ -65,15 +65,15 @@ def test_find_and_set_bad_param(config):
 
 
 def test_construct_overrides_map_from_tuple():
-    assert bitsim.construct_override_map_from_tuple(
+    assert step.construct_override_map_from_tuple(
         ('a','b','c','d')
     ) == {'a':'b', 'c':'d'}
 
 
 def test_step_config(tmp_path):
-    in_file = Path("tests/test_data/test_config.xml")
-    out_file = Path(tmp_path) / "test_config.xml"
-    bitsim.step_config(
+    in_file = "tests/test_data/test_config.xml"
+    out_file = os.path.join(tmp_path, "test_config.xml")
+    step.step_config(
         input_file=in_file,
         output_file=out_file,
         overrides=(

@@ -13,6 +13,11 @@ def step_config(input_file: Path, output_file: Path, overrides: tuple) -> None:
         output_file (Path): Output config path ("current matsim")
         overrides (tuple): Tuple representation of overrides
     """
+    if isinstance(input_file, str):
+        input_file = Path(input_file)
+    if isinstance(output_file, str):
+        output_file = Path(output_file)
+
     logging.info(f"Loading config from: {input_file}")
     config = BaseConfig(input_file)
 
