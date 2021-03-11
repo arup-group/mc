@@ -57,7 +57,7 @@ Commands:
   gen       Generate a template config: empty|default|test.
   print     Print a config to terminal.
   step      Read an existing config, fill in the target variables and write...
-  debug  Debug a config.
+  debug     Debug a config.
 ```
 
 ## Programming Interface
