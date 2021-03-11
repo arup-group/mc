@@ -9,6 +9,7 @@ key and value assurance.
 Got a `config.xml` that you love? Let me know and get it added to the CLI generator so that it's always available.
 
 ## Contents
+
 * [Installation](#markdown-header-installation)
 * [Usage](#markdown-header-usage)
 * [Command Line](#markdown-header-command-line)
@@ -18,6 +19,7 @@ Got a `config.xml` that you love? Let me know and get it added to the CLI genera
 * [Todo](#markdown-header-todo)
 
 ## Installation
+
 Clone or download the repository from the [downloads section](https://bitbucket.org/arupdigital/MC/downloads/). Once available locally, navigate to the folder and run:
 
 
@@ -30,10 +32,12 @@ pytest
 ```
 
 ## Usage
+
 - Command Line Interface
 - Python Package
 
 ## Command Line
+
 The CLI commands are pretty explorable via help, start with `mc --help`:
 
 ```
@@ -45,16 +49,19 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  build    Build a config with defined sub-pops, modes & activities.
-  convert  Read an existing config and write as xml or json.
-  debug    Debug a config.
-  diff     Simple diff two configs.
-  gen      Generate a template config: |empty|default|test|.
-  print    Print a config to terminal.
-  fill     Read an existing config, fill in the override wildcard variables, and write out the updated config
+  build     Build a config with defined sub-pops, modes & activities.
+  convert   Read an existing config and write as xml or json.
+  diff      Simple diff two configs.
+  fill      Read an existing wildcarded config, fill in the target variables...
+  find      Find and print config components to terminal.
+  gen       Generate a template config: empty|default|test.
+  print     Print a config to terminal.
+  step      Read an existing config, fill in the target variables and write...
+  debug  Debug a config.
 ```
 
 ## Programming Interface
+
 ```
 from mc import build
 ```
@@ -149,9 +156,74 @@ Nested objects can be explicitly accessed via the parent attributes, ie `.module
 `.parametersets.values()`, `params.values()`. Valid keys (ignoring suffixes) for nestable
 objects via `.valid_keys`.
 
+## Find
+
+Both the CLI and API support string searches for config components using an addressing system:
+
+```
+config['plans']['inputPlansFile'] = 'PATH'
+search = config.find("plans/inputPlansFile")
+for i in search:
+  i.print()
+```
+
+```
+param {'name': 'inputPlansFile', 'value': 'PATH'}
+```
+
+Find is returning a list because it supports partial addresses which result in multiple finds:
+
+```
+search = config.find("modeParams:car/monetaryDistanceRate")
+for i in search:
+  i.print()
+```
+
+```
+param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg subpopulation A
+param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg subpopulation B
+```
+
+Addresses can omit components, for example if we want to look at all `monetaryDistanceRates` for the default subpopulation (ie from `scoringParameters:default`):
+
+```
+search = config.find("scoringParameters:default/monetaryDistanceRate")
+# this is equivalent to "*/scoringParameters:default/*/monetaryDistanceRate"
+for i in search:
+  i.print()
+```
+
+```
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg walk
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg bike
+param {'name': 'monetaryDistanceRate', 'value': '-0.001'}  # eg pt
+param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg car
+```
+
+Or more simply we can get all `monetaryDistanceRates`:
+
+```
+search = config.find("monetaryDistanceRate")
+# this is equivalent to "*/*/*/monetaryDistanceRate"
+# this is equivalnet to "*/scoringParameters:*/modeParams:*/monetaryDistanceRate"
+for i in search:
+  i.print()
+```
+
+```
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg subpop A walk
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg subpop A bike
+param {'name': 'monetaryDistanceRate', 'value': '-0.001'}  # subpop A eg pt
+param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # subpop A eg car
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg subpop B walk
+param {'name': 'monetaryDistanceRate', 'value': '-0.0'}  # eg subpop B bike
+param {'name': 'monetaryDistanceRate', 'value': '-0.001'}  # eg subpop B pt
+param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg subpop B car
+```
+
+In the examples above, you can see that wildcarding with `*` can be used to return 'all' config elements. The `*` operator tells the find method to search all at a given level. As shown above, it is useful for returning all elements within a parameterset or explicitly describing levels to search.
 
 ## Tests
-
 
 Run the tests (from root dir)
 ----
@@ -165,10 +237,11 @@ To generate XML & HTML coverage reports to `reports/coverage`:
 
 
 ## Contact
+
 fred.shone@arup.com
 
-
 ## Further Work
+
 * Add more and better debugging
 * Populate with some more default configurations
 * Add detailed value validation, for example acceptable integer ranges
