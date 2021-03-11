@@ -94,11 +94,11 @@ class BaseDebug:
         :return: dict
         """
         return {
-            'network_path': self['network']['inputNetworkFile'],
-            'plans_path': self['plans']['inputPlansFile'],
-            'attributes_path': self['plans']['inputPersonAttributesFile'],
-            'transit_path': self['transit']['transitScheduleFile'],
-            'transit_vehicles_path': self['transit']['vehiclesFile'],
+            'network_path': self['network'].get('inputNetworkFile', None),
+            'plans_path': self['plans'].get('inputPlansFile', None),
+            'attributes_path': self['plans'].get('inputPersonAttributesFile', None),
+            'transit_path': self['transit'].get('transitScheduleFile', None),
+            'transit_vehicles_path': self['transit'].get('vehiclesFile', None),
         }
 
     def log_bad_subpopulations(self) -> list:
