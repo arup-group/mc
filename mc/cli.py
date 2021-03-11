@@ -155,7 +155,7 @@ def difference(
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.option('--show', '-p', is_flag=True, default=False, show_default=True)
-def validate(
+def debug(
         read_path: Path,
         show: bool
 ) -> None:

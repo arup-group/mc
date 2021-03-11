@@ -34,6 +34,12 @@ def test_path_validate():
     assert logs
 
 
+def test_path_v12_validate():
+    test_config = BaseConfig(path=env.test_v12_xml_path)
+    logs = test_config.log_bad_paths()
+    assert len(logs) == 1
+
+
 def test_subpop_validate_good():
     test_config = BaseConfig(path=env.test_xml_path)
     log = test_config.log_bad_subpopulations()
