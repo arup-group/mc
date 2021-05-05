@@ -116,6 +116,12 @@ def build_config(
     """
     Build a config with defined sub-pops, modes & activities.
     """
+    if isinstance(write_path, str):
+        write_path = Path(write_path)
+    if isinstance(input_dir, str):
+        input_dir = Path(input_dir)
+    if isinstance(output_dir, str):
+        output_dir = Path(output_dir)
     subpops = string_to_tuple(subpops)
     modes = string_to_tuple(modes)
     activities = string_to_tuple(activities)
