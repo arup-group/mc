@@ -35,6 +35,30 @@ def test_step(tmpdir):
     assert os.path.isfile(temp_xml)
 
 
+def test_autostep(tmpdir):
+    runner = CliRunner()
+    temp_xml = os.path.join(tmpdir, "0", "test.xml")
+    result = runner.invoke(
+        cli.cli,
+            [
+            "autostep",
+            str(tmpdir),
+            str(env.test_v12_xml_path),
+            "10",
+            "100",
+            "10",
+            temp_xml,
+            "a", "a",
+            "b", "b",
+            "c", "c"
+            ]
+        )
+    if result.exception:
+        traceback.print_exception(*result.exc_info)
+    assert result.exit_code == 0
+    assert os.path.isfile(temp_xml)
+
+
 def test_fill(tmpdir):
     runner = CliRunner()
     temp_xml = os.path.join(tmpdir, "test.xml")
