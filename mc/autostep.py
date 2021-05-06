@@ -15,15 +15,15 @@ DEFAULT_FRACTION_OF_ITERATIONS_TO_DISABLE_INNOVATION = 0.8
 def autostep_config(
     sim_root: Path,
     seed_matsim_config_path: Path,
-    index: str,
-    iterations: str,
+    start_index: str,
+    total_iterations: str,
     step: str,
     biteration_matsim_config_path: str,
     overrides: tuple
     ) -> None:
     """
     Step a config for bitsim based on arguments and an overrides map.
-    Note that index will have already been incremented by a step.
+    Note that start_index will have already been incremented by a step.
     Note that MATSim configs use paths relative to config location.
     """
 
@@ -34,10 +34,10 @@ def autostep_config(
         seed_matsim_config_path = Path(seed_matsim_config_path)
     if not isinstance(biteration_matsim_config_path, Path):
         biteration_matsim_config_path = Path(biteration_matsim_config_path)
-    if not isinstance(index, int):
-        index = int(index)
-    if not isinstance(iterations, int):
-        iterations = int(iterations)
+    if not isinstance(start_index, int):
+        start_index = int(start_index)
+    if not isinstance(total_iterations, int):
+        total_iterations = int(total_iterations)
     if not isinstance(step, int):
         step = int(step)
 
@@ -47,11 +47,11 @@ def autostep_config(
     config = BaseConfig(seed_matsim_config_path)
     set_default_behaviours(config)
 
-    first_iteration = index - step
-    last_iteration = index
+    first_iteration = start_index - step
+    last_iteration = start_index
     new_write_path = sim_root / str(last_iteration)
 
-    set_cooling(config=config, iterations=iterations, index=last_iteration, step=step)
+    set_cooling(config=config, total_iterations=total_iterations, start_index=last_iteration, step=step)
     set_write_path(config=config, new_write_path=new_write_path)
     set_iterations(config=config, first_iteration=first_iteration, last_iteration=last_iteration)
     find_and_set_overrides(config=config, overrides=overrides)
@@ -81,12 +81,12 @@ def construct_override_map_from_tuple(overrides: tuple) -> dict:
     return override_map
 
 
-def set_cooling(config, iterations, index, step):
+def set_cooling(config, total_iterations, start_index, step):
     """
     Set fractionOfIterationsToDisableInnovation to 0 if iterations exceeded.
     Otherwise set for lesser of [0.8*step, 10]
     """
-    if index > iterations:  # assume cooling
+    if start_index > total_iterations:  # assume cooling
         set_innovation(config=config, new_fraction="0")
     else:
         desired_intermediate_cooling_steps = min([(0.2*step), 10])

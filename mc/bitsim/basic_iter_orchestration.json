@@ -1,6 +1,6 @@
 {
   "orchestration": {
-    "iterations": "100",
+    "total_iterations": "100",
     "step": "5",
     "cooling_iterations": "10",
     "sim_root": "/efs/early_stopping_tests/multimodal_town_B",

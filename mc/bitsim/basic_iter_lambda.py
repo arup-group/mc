@@ -12,8 +12,8 @@ def lambda_handler(event, context=None):
     orchestration = event["orchestration"]
 
     # set some defaults as required
-    if not "index" in orchestration:  # default to 0
-        orchestration["index"] = "0"
+    if not "start_index" in orchestration:  # default to 0
+        orchestration["start_index"] = "0"
     if not "seed_matsim_config_path"in orchestration:  # default to looking in root
         orchestration["seed_matsim_config_path"] = orchestration["sim_root"] + "/" + DEFAULT_MATSIM_CONFIG_NAME
     if not "elara_config_path" in orchestration:  # default to looking in root
@@ -23,20 +23,20 @@ def lambda_handler(event, context=None):
 
     # update matsim config path that will be used by MATSim (after being output by mc.autostep)
     orchestration["biteration_matsim_config_path"] = \
-        orchestration["sim_root"] + "/" + str(orchestration["index"]) + "/" + DEFAULT_MATSIM_CONFIG_NAME
+        orchestration["sim_root"] + "/" + str(orchestration["start_index"]) + "/" + DEFAULT_MATSIM_CONFIG_NAME
 
     # update biteration output path
     next_index = str(
-        int(orchestration["index"]) + int(orchestration["step"])
+        int(orchestration["start_index"]) + int(orchestration["step"])
         ) 
     orchestration["biteration_output_path"] = \
         orchestration["sim_root"] + "/" + next_index
     
     # iterate index (note that future jobs with the ASL will now receive the stepped value of 'index'
-    orchestration["index"] = next_index
+    orchestration["start_index"] = next_index
 
     # stopping criteria:
-    if int(orchestration["index"]) > int(orchestration["iterations"]) + int(orchestration["cooling_iterations"]):
+    if int(orchestration["start_index"]) > int(orchestration["total_iterations"]) + int(orchestration["cooling_iterations"]):
         raise Exception("Iteration & cooling limit exceeded")
 
     return orchestration

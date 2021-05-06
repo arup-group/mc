@@ -30,7 +30,7 @@ def test_set_innovation(config):
 
 
 @pytest.mark.parametrize(
-    "iterations,index,step,new_fraction",
+    "total_iterations,start_index,step,new_fraction",
     [
         (100, 10, 10, "0.8"),
         (100, 20, 20, "0.8"),
@@ -39,8 +39,8 @@ def test_set_innovation(config):
         (100, 200, 100, "0"),
     ]
 )
-def test_set_cooling(config, iterations, index, step, new_fraction):
-    autostep.set_cooling(config=config, iterations=iterations, index=index, step=step)
+def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
+    autostep.set_cooling(config=config, total_iterations=total_iterations, start_index=start_index, step=step)
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
 
 
@@ -108,8 +108,8 @@ def test_autostep_config_first_iteration(tmp_path):
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
-        index="10",
-        iterations="100",
+        start_index="10",
+        total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
         overrides=(
@@ -146,8 +146,8 @@ def test_autostep_config(tmp_path):
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
-        index="20",
-        iterations="100",
+        start_index="20",
+        total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
         overrides=(
@@ -179,14 +179,14 @@ def test_step_lambda(tmp_path, fake_lambda_handler):
         "orchestration": {
             "sim_root": str(tmp_path),
             "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
-            "index": "0",
-            "iterations": "100",
+            "start_index": "0",
+            "total_iterations": "100",
             "step": "10",
             }
         }
     orchestration = fake_lambda_handler(event)
 
-    assert(orchestration["index"] == "10")
+    assert(orchestration["start_index"] == "10")
     assert(orchestration["biteration_matsim_config_path"] == os.path.join(tmp_path, "0", "matsim_config.xml"))
 
 
@@ -195,8 +195,8 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
         "orchestration": {
             "sim_root": str(tmp_path),
             "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
-            "index": "0",
-            "iterations": "100",
+            "start_index": "0",
+            "total_iterations": "100",
             "step": "10",
             }
         }
@@ -205,8 +205,8 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     autostep.autostep_config(
         sim_root=orchestration["sim_root"],
         seed_matsim_config_path=orchestration["seed_matsim_config_path"],
-        index=orchestration["index"],
-        iterations=orchestration["iterations"],
+        start_index=orchestration["start_index"],
+        total_iterations=orchestration["total_iterations"],
         step=orchestration["step"],
         biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
         overrides=(
@@ -243,8 +243,8 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     autostep.autostep_config(
         sim_root=orchestration["sim_root"],
         seed_matsim_config_path=orchestration["seed_matsim_config_path"],
-        index=orchestration["index"],
-        iterations=orchestration["iterations"],
+        start_index=orchestration["start_index"],
+        total_iterations=orchestration["total_iterations"],
         step=orchestration["step"],
         biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
         overrides=(
@@ -274,8 +274,8 @@ def test_stepping(tmp_path, fake_lambda_handler):
     orchestration = {
         "sim_root": str(tmp_path),
         "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
-        "index": "0",
-        "iterations": "30",
+        "start_index": "0",
+        "total_iterations": "30",
         "step": "10",
         }
 
@@ -288,8 +288,8 @@ def test_stepping(tmp_path, fake_lambda_handler):
         autostep.autostep_config(
             sim_root=orchestration["sim_root"],
             seed_matsim_config_path=orchestration["seed_matsim_config_path"],
-            index=orchestration["index"],
-            iterations=orchestration["iterations"],
+            start_index=orchestration["start_index"],
+            total_iterations=orchestration["total_iterations"],
             step=orchestration["step"],
             biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
             overrides=(
@@ -321,8 +321,8 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
     orchestration = {
         "sim_root": str(tmp_path),
         "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
-        "index": "0",
-        "iterations": "30",
+        "start_index": "0",
+        "total_iterations": "30",
         "step": "10",
         "cooling_iterations": "10"
         }
@@ -336,8 +336,8 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
         autostep.autostep_config(
             sim_root=orchestration["sim_root"],
             seed_matsim_config_path=orchestration["seed_matsim_config_path"],
-            index=orchestration["index"],
-            iterations=orchestration["iterations"],
+            start_index=orchestration["start_index"],
+            total_iterations=orchestration["total_iterations"],
             step=orchestration["step"],
             biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
             overrides=(

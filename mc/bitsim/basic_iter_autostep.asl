@@ -27,13 +27,11 @@
             "autostep",
             "Ref::sim_root",
             "Ref::seed_matsim_config_path",
-            "Ref::index"
-            "Ref::iterations",
+            "Ref::start_index"
+            "Ref::total_iterations",
             "Ref::step",
             "Ref::biteration_matsim_config_path"
             "--",
-            "fractionOfIterationsToDisableInnovation",
-            "Ref::fractionOfIterationsToDisableInnovation"
             $sampleParameters
           ]
         }
