@@ -12,194 +12,6 @@ DEFAULT_TRANSITVEHICLES_NAME = "output_transitVehicles.xml.gz"
 DEFAULT_FRACTION_OF_ITERATIONS_TO_DISABLE_INNOVATION = 0.8
 
 
-"""
-def lambda_handler(event, context):
-    """
-"""
-    Iterate the orchestration dictionary.
-    Check for stopping criteria.
-    Update matsim config path.
-    Update output path (used by Elara).
-    Check for and add elara config path.
-    """
-"""
-    DEFAULT_MATSIM_CONFIG_NAME = "matsim_config.xml"
-    DEFAULT_ELARA_CONFIG_NAME = "elara_config.toml"
-
-    orchestration = event["orchestration"]
-
-    # set some defaults as required
-    if not "index" in orchestration:  # default to 0
-        orchestration["index"] = "0"
-    if not "seed_matsim_config_path"in orchestration:  # default to looking in root
-        orchestration["seed_matsim_config_path"] = orchestration["sim_root"] + "/" + DEFAULT_MATSIM_CONFIG_NAME
-    if not "elara_config_path" in orchestration:  # default to looking in root
-        orchestration["elara_config_path"] = orchestration["sim_root"] + "/" + DEFAULT_ELARA_CONFIG_NAME
-
-    # stopping criteria:
-    if int(orchestration["index"]) >= int(orchestration["iterations"]):
-
-        if "cooling_iterations" not in orchestration:
-            raise Exception("Iteration limit exceeded")
-
-        if int(orchestration["cooling_iterations"]) > 0:
-            orchestration["fractionOfIterationsToDisableInnovation"] = "0"
-            orchestration["cooling_iterations"] = str(
-                int(orchestration["cooling_iterations"]) - int(orchestration["step"]))
-        else:
-            raise Exception("Iteration & cooling limit exceeded")
-
-    # update matsim config path that will be used by MATSim (after being output by mc.autostep)
-    orchestration["biteration_matsim_config_path"] = \
-        orchestration["sim_root"] + "/" + str(orchestration["index"]) + "/" + DEFAULT_MATSIM_CONFIG_NAME
-
-    # update biteration output path
-    next_index = str(
-        int(orchestration["index"]) + int(orchestration["step"])
-        ) 
-    orchestration["biteration_output_path"] = \
-        orchestration["sim_root"] + "/" + next_index
-    
-    # iterate index (note that future jobs with the ASL will now receive the stepped value of 'index'
-    orchestration["index"] = next_index
-
-    return orchestration
-
-
-# orchestration.json
-{
-  "orchestration": {
-    "iterations": "100",  # count --> iterations
-    "step": "5",
-    "cooling_iterations": "10",
-    "sim_root": "/efs/early_stopping_tests/multimodal_town_B",  # mc_output_dir -> sim_root
-    "seed_matsim_config_path": "/efs/early_stopping_tests/multimodal_town_B/bitsim_config.xml",  # mc_input_config -> matsim_config_path
-    "elara_config_path": "/efs/early_stopping_tests/multimodal_town_B/elara_config.toml",  # elara_config --> elara_config_path
-    "workflow": "test-multimodal-town",
-    "channel": "#city-modelling-feeds-test"
-  }
-}
-
-
-# template.asl
-{
-  "Comment": "Amazon States Language implementation of basic BitSim iterator via AWS Batch",
-  "StartAt": "ITERATOR",
-  "States": {
-    "ITERATOR": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:$AWS_CONFIG_default_region:$AWS_CONFIG_account_id:function:BitsimIterator",
-      "ResultPath": "$.orchestration",
-      "Next": "MC",
-      "Catch": [{
-        "ErrorEquals": [ "States.ALL" ],
-        "Next": "ROLLYPOLLY_FINAL",
-        "ResultPath": "$.taskresult"
-      }]
-    },
-    "MC": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::batch:submitJob.sync",
-      "ResultPath": "$.taskresult",
-      "Parameters": {
-        "JobDefinition": "$MC_jobDefinition",
-        "JobName": "$MC_jobName",
-        "JobQueue": "$jobQueue",
-        "Parameters.$": "$.orchestration",
-        "ContainerOverrides": {
-          "Command": [
-            "autostep",
-            "Ref::sim_root",
-            "Ref::seed_matsim_config_path",
-            "Ref::index"
-            "Ref::iterations",
-            "Ref::step",
-            "Ref::biteration_matsim_config_path"
-            "--",
-            "fractionOfIterationsToDisableInnovation",
-            "Ref::fractionOfIterationsToDisableInnovation"
-            $sampleParameters
-          ]
-        }
-      },
-      "Next": "MATSIM"
-    },
-    "MATSIM": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::batch:submitJob.sync",
-      "ResultPath": "$.taskresult",
-      "Parameters": {
-        "Parameters.$": "$.orchestration",
-        "JobDefinition": "$MATSIM_jobDefinition",
-        "JobName": "$MATSIM_jobName",
-        "JobQueue": "$jobQueue",
-        "ContainerOverrides": {
-          "Command": [
-            "$MATSIM_controller",
-            "Ref::biteration_matsim_config_path"
-          ]
-        }
-      },
-      "Next": "ELARA",
-      "Retry": [{
-        "ErrorEquals": [ "States.TaskFailed" ],
-        "IntervalSeconds": 5,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.0
-      }]
-    },
-    "ELARA": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::batch:submitJob.sync",
-      "ResultPath": null,
-      "Parameters": {
-        "Parameters.$": "$.orchestration",
-        "JobDefinition": "$ELARA_jobDefinition",
-        "JobName": "$ELARA_jobName",
-        "JobQueue": "$jobQueue",
-        "Parameters.$": "$.orchestration",
-        "ContainerOverrides": {
-          "Command": [
-            "run",
-            "Ref::elara_config_path",
-            "--path_override",
-            "Ref::biteration_output_path"
-          ]
-        }
-      },
-      "Next": "ITERATOR",
-      "Retry": [{
-        "ErrorEquals": [ "States.TaskFailed" ],
-        "IntervalSeconds": 5,
-        "MaxAttempts": 2,
-        "BackoffRate": 2.0
-      }]
-    },
-    "ROLLYPOLLY_FINAL": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::batch:submitJob.sync",
-      "Parameters": {
-        "Parameters.$": "$.orchestration",
-        "JobDefinition": "$ROLLYPOLLY_FINAL_jobDefinition",
-        "JobName": "$ROLLYPOLLY_FINAL_jobName",
-        "JobQueue": "$jobQueue",
-        "ContainerOverrides": {
-          "Command": [
-            "/rollypolly/roll/poll_file_post_slack.py",
-            "-f", "Ref::biteration_output_path",
-            "-j", "Final",
-            "-w", "Ref::workflow",
-            "-c", "Ref::channel",
-            "-ar", "$AWS_CONFIG_default_region"
-          ]
-        }
-      },
-      "End": true
-    }
-  }
-"""
-
-
 def autostep_config(
     sim_root: Path,
     seed_matsim_config_path: Path,
@@ -216,18 +28,20 @@ def autostep_config(
     """
 
     # force the input types as required
-    if isinstance(sim_root, str):
+    if not isinstance(sim_root, Path):
         sim_root = Path(sim_root)
-    if isinstance(seed_matsim_config_path, str):
-        sim_root = Path(seed_matsim_config_path)
-    if not isinstance(index, str):
-        index = int(index)
-    if not isinstance(iterations, str):
-        iterations = int(iterations)
-    if not isinstance(step, str):
-        step = int(step)
-    if isinstance(biteration_matsim_config_path, str):
+    if not isinstance(seed_matsim_config_path, Path):
+        seed_matsim_config_path = Path(seed_matsim_config_path)
+    if not isinstance(biteration_matsim_config_path, Path):
         biteration_matsim_config_path = Path(biteration_matsim_config_path)
+    if not isinstance(index, int):
+        index = int(index)
+    if not isinstance(iterations, int):
+        iterations = int(iterations)
+    if not isinstance(step, int):
+        step = int(step)
+
+    overrides = construct_override_map_from_tuple(overrides)
 
     logging.info(f"Loading seed config from: {seed_matsim_config_path}")
     config = BaseConfig(seed_matsim_config_path)
@@ -237,11 +51,12 @@ def autostep_config(
     last_iteration = index
     new_write_path = sim_root / str(last_iteration)
 
+    set_cooling(config=config, iterations=iterations, index=last_iteration, step=step)
     set_write_path(config=config, new_write_path=new_write_path)
     set_iterations(config=config, first_iteration=first_iteration, last_iteration=last_iteration)
     find_and_set_overrides(config=config, overrides=overrides)
 
-    if not index == 0:  # if first iteration - don't update input paths
+    if not first_iteration == 0:  # if first iteration - don't update input paths
         previous_root = sim_root / str(first_iteration)
         auto_set_input_paths(config=config, root=previous_root)
 
@@ -258,20 +73,44 @@ def autostep_config(
 
 
 def construct_override_map_from_tuple(overrides: tuple) -> dict:
+    if not overrides:
+        return {}
     override_map = {}
     for i in range(0, len(overrides), 2):
         override_map[overrides[i]] = overrides[i+1]
     return override_map
 
 
-def set_default_behaviours(config: BaseConfig, overrides: dict):
+def set_cooling(config, iterations, index, step):
+    """
+    Set fractionOfIterationsToDisableInnovation to 0 if iterations exceeded.
+    Otherwise set for lesser of [0.8*step, 10]
+    """
+    if index > iterations:  # assume cooling
+        set_innovation(config=config, new_fraction="0")
+    else:
+        desired_intermediate_cooling_steps = min([(0.2*step), 10])
+        new_fraction = 1 - (desired_intermediate_cooling_steps / step)
+        set_innovation(config=config, new_fraction=str(new_fraction))
+
+
+def set_innovation(config, new_fraction):
+    """
+    Set config fractionOfIterationsToDisableInnovation.
+    """
+    fraction = config['strategy'].get('fractionOfIterationsToDisableInnovation')
+    config['strategy']['fractionOfIterationsToDisableInnovation'] = new_fraction
+    logging.info(f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {new_fraction}")
+
+
+def set_default_behaviours(config: BaseConfig):
     """
     Set common behaviours in config.
     """
     logging.info(f"Setting common behaviour overrides.")
-    outputDirectory = config['controler']['outputDirectory'] 
-    config['controler']['outputDirectory'] = "deleteDirectoryIfExists"
-    logging.info(f"Changing: {outputDirectory} to: 'deleteDirectoryIfExists'")
+    overwriteFiles = config['controler']['overwriteFiles'] 
+    config['controler']['overwriteFiles'] = "deleteDirectoryIfExists"
+    logging.info(f"Changing: {overwriteFiles} to: 'deleteDirectoryIfExists'")
 
     writeEventsInterval = config['controler']['writeEventsInterval'] 
     config['controler']['writeEventsInterval'] = "0"
@@ -280,12 +119,6 @@ def set_default_behaviours(config: BaseConfig, overrides: dict):
     writePlansInterval = config['controler']['writePlansInterval'] 
     config['controler']['writePlansInterval'] = "0"
     logging.info(f"Changing: {writePlansInterval} to: '0'")
-
-    if "fractionOfIterationsToDisableInnovation" not in overrides:
-        fraction = config['strategy'].get('fractionOfIterationsToDisableInnovation')
-        default = str(DEFAULT_FRACTION_OF_ITERATIONS_TO_DISABLE_INNOVATION)
-        config['strategy']['fractionOfIterationsToDisableInnovation'] = default
-        logging.info(f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {default}")
 
 
 def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
