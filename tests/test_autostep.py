@@ -25,6 +25,7 @@ def config():
 
 
 def test_set_innovation(config):
+    assert not config['strategy']['fractionOfIterationsToDisableInnovation'] == "0"
     autostep.set_innovation(config=config, new_fraction="0")
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0"
 
@@ -40,6 +41,7 @@ def test_set_innovation(config):
     ]
 )
 def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
+    assert not config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
     autostep.set_cooling(config=config, total_iterations=total_iterations, start_index=start_index, step=step)
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
 
@@ -92,7 +94,7 @@ def test_find_and_set_params(config):
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
 
-def test_find_and_set_bad_param(config):
+def test_finding_and_setting_bad_param_leaves_config_unchanged(config):
     cnfg = deepcopy(config)
     autostep.find_and_set_overrides(
         config,

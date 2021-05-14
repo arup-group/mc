@@ -18,7 +18,7 @@ def autostep_config(
     start_index: str,
     total_iterations: str,
     step: str,
-    biteration_matsim_config_path: str,
+    biteration_matsim_config_path: Path,
     overrides: tuple
     ) -> None:
     """
@@ -40,6 +40,14 @@ def autostep_config(
         total_iterations = int(total_iterations)
     if not isinstance(step, int):
         step = int(step)
+
+    if not len(overrides) % 2 == 0:
+        raise UserWarning(
+            f"""
+            Overrides must be of even length (key value pairs, eg k1, v1, k2, v2, ...).
+            Provided overrides '{overrides}' have length {len(overrides)}.
+            """
+            )
 
     overrides = construct_override_map_from_tuple(overrides)
 
