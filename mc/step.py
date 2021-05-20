@@ -39,6 +39,8 @@ def step_config(input_file: Path, output_file: Path, overrides: tuple) -> None:
 
 
 def construct_override_map_from_tuple(overrides: tuple) -> dict:
+    if not overrides:
+        return {}
     override_map = {}
     for i in range(0, len(overrides), 2):
         override_map[overrides[i]] = overrides[i+1]

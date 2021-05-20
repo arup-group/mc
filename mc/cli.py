@@ -7,6 +7,7 @@ import click
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import fill_config
 from mc.step import step_config
+from mc.autostep import autostep_config
 
 
 @click.group()
@@ -29,6 +30,37 @@ def step(
     Read an existing config, apply overrides and write out.
     """
     step_config(read_path, write_path, overrides)
+
+
+@cli.command()
+@click.argument('sim_root', type=click.Path(exists=True))
+@click.argument('seed_matsim_config_path', type=click.Path(writable=True))
+@click.argument('start_index', type=str)
+@click.argument('total_iterations', type=str)
+@click.argument('step', type=str)
+@click.argument('biteration_matsim_config_path', type=click.Path(writable=True))
+@click.argument('overrides', nargs=-1)
+def autostep(
+        sim_root: Path,
+        seed_matsim_config_path: Path,
+        start_index: str,
+        total_iterations: str,
+        step: str,
+        biteration_matsim_config_path: Path,
+        overrides: tuple
+) -> None:
+    """
+    Read an existing config, apply overrides and write out.
+    """
+    autostep_config(
+        sim_root=sim_root,
+        seed_matsim_config_path=seed_matsim_config_path,
+        start_index=start_index,
+        total_iterations=total_iterations,
+        step=step,
+        biteration_matsim_config_path=biteration_matsim_config_path,
+        overrides=overrides
+    )
 
 
 @cli.command()
@@ -116,6 +148,12 @@ def build_config(
     """
     Build a config with defined sub-pops, modes & activities.
     """
+    if isinstance(write_path, str):
+        write_path = Path(write_path)
+    if isinstance(input_dir, str):
+        input_dir = Path(input_dir)
+    if isinstance(output_dir, str):
+        output_dir = Path(output_dir)
     subpops = string_to_tuple(subpops)
     modes = string_to_tuple(modes)
     activities = string_to_tuple(activities)

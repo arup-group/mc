@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = venv/*, tests/*
+omit = venv/*, tests/*, mc/bitsim/*
 
 [report]
-fail_under = 78
+fail_under = 84

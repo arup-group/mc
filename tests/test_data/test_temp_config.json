@@ -408,7 +408,7 @@
         "ExternalExeConfigTemplate": "null",
         "ExternalExeTimeOut": "3600",
         "ExternalExeTmpFileRootDir": "null",
-        "fractionOfIterationsToDisableInnovation": "0.9",
+        "fractionOfIterationsToDisableInnovation": "0.95",
         "maxAgentPlanMemorySize": "5",
         "planSelectorForRemoval": "WorstPlanSelector"
       },

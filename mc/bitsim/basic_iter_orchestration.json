@@ -1,0 +1,12 @@
+{
+  "orchestration": {
+    "total_iterations": "100",
+    "step": "5",
+    "cooling_iterations": "10",
+    "sim_root": "/efs/early_stopping_tests/multimodal_town_B",
+    "seed_matsim_config_path": "/efs/early_stopping_tests/multimodal_town_B/bitsim_config.xml",
+    "elara_config_path": "/efs/early_stopping_tests/multimodal_town_B/elara_config.toml",
+    "workflow": "test-multimodal-town",
+    "channel": "#city-modelling-feeds-test"
+  }
+}

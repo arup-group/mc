@@ -324,7 +324,7 @@
     <param name="ExternalExeConfigTemplate" value="null"/>
     <param name="ExternalExeTimeOut" value="3600"/>
     <param name="ExternalExeTmpFileRootDir" value="null"/>
-    <param name="fractionOfIterationsToDisableInnovation" value="0.9"/>
+    <param name="fractionOfIterationsToDisableInnovation" value="0.95"/>
     <param name="maxAgentPlanMemorySize" value="5"/>
     <param name="planSelectorForRemoval" value="WorstPlanSelector"/>
     <parameterset type="strategysettings">
