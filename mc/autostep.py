@@ -69,12 +69,8 @@ def autostep_config(
         auto_set_input_paths(config=config, root=previous_root)
 
     logging.info(f"Writing config to: {biteration_matsim_config_path}")
-    try:
-        biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=False)
-    except FileExistsError:
-        logging.error(f"Folder for {biteration_matsim_config_path} is already there")
-    else: 
-        logging.info(f"Creating dir for {biteration_matsim_config_path}")
+    # after first iteration, matsim should have created the dir already (for previous step outputs).
+    biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
     config.write(biteration_matsim_config_path)
 
     logging.info(f"Autostep complete")
