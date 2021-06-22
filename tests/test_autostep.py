@@ -124,16 +124,16 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(
-        "~", "tii", "network.xml"
+        os.getcwd(), "~", "tii", "network.xml"
         )
     assert config['plans']['inputPlansFile'] == os.path.join(
-        "~", "tii", "1p_models", "population.xml.gz"
+        os.getcwd(), "~", "tii", "1p_models", "population.xml.gz"
         )
     assert config['transit']['transitScheduleFile'] == os.path.join(
-        "~", "tii", "schedule-merged.xml"
+        os.getcwd(), "~", "tii", "schedule-merged.xml"
     )
     assert config['transit']['vehiclesFile'] == os.path.join(
-        "~", "tii", "vehicles.xml"
+        os.getcwd(), "~", "tii", "vehicles.xml"
         )
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
@@ -224,16 +224,16 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(
-        "~", "tii", "network.xml"
+        os.getcwd(), "~", "tii", "network.xml"
         )
     assert config['plans']['inputPlansFile'] == os.path.join(
-        "~", "tii", "1p_models", "population.xml.gz"
+        os.getcwd(), "~", "tii", "1p_models", "population.xml.gz"
         )
     assert config['transit']['transitScheduleFile'] == os.path.join(
-        "~", "tii", "schedule-merged.xml"
+        os.getcwd(), "~", "tii", "schedule-merged.xml"
     )
     assert config['transit']['vehiclesFile'] == os.path.join(
-        "~", "tii", "vehicles.xml"
+        os.getcwd(), "~", "tii", "vehicles.xml"
         )
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"

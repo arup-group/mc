@@ -124,6 +124,8 @@ def set_default_behaviours(config: BaseConfig):
     config['controler']['writePlansInterval'] = "0"
     logging.info(f"Changing: {writePlansInterval} to: '0'")
 
+    fix_relative_input_paths_to_abs(config=config)
+
 
 def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
     """
@@ -154,6 +156,21 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
         new_path = root / default
         logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
         config[module][param] = str(new_path)
+
+
+def fix_relative_input_paths_to_abs(config: BaseConfig):
+    logging.info(f"Input path overrides to config")
+    for module, param in [
+        ("network", "inputNetworkFile"),
+        ("plans", "inputPlansFile"),
+        ("transit", "transitScheduleFile"),
+        ("transit", "vehiclesFile"),
+        ]:
+        prev_path = Path(config[module][param])
+        if not prev_path.is_absolute():
+            new_path = prev_path.resolve()
+            logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
+            config[module][param] = str(new_path)
 
 
 def set_iterations(config: BaseConfig, first_iteration: int, last_iteration: int) -> None:
