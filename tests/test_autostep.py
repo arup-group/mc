@@ -47,10 +47,11 @@ def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
 
 
 def test_set_default_behaviours(config):
-    autostep.set_default_behaviours(config)
+    step = 5
+    autostep.set_default_behaviours(config, step)
     assert config['controler']['overwriteFiles'] == "deleteDirectoryIfExists"
-    assert config['controler']['writeEventsInterval'] == "0"
-    assert config['controler']['writePlansInterval'] == "0"
+    assert config['controler']['writeEventsInterval'] == "5"
+    assert config['controler']['writePlansInterval'] == "5"
 
 
 def test_set_write_path(config):

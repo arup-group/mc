@@ -53,7 +53,7 @@ def autostep_config(
 
     logging.info(f"Loading seed config from: {seed_matsim_config_path}")
     config = BaseConfig(seed_matsim_config_path)
-    set_default_behaviours(config)
+    set_default_behaviours(config, step)
 
     first_iteration = start_index - step
     last_iteration = start_index
@@ -107,22 +107,24 @@ def set_innovation(config, new_fraction):
     logging.info(f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {new_fraction}")
 
 
-def set_default_behaviours(config: BaseConfig):
+def set_default_behaviours(config: BaseConfig, step: int):
     """
     Set common behaviours in config.
     """
+    step = str(step)
+
     logging.info(f"Setting common behaviour overrides.")
-    overwriteFiles = config['controler']['overwriteFiles'] 
+    overwriteFiles = config['controler']['overwriteFiles']
     config['controler']['overwriteFiles'] = "deleteDirectoryIfExists"
     logging.info(f"Changing: {overwriteFiles} to: 'deleteDirectoryIfExists'")
 
-    writeEventsInterval = config['controler']['writeEventsInterval'] 
-    config['controler']['writeEventsInterval'] = "0"
-    logging.info(f"Changing: {writeEventsInterval} to: '0'")
+    writeEventsInterval = config['controler']['writeEventsInterval']
+    config['controler']['writeEventsInterval'] = step
+    logging.info(f"Changing: {writeEventsInterval} to: {step}")
 
-    writePlansInterval = config['controler']['writePlansInterval'] 
-    config['controler']['writePlansInterval'] = "0"
-    logging.info(f"Changing: {writePlansInterval} to: '0'")
+    writePlansInterval = config['controler']['writePlansInterval']
+    config['controler']['writePlansInterval'] = step
+    logging.info(f"Changing: {writePlansInterval} to: {step}")
 
     fix_relative_input_paths_to_abs(config=config)
 
