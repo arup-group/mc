@@ -1,7 +1,7 @@
-import logging
 from pathlib import Path
 
 from mc.base import BaseConfig, Param
+from mc.logger import logging
 
 
 DEFAULT_MATSIM_CONFIG_NAME = "matsim_config.xml"
