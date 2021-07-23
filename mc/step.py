@@ -1,8 +1,7 @@
-import logging
 from pathlib import Path
 
 from mc.base import BaseConfig, Param
-
+from mc.logger import logging
 
 def step_config(input_file: Path, output_file: Path, overrides: tuple) -> None:
     """

@@ -1,7 +1,8 @@
 import ast
-import logging
 from pathlib import Path
 import os
+
+from mc.logger import logging
 
 def fill_config(input_file: str, output_file: str, overrides):
     """
