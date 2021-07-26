@@ -117,8 +117,10 @@ class TestConfig(BaseConfig):
             for mode, mut_hr, mdr in zip(modes, mut_hrs, mdrs):
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}']['mode'] = mode
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}']['constant'] = '0'
-                self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}']['marginalUtilityOfDistance_util_m'] = '0'
-                self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}']['marginalUtilityOfTraveling_util_hr'] = mut_hr
+                self['planCalcScore'][f'scoringParameters:{subpop}'][
+                    f'modeParams:{mode}']['marginalUtilityOfDistance_util_m'] = '0'
+                self['planCalcScore'][f'scoringParameters:{subpop}'][
+                    f'modeParams:{mode}']['marginalUtilityOfTraveling_util_hr'] = mut_hr
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}']['monetaryDistanceRate'] = mdr
 
             activities = ['home', 'work', 'depo', 'dropoff_1', 'dropoff_2', 'dropoff_3']
@@ -128,8 +130,10 @@ class TestConfig(BaseConfig):
             for act, typ_dur, min_dur in zip(activities, typ_durs, min_durs):
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['activityType'] = act
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['priority'] = '1'
-                self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['typicalDuration'] = typ_dur
-                self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['minimalDuration'] = min_dur
+                self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['typicalDuration'] \
+                    = typ_dur
+                self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['minimalDuration'] \
+                    = min_dur
 
         self['strategy']['maxAgentPlanMemorySize'] = '3'
 
@@ -304,7 +308,8 @@ class BuildConfig(BaseConfig):
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}'][
                     'marginalUtilityOfDistance_util_m'] = '0'
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}'][
-                    'marginalUtilityOfTraveling_util_hr'] = default_mode_scoring.get(mode, default_mode_scoring['car'])['mut_hr']
+                    'marginalUtilityOfTraveling_util_hr'] = \
+                    default_mode_scoring.get(mode, default_mode_scoring['car'])['mut_hr']
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'modeParams:{mode}'][
                     'monetaryDistanceRate'] = default_mode_scoring.get(mode, default_mode_scoring['car'])['mdr']
 
@@ -312,9 +317,11 @@ class BuildConfig(BaseConfig):
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['activityType'] = act
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}']['priority'] = '1'
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}'][
-                    'typicalDuration'] = default_activity_scoring.get(mode, default_activity_scoring['other'])['typ_dur']
+                    'typicalDuration'] = \
+                    default_activity_scoring.get(mode, default_activity_scoring['other'])['typ_dur']
                 self['planCalcScore'][f'scoringParameters:{subpop}'][f'activityParams:{act}'][
-                    'minimalDuration'] = default_activity_scoring.get(mode, default_activity_scoring['other'])['min_dur']
+                    'minimalDuration'] = \
+                    default_activity_scoring.get(mode, default_activity_scoring['other'])['min_dur']
 
         self['strategy']['maxAgentPlanMemorySize'] = '5'
 
@@ -334,7 +341,8 @@ class BuildConfig(BaseConfig):
         self['transitRouter']['maxBeelineWalkConnectionDistance'] = '500'
         self['transitRouter']['searchRadius'] = '1000'
 
-        self['planscalcroute']['teleportedModeParameters:access_walk'] = defaults_config['planscalcroute']['teleportedModeParameters:access_walk']
+        self['planscalcroute']['teleportedModeParameters:access_walk'] = \
+            defaults_config['planscalcroute']['teleportedModeParameters:access_walk']
 
 
 CONFIG_MAP = {

@@ -1,8 +1,8 @@
 import ast
-from pathlib import Path
 import os
 
 from mc.logger import logging
+
 
 def fill_config(input_file: str, output_file: str, overrides):
     """
@@ -32,12 +32,13 @@ def fill_config(input_file: str, output_file: str, overrides):
                 line = line.replace(wildcard, str(override_map[token]))
             o.write(line)
 
+
 def construct_override_map_from_list(overrides: tuple):
     override_map = {}
     for i in range(0, len(overrides), 2):
         override_map[overrides[i]] = overrides[i+1]
     return override_map
 
+
 def construct_override_map_from_literal(overrides):
     return ast.literal_eval(overrides)
-

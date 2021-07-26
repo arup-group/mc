@@ -3,12 +3,13 @@ Command line interface for MC.
 """
 from pathlib import Path
 from typing import Tuple
+
 import click
+
+from mc.autostep import autostep_config
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import fill_config
 from mc.step import step_config
-from mc.autostep import autostep_config
-from mc.logger import logging
 
 
 @click.group()

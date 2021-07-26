@@ -10,4 +10,4 @@ _ROOT = Path(os.path.abspath(os.path.dirname(__file__)))
 
 _DEFAULTS_DIR = _ROOT / 'default_data'
 if not _DEFAULTS_DIR.is_dir():
-    raise NotADirectoryError(f"Default data dir not found at {path}")
+    raise NotADirectoryError(f"Default data dir not found at {_DEFAULTS_DIR}")

@@ -3,6 +3,7 @@ from pathlib import Path
 from mc.base import BaseConfig, Param
 from mc.logger import logging
 
+
 def step_config(input_file: Path, output_file: Path, overrides: tuple) -> None:
     """
     Step a config for bitsim based on overrides map.
@@ -32,7 +33,7 @@ def step_config(input_file: Path, output_file: Path, overrides: tuple) -> None:
         output_file.parent.mkdir(parents=True, exist_ok=False)
     except FileExistsError:
         logging.error(f"Folder for {output_file} is already there")
-    else: 
+    else:
         logging.info(f"Creating dir for {output_file}")
     config.write(output_file)
 
@@ -47,7 +48,7 @@ def construct_override_map_from_tuple(overrides: tuple) -> dict:
 
 
 def set_write_path(config: BaseConfig, overrides: dict) -> None:
-    logging.info(f"Write path override to config")
+    logging.info("Write path override to config")
     old_write_path = Path(config['controler']['outputDirectory'])
     new_write_path = Path(overrides.pop("outputDirectory"))
     config['controler']['outputDirectory'] = str(new_write_path)
@@ -63,7 +64,7 @@ def set_input_paths(config: BaseConfig, overrides: dict) -> None:
     :param config: Config
     :param overrides: Path of output
     """
-    logging.info(f"Input path overrides to config")
+    logging.info("Input path overrides to config")
     dir = Path(overrides.pop("matsim_source"))
 
     for _, module in config.modules.items():
@@ -72,7 +73,7 @@ def set_input_paths(config: BaseConfig, overrides: dict) -> None:
             This is a bit dangerous, ie if we add new params in future
             we need to check they do or don't end in 'File' as appropriate.
             But on the plus side - this method is also more flexible than
-            hardcoding, which would require us to check which version of 
+            hardcoding, which would require us to check which version of
             MATSim is being used.
             """
             if param_name[-4:] == 'File':
@@ -95,8 +96,8 @@ def set_last_iteration(config: BaseConfig, overrides: dict) -> None:
     and so on, which will be nicer for the user. This would require we pass
     'index' and 'next_index' from the orchestration to the cli.
     """
-    logging.info(f"Step overrides to config")
-    old_step = config['controler']['lastIteration'] 
+    logging.info("Step overrides to config")
+    old_step = config['controler']['lastIteration']
     new_step = overrides.pop('step')
     config['controler']['lastIteration'] = new_step
     logging.info(f"LastIteration (step) override: {old_step} to: {new_step}")
