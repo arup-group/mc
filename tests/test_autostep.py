@@ -26,14 +26,8 @@ def config():
 
 
 @pytest.fixture()
-def abspath_config():
-    in_file = Path(os.path.join(this_dir(), "test_data/test_abspath_config.xml"))
-    return BaseConfig(in_file)
-
-
-@pytest.fixture()
-def relpath_config():
-    in_file = Path(os.path.join(this_dir(), "test_data/test_relpath_config.xml"))
+def test_path_config():
+    in_file = Path(os.path.join(this_dir(), "test_data/test_path_config.xml"))
     return BaseConfig(in_file)
 
 
@@ -62,8 +56,13 @@ def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
 
 
 def test_set_default_behaviours(config, tmp_path):
+    assert config['controler']['overwriteFiles'] == "failIfDirectoryExists"
+    assert config['controler']['writeEventsInterval'] == "1"
+    assert config['controler']['writePlansInterval'] == "50"
+
     step = 5
     autostep.set_default_behaviours(config, step, tmp_path)
+
     assert config['controler']['overwriteFiles'] == "deleteDirectoryIfExists"
     assert config['controler']['writeEventsInterval'] == "5"
     assert config['controler']['writePlansInterval'] == "5"
@@ -82,53 +81,44 @@ def test_autoset_input_paths(config):
     assert config['transit']['vehiclesFile'] == 'test/ing/output_transitVehicles.xml.gz'
 
 
-def test_fix_relative_home_input_paths_to_abs(config, tmp_path):
-    autostep.fix_relative_input_paths_to_abs(config, tmp_path)
-    assert config['network']['inputNetworkFile'] == os.path.expanduser(
-        os.path.join("~", "tii", "network.xml")
-    )
-    assert config['plans']['inputPlansFile'] == os.path.expanduser(
-        os.path.join("~", "tii", "1p_models", "population.xml.gz")
-    )
-    assert config['transit']['transitScheduleFile'] == os.path.expanduser(
-        os.path.join("~", "tii", "schedule-merged.xml")
-    )
-    assert config['transit']['vehiclesFile'] == os.path.expanduser(
-        os.path.join("~", "tii", "vehicles.xml")
-    )
-
-
-def test_fix_relative_input_paths_to_abs(relpath_config):
-    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_relpath_config.xml")
+def test_fix_relative_input_paths_to_abs(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
     config_dir = os.path.dirname(seed_matsim_config_path)
-    autostep.fix_relative_input_paths_to_abs(relpath_config, seed_matsim_config_path)
-    assert relpath_config['network']['inputNetworkFile'] == os.path.abspath(
+
+    assert test_path_config['network']['inputNetworkFile'] == "./tii/network.xml"
+    assert test_path_config['plans']['inputPlansFile'] == "../tii/1p_models/population.xml.gz"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['network']['inputNetworkFile'] == os.path.abspath(
         os.path.join(config_dir, "tii", "network.xml")
     )
-    assert relpath_config['plans']['inputPlansFile'] == os.path.abspath(
-        os.path.join(config_dir, "tii", "1p_models", "population.xml.gz")
-    )
-    assert relpath_config['transit']['transitScheduleFile'] == os.path.abspath(
-        os.path.join(config_dir, "tii", "schedule-merged.xml")
-    )
-    assert relpath_config['transit']['vehiclesFile'] == os.path.abspath(
-        os.path.join(config_dir, "tii", "vehicles.xml")
+    assert test_path_config['plans']['inputPlansFile'] == os.path.abspath(
+        os.path.join(config_dir, "..", "tii", "1p_models", "population.xml.gz")
     )
 
 
-def test_absolute_input_paths_retained(abspath_config, tmp_path):
-    autostep.fix_relative_input_paths_to_abs(abspath_config, tmp_path)
-    assert abspath_config['network']['inputNetworkFile'] == os.path.abspath(
-        os.path.join("/", "tii", "network.xml")
-    )
-    assert abspath_config['plans']['inputPlansFile'] == os.path.abspath(
-        os.path.join("/", "tii", "1p_models", "population.xml.gz")
-    )
-    assert abspath_config['transit']['transitScheduleFile'] == os.path.abspath(
-        os.path.join("/", "tii", "schedule-merged.xml")
-    )
-    assert abspath_config['transit']['vehiclesFile'] == os.path.abspath(
+def test_absolute_input_paths_retained(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
+
+    assert test_path_config['transit']['vehiclesFile'] == "/tii/vehicles.xml"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['transit']['vehiclesFile'] == os.path.abspath(
         os.path.join("/", "tii", "vehicles.xml")
+    )
+
+
+def test_fix_relative_home_input_paths_to_abs(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
+
+    assert test_path_config['transit']['transitScheduleFile'] == "~/tii/schedule-merged.xml"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['transit']['transitScheduleFile'] == os.path.expanduser(
+        os.path.join("~", "tii", "schedule-merged.xml")
     )
 
 

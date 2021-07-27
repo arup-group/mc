@@ -14,12 +14,11 @@
 </module>
 <!-- ====================================================================== -->
 <module name="plans" >
-	<param name="inputPersonAttributesFile" value="./tii/1p_models/population_attributes.xml.gz" />
-	<param name="inputPlansFile" value="./tii/1p_models/population.xml.gz" />
+	<param name="inputPlansFile" value="../tii/1p_models/population.xml.gz" />
 </module>
 <!-- ====================================================================== -->
 <module name="transit" >
-	<param name="transitScheduleFile" value="./tii/schedule-merged.xml" />
-	<param name="vehiclesFile" value="./tii/vehicles.xml" />
+	<param name="transitScheduleFile" value="~/tii/schedule-merged.xml" />
+	<param name="vehiclesFile" value="/tii/vehicles.xml" />
 </module>
 </config>
