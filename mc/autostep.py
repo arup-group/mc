@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from mc.base import BaseConfig, Param
@@ -52,7 +53,7 @@ def autostep_config(
 
     logging.info(f"Loading seed config from: {seed_matsim_config_path}")
     config = BaseConfig(seed_matsim_config_path)
-    set_default_behaviours(config, step)
+    set_default_behaviours(config, step, seed_matsim_config_path)
 
     first_iteration = start_index - step
     last_iteration = start_index
@@ -106,7 +107,7 @@ def set_innovation(config, new_fraction):
     logging.info(f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {new_fraction}")
 
 
-def set_default_behaviours(config: BaseConfig, step: int):
+def set_default_behaviours(config: BaseConfig, step: int, seed_matsim_config_path: Path):
     """
     Set common behaviours in config.
     """
@@ -125,7 +126,7 @@ def set_default_behaviours(config: BaseConfig, step: int):
     config['controler']['writePlansInterval'] = step
     logging.info(f"Changing: {writePlansInterval} to: {step}")
 
-    fix_relative_input_paths_to_abs(config=config)
+    fix_relative_input_paths_to_abs(config=config, seed_matsim_config_path=seed_matsim_config_path)
 
 
 def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
@@ -159,7 +160,7 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
         config[module][param] = str(new_path)
 
 
-def fix_relative_input_paths_to_abs(config: BaseConfig):
+def fix_relative_input_paths_to_abs(config: BaseConfig, seed_matsim_config_path: Path):
     logging.info("Input path overrides to config")
     for module, param in [
         ("network", "inputNetworkFile"),
@@ -169,7 +170,9 @@ def fix_relative_input_paths_to_abs(config: BaseConfig):
     ]:
         prev_path = Path(config[module][param])
         if not prev_path.is_absolute():
-            new_path = prev_path.resolve()
+            new_path = Path(os.path.join(
+                os.path.dirname(seed_matsim_config_path), os.path.expanduser(prev_path)
+            )).resolve()
             logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
             config[module][param] = str(new_path)
 

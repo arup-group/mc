@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+<!-- ====================================================================== -->
+<module name="global" >
+	<param name="coordinateSystem" value="EPSG:27700" />
+	<param name="insistingOnDeprecatedConfigVersion" value="true" />
+	<param name="numberOfThreads" value="32" />
+	<param name="randomSeed" value="4711" />
+</module>
+<!-- ====================================================================== -->
+<module name="network" >
+	<param name="inputNetworkFile" value="/tii/network.xml" />
+</module>
+<!-- ====================================================================== -->
+<module name="plans" >
+	<param name="inputPersonAttributesFile" value="/tii/1p_models/population_attributes.xml.gz" />
+	<param name="inputPlansFile" value="/tii/1p_models/population.xml.gz" />
+</module>
+<!-- ====================================================================== -->
+<module name="transit" >
+	<param name="transitScheduleFile" value="/tii/schedule-merged.xml" />
+	<param name="vehiclesFile" value="/tii/vehicles.xml" />
+</module>
+</config>

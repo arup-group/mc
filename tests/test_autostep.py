@@ -6,6 +6,7 @@ import os
 from mc.base import BaseConfig
 from mc import autostep
 from mc.bitsim.basic_iter_lambda import lambda_handler
+from tests.env import this_dir
 
 
 def test_construct_overrides_map_from_tuple():
@@ -20,7 +21,13 @@ def test_construct_overrides_map_from_empty_tuple():
 
 @pytest.fixture()
 def config():
-    in_file = Path("tests/test_data/test_config.xml")
+    in_file = Path(os.path.join(this_dir(), "test_data/test_config.xml"))
+    return BaseConfig(in_file)
+
+
+@pytest.fixture()
+def test_path_config():
+    in_file = Path(os.path.join(this_dir(), "test_data/test_path_config.xml"))
     return BaseConfig(in_file)
 
 
@@ -40,15 +47,22 @@ def test_set_innovation(config):
         (100, 200, 100, "0"),
     ]
 )
+
+
 def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
     assert not config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
     autostep.set_cooling(config=config, total_iterations=total_iterations, start_index=start_index, step=step)
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
 
 
-def test_set_default_behaviours(config):
+def test_set_default_behaviours(config, tmp_path):
+    assert config['controler']['overwriteFiles'] == "failIfDirectoryExists"
+    assert config['controler']['writeEventsInterval'] == "1"
+    assert config['controler']['writePlansInterval'] == "50"
+
     step = 5
-    autostep.set_default_behaviours(config, step)
+    autostep.set_default_behaviours(config, step, tmp_path)
+
     assert config['controler']['overwriteFiles'] == "deleteDirectoryIfExists"
     assert config['controler']['writeEventsInterval'] == "5"
     assert config['controler']['writePlansInterval'] == "5"
@@ -65,6 +79,47 @@ def test_autoset_input_paths(config):
     assert config['plans']['inputPlansFile'] == 'test/ing/output_plans.xml.gz'
     assert config['transit']['transitScheduleFile'] == 'test/ing/output_transitSchedule.xml.gz'
     assert config['transit']['vehiclesFile'] == 'test/ing/output_transitVehicles.xml.gz'
+
+
+def test_fix_relative_input_paths_to_abs(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
+    config_dir = os.path.dirname(seed_matsim_config_path)
+
+    assert test_path_config['network']['inputNetworkFile'] == "./tii/network.xml"
+    assert test_path_config['plans']['inputPlansFile'] == "../tii/1p_models/population.xml.gz"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['network']['inputNetworkFile'] == os.path.abspath(
+        os.path.join(config_dir, "tii", "network.xml")
+    )
+    assert test_path_config['plans']['inputPlansFile'] == os.path.abspath(
+        os.path.join(config_dir, "..", "tii", "1p_models", "population.xml.gz")
+    )
+
+
+def test_absolute_input_paths_retained(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
+
+    assert test_path_config['transit']['vehiclesFile'] == "/tii/vehicles.xml"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['transit']['vehiclesFile'] == os.path.abspath(
+        os.path.join("/", "tii", "vehicles.xml")
+    )
+
+
+def test_fix_relative_home_input_paths_to_abs(test_path_config):
+    seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
+
+    assert test_path_config['transit']['transitScheduleFile'] == "~/tii/schedule-merged.xml"
+
+    autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
+
+    assert test_path_config['transit']['transitScheduleFile'] == os.path.expanduser(
+        os.path.join("~", "tii", "schedule-merged.xml")
+    )
 
 
 def test_set_iterations(config):
@@ -124,18 +179,18 @@ def test_autostep_config_first_iteration(tmp_path):
     config = BaseConfig(out_file)
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
-    assert config['network']['inputNetworkFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "network.xml"
-        )
-    assert config['plans']['inputPlansFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "1p_models", "population.xml.gz"
-        )
-    assert config['transit']['transitScheduleFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "schedule-merged.xml"
-    )
-    assert config['transit']['vehiclesFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "vehicles.xml"
-        )
+    assert config['network']['inputNetworkFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "network.xml")
+    ))
+    assert config['plans']['inputPlansFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "1p_models", "population.xml.gz")
+    ))
+    assert config['transit']['transitScheduleFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "schedule-merged.xml")
+    ))
+    assert config['transit']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "vehicles.xml")
+    ))
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
@@ -224,18 +279,18 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     config = BaseConfig(out_file)
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
-    assert config['network']['inputNetworkFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "network.xml"
-        )
-    assert config['plans']['inputPlansFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "1p_models", "population.xml.gz"
-        )
-    assert config['transit']['transitScheduleFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "schedule-merged.xml"
-    )
-    assert config['transit']['vehiclesFile'] == os.path.join(
-        os.getcwd(), "~", "tii", "vehicles.xml"
-        )
+    assert config['network']['inputNetworkFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "network.xml")
+    ))
+    assert config['plans']['inputPlansFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "1p_models", "population.xml.gz")
+    ))
+    assert config['transit']['transitScheduleFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "schedule-merged.xml")
+    ))
+    assert config['transit']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "tii", "vehicles.xml")
+    ))
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
