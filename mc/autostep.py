@@ -3,24 +3,23 @@ from pathlib import Path
 from mc.base import BaseConfig, Param
 from mc.logger import logging
 
-
 DEFAULT_MATSIM_CONFIG_NAME = "matsim_config.xml"
 DEFAULT_PLANS_NAME = "output_plans.xml.gz"
 DEFAULT_NETWORK_NAME = "output_network.xml.gz"
-DEFAULT_TRANSITSCHEDULE_NAME = "output_transitSchedule.xml.gz" 
+DEFAULT_TRANSITSCHEDULE_NAME = "output_transitSchedule.xml.gz"
 DEFAULT_TRANSITVEHICLES_NAME = "output_transitVehicles.xml.gz"
 DEFAULT_FRACTION_OF_ITERATIONS_TO_DISABLE_INNOVATION = 0.8
 
 
 def autostep_config(
-    sim_root: Path,
-    seed_matsim_config_path: Path,
-    start_index: str,
-    total_iterations: str,
-    step: str,
-    biteration_matsim_config_path: Path,
-    overrides: tuple
-    ) -> None:
+        sim_root: Path,
+        seed_matsim_config_path: Path,
+        start_index: str,
+        total_iterations: str,
+        step: str,
+        biteration_matsim_config_path: Path,
+        overrides: tuple
+) -> None:
     """
     Step a config for bitsim based on arguments and an overrides map.
     Note that start_index will have already been incremented by a step.
@@ -47,7 +46,7 @@ def autostep_config(
             Overrides must be of even length (key value pairs, eg k1, v1, k2, v2, ...).
             Provided overrides '{overrides}' have length {len(overrides)}.
             """
-            )
+        )
 
     overrides = construct_override_map_from_tuple(overrides)
 
@@ -73,7 +72,7 @@ def autostep_config(
     biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
     config.write(biteration_matsim_config_path)
 
-    logging.info(f"Autostep complete")
+    logging.info("Autostep complete")
 
 
 def construct_override_map_from_tuple(overrides: tuple) -> dict:
@@ -81,7 +80,7 @@ def construct_override_map_from_tuple(overrides: tuple) -> dict:
         return {}
     override_map = {}
     for i in range(0, len(overrides), 2):
-        override_map[overrides[i]] = overrides[i+1]
+        override_map[overrides[i]] = overrides[i + 1]
     return override_map
 
 
@@ -93,7 +92,7 @@ def set_cooling(config, total_iterations, start_index, step):
     if start_index > total_iterations:  # assume cooling
         set_innovation(config=config, new_fraction="0")
     else:
-        desired_intermediate_cooling_steps = min([(0.2*step), 10])
+        desired_intermediate_cooling_steps = min([(0.2 * step), 10])
         new_fraction = 1 - (desired_intermediate_cooling_steps / step)
         set_innovation(config=config, new_fraction=str(new_fraction))
 
@@ -113,7 +112,7 @@ def set_default_behaviours(config: BaseConfig, step: int):
     """
     step = str(step)
 
-    logging.info(f"Setting common behaviour overrides.")
+    logging.info("Setting common behaviour overrides.")
     overwriteFiles = config['controler']['overwriteFiles']
     config['controler']['overwriteFiles'] = "deleteDirectoryIfExists"
     logging.info(f"Changing: {overwriteFiles} to: 'deleteDirectoryIfExists'")
@@ -133,7 +132,7 @@ def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
     """
     Note that 'outputDirectory' == '$next_matsim_dir' from overrides
     """
-    logging.info(f"Write path override to config")
+    logging.info("Write path override to config")
     old_write_path = Path(config['controler']['outputDirectory'])
     config['controler']['outputDirectory'] = str(new_write_path)
     logging.info(f"Write file path override: {str(old_write_path)} to: {str(new_write_path)}")
@@ -147,13 +146,13 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
     :param root: Path
     """
 
-    logging.info(f"Input path overrides to config")
+    logging.info("Input path overrides to config")
     for module, param, default in [
         ("network", "inputNetworkFile", DEFAULT_NETWORK_NAME),
         ("plans", "inputPlansFile", DEFAULT_PLANS_NAME),
         ("transit", "transitScheduleFile", DEFAULT_TRANSITSCHEDULE_NAME),
         ("transit", "vehiclesFile", DEFAULT_TRANSITVEHICLES_NAME),
-        ]:
+    ]:
         prev_path = config[module][param]
         new_path = root / default
         logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
@@ -161,13 +160,13 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
 
 
 def fix_relative_input_paths_to_abs(config: BaseConfig):
-    logging.info(f"Input path overrides to config")
+    logging.info("Input path overrides to config")
     for module, param in [
         ("network", "inputNetworkFile"),
         ("plans", "inputPlansFile"),
         ("transit", "transitScheduleFile"),
         ("transit", "vehiclesFile"),
-        ]:
+    ]:
         prev_path = Path(config[module][param])
         if not prev_path.is_absolute():
             new_path = prev_path.resolve()
@@ -179,11 +178,11 @@ def set_iterations(config: BaseConfig, first_iteration: int, last_iteration: int
     """
     Set config firstIteration and lastIteration.
     """
-    logging.info(f"Step overrides to config")
-    old_firstIteration = config['controler']['firstIteration'] 
+    logging.info("Step overrides to config")
+    old_firstIteration = config['controler']['firstIteration']
     config['controler']['firstIteration'] = str(first_iteration)
     logging.info(f"firstIteration (step) override: {old_firstIteration} to: {first_iteration}")
-    old_lastIteration = config['controler']['lastIteration'] 
+    old_lastIteration = config['controler']['lastIteration']
     config['controler']['lastIteration'] = str(last_iteration)
     logging.info(f"lastIteration (step) override: {old_lastIteration} to: {last_iteration}")
 

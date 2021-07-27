@@ -24,6 +24,9 @@ jobs:
         sudo apt-get install ca-certificates
         export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
         pip3 install -e .
+    - name: Lint with flake8
+      run: |
+        ./scripts/lint-check.sh
     - name: Unit tests
       run: |
         export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt

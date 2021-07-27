@@ -7,15 +7,15 @@ VALID_MAP = {
     "modules": {
 
         "swissRailRaptor": {
-		    "params": {
-		        "scoringParameters": "Default",
-		        "transferPenaltyBaseCost": "0.0",
-		        "transferPenaltyCostPerTravelTimeHour": "0.0",
-		        "transferPenaltyMaxCost": "Infinity",
-		        "transferPenaltyMinCost": "-Infinity",
-		        "useIntermodalAccessEgress": "false",
-		        "useModeMappingForPassengers": "false",
-		        "useRangeQuery": "false",
+            "params": {
+                "scoringParameters": "Default",
+                "transferPenaltyBaseCost": "0.0",
+                "transferPenaltyCostPerTravelTimeHour": "0.0",
+                "transferPenaltyMaxCost": "Infinity",
+                "transferPenaltyMinCost": "-Infinity",
+                "useIntermodalAccessEgress": "false",
+                "useModeMappingForPassengers": "false",
+                "useRangeQuery": "false",
             },
             "parametersets": {
                 "intermodalAccessEgress": {
@@ -73,7 +73,7 @@ VALID_MAP = {
 
         "transit": {
             "params": {
-                "insistingOnUsingDeprecatedPersonAttributeFile":"true",
+                "insistingOnUsingDeprecatedPersonAttributeFile": "true",
                 "useTransit": "true",
                 "transitScheduleFile": "./output_transitSchedule.xml.gz",
                 "vehiclesFile": "./output_transitVehicles.xml",

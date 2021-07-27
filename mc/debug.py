@@ -49,23 +49,20 @@ class BaseDebug:
                               f"include all modes: {modes}")
 
             if not self.get('travelTimeCalculator'):
-                logger.append(f"MULTIMODAL: multimodal module requires travelTimeCalculator module")
+                logger.append("MULTIMODAL: multimodal module requires travelTimeCalculator module")
 
             else:
                 if not self['travelTimeCalculator'].get('analyzedModes'):
                     logger.append(
-                        f"MULTIMODAL: multimodal module requires "
-                        f"list of modes at analyzedModes@travelTimeCalculator")
+                        "MULTIMODAL: multimodal module requires list of modes at analyzedModes@travelTimeCalculator")
 
                 if not self['travelTimeCalculator'].get('filterModes') == 'true':
                     logger.append(
-                        f"MULTIMODAL: multimodal module requires filterModes@travelTimeCalculator"
-                        f" set to 'true'")
+                        "MULTIMODAL: multimodal module requires filterModes@travelTimeCalculator set to 'true'")
 
                 if not self['travelTimeCalculator'].get('separateModes') == 'false':
                     logger.append(
-                        f"MULTIMODAL: multimodal module requires separateModes@travelTimeCalculator"
-                        f" set to 'false'")
+                        "MULTIMODAL: multimodal module requires separateModes@travelTimeCalculator set to 'false'")
 
             for m in modes:
                 if not self['planscalcroute'].get(f'teleportedModeParameters:{m}'):
@@ -119,8 +116,8 @@ class BaseDebug:
                 logger.append(f"SUBPOP:{s} defined more than once in planCalcScore")
 
         # check for default
-        if not 'default' in scoring_subpops:
-            logger.append(f"SUBPOP default subpop missing from planCalcScore")
+        if 'default' not in scoring_subpops:
+            logger.append("SUBPOP default subpop missing from planCalcScore")
 
         # Strategy:
         strategy_subpops = []
@@ -336,8 +333,3 @@ def calc_cost(logger, dist_cost_rate, mum, dist_util_rate, hour_util_rate, mode)
     dist_cost = (float(dist_cost_rate) * float(mum)) + float(dist_util_rate)
     time_cost = float(hour_util_rate) / (speed_map[mode] * 3600)
     return dist_cost + time_cost
-
-
-
-
-

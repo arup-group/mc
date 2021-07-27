@@ -418,7 +418,7 @@ class BaseConfig(Base, BaseDebug):
 
     def find(self, address: str) -> list:
         """
-        Given a string address (refer to the README) recursively search for 
+        Given a string address (refer to the README) recursively search for
         list of matching config elements.
 
         Args:
@@ -429,7 +429,7 @@ class BaseConfig(Base, BaseDebug):
         """
 
         list_address = address.strip("/").split("/")
-        
+
         if len(list_address) == 1:  # reached end of address
             address = list_address[0]
             if address in self.modules:
@@ -572,7 +572,7 @@ class Module(Base):
 
     def find(self, address: str) -> list:
         """
-        Given a string address (refer to the README) recursively search for 
+        Given a string address (refer to the README) recursively search for
         list of matching config elements.
 
         Args:
@@ -613,7 +613,7 @@ class Module(Base):
             return [f for g in search for f in g]  # flatten
 
         if "*" in list_address[0]:  # special find recurse
-            snaps= []
+            snaps = []
             for candidate in self.parametersets:
                 if specials_snap(candidate, list_address[0]):
                     snaps.append(self.parametersets[candidate])
@@ -640,7 +640,7 @@ class Module(Base):
 
     def __setitem__(self, key, value):
         if not isinstance(value, (str, ParamSet, Param)):
-            raise ValueError(f"Please use value of either type ParamSet, Param or str")
+            raise ValueError("Please use value of either type ParamSet, Param or str")
 
         if isinstance(value, ParamSet):
             self.is_valid_paramset_key(key)
@@ -715,7 +715,7 @@ class ParamSet(Base):
 
     def find(self, address: str) -> list:
         """
-        Given a string address (refer to the README) recursively search for 
+        Given a string address (refer to the README) recursively search for
         list of matching config elements.
 
         Args:
@@ -757,7 +757,7 @@ class ParamSet(Base):
             return [f for g in search for f in g]  # flatten
 
         if "*" in list_address[0]:  # special find recurse
-            snaps= []
+            snaps = []
             for candidate in self.parametersets:
                 if specials_snap(candidate, list_address[0]):
                     snaps.append(self.parametersets[candidate])
@@ -771,11 +771,11 @@ class ParamSet(Base):
 
         search = [m.find(address) for m in self.parametersets.values()]
         return [f for g in search for f in g]  # flatten
-        
+
     def __setitem__(self, key, value):
 
         if not isinstance(value, (str, ParamSet, Param)):
-            raise ValueError(f"Please use value of either type ParamSet, Param or str")
+            raise ValueError("Please use value of either type ParamSet, Param or str")
         if isinstance(value, ParamSet):
             self.is_valid_paramset_key(key)
             self.parametersets[key] = value
@@ -819,7 +819,7 @@ class Param(Base):
         self.name = name
         self.value = value
         self.data = {'name': self.name, 'value': self.value}
-    
+
     def __str__(self) -> str:
         return super().__str__()
 
