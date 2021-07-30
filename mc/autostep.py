@@ -49,11 +49,6 @@ def autostep_config(
             """
         )
 
-    # bitsim swarms will need to create subdirs of the initial sim_root
-    # whose names won't be known until runtime, so we need to create here
-    if not sim_root.is_dir():
-        sim_root.mkdir()
-
     overrides = construct_override_map_from_tuple(overrides)
 
     logging.info(f"Loading seed config from: {seed_matsim_config_path}")

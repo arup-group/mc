@@ -227,27 +227,6 @@ def test_autostep_config(tmp_path):
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
 
 
-def test_autostep_config_creates_sim_root_if_not_already_exists(tmp_path):
-    swarm_path = os.path.join(tmp_path, "created-by-swarms")
-    in_file = os.path.join("tests", "test_data", "test_config.xml")
-    out_file = os.path.join(swarm_path, "10", "matsim_config.xml")
-
-    assert not Path(swarm_path).is_dir()
-
-    autostep.autostep_config(
-        sim_root=swarm_path,
-        seed_matsim_config_path=in_file,
-        start_index="0",
-        total_iterations="100",
-        step="10",
-        biteration_matsim_config_path=out_file,
-        overrides=()
-    )
-
-    assert Path(swarm_path).is_dir()
-    assert Path(out_file).is_file()
-
-
 @pytest.fixture()
 def fake_lambda_handler():
     return lambda_handler
