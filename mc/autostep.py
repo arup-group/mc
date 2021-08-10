@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import subprocess
 
 from mc.base import BaseConfig, Param
 from mc.logger import logging
@@ -26,6 +27,19 @@ def autostep_config(
     Note that start_index will have already been incremented by a step.
     Note that MATSim configs use paths relative to config location.
     """
+
+    show_mounted_disks = "df"
+    ls_slash_mnt_slash_efs = "ls /mnt/efs"
+
+    for command in [show_mounted_disks, ls_slash_mnt_slash_efs]:
+        print(f'command: {command}')
+        process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+
+        if error:
+            print(f'error: {error}')
+
+        print('output: ', output)
 
     # force the input types as required
     if not isinstance(sim_root, Path):
