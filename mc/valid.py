@@ -297,14 +297,14 @@ VALID_MAP = {
         "qsim": {
             "params": {
                 "creatingVehiclesForAllNetworkModes": "true",
-                "endTime": "24:00:00",
+                "endTime": "36:00:00",
                 "flowCapacityFactor": "0.01",
                 "insertingWaitingVehiclesBeforeDrivingVehicles": "false",
                 "isRestrictingSeepage": "true",
                 "isSeepModeStorageFree": "false",
                 "linkDynamics": "FIFO",
                 "linkWidth": "30.0",
-                "mainMode": "bus,car,rail,tram",
+                "mainMode": "car",
                 "nodeOffset": "0.0",
                 "numberOfThreads": "32",
                 "removeStuckVehicles": "false",
@@ -327,7 +327,19 @@ VALID_MAP = {
             }
         },
 
+        "hermes": {
+            "params": {
+                "mainMode": "car",
+                "endTime": "36:00:00",
+                "flowCapacityFactor": "0.01",
+                "storageCapacityFactor": "0.01",
+                "stuckTime": "10.0",
+                "useDeterministicPt": "true"
+            }
+        },
+
         "scenario": {},
+
         "strategy": {
             "params": {
                 "ExternalExeConfigTemplate": "null",
