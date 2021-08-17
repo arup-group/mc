@@ -387,10 +387,16 @@ class BaseConfig(Base, BaseDebug):
         self.data = {'name': 'config'}
         self.valid_keys = list(VALID_MAP['modules'])
 
+        if path is None:
+            return None
+
+        if path is None:
+            return None
+
         if isinstance(path, str):
             path = Path(path)
 
-        if path_exists(path):
+        if path.is_file():
             if xml_path(path):
                 with path.open() as file:
                     root = et.parse(file).getroot()
@@ -399,6 +405,10 @@ class BaseConfig(Base, BaseDebug):
                 with path.open() as file:
                     data = json.load(file)
                     self.build_from_json(data)
+        else:
+            raise FileNotFoundError(
+                f"File ({str(path)}) not found."
+                )
 
     def print(self, i: int = 0) -> None:
         for module in self.modules.values():
