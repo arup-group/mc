@@ -127,7 +127,7 @@ def set_default_behaviours(config: BaseConfig, step: int, seed_matsim_config_pat
     logging.info(f"Changing: {writePlansInterval} to: {step}")
 
     config['planCalcScore']['writeExperiencedPlans'] = "true"
-    logging.info(f"Forcing writeExperiencedPlans to true")
+    logging.info("Forcing writeExperiencedPlans to true")
 
     fix_relative_input_paths_to_abs(config=config, seed_matsim_config_path=seed_matsim_config_path)
 

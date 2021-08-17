@@ -404,7 +404,7 @@ class BaseConfig(Base, BaseDebug):
                     self.build_from_json(data)
         else:
             raise FileNotFoundError(
-                "File ({str(path)}) not found."
+                f"File ({str(path)}) not found."
                 )
 
     def print(self, i: int = 0) -> None:
