@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = venv/*, tests/*, mc/bitsim/*
+omit = venv/*, tests/*, mc/bitsim/*, mc/setup.py
 
 [report]
-fail_under = 84
+fail_under = 80
