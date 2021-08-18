@@ -228,7 +228,7 @@ In the examples above, you can see that wildcarding with `*` can be used to retu
 
 ## Validation
 
-MC has a build in representation of a valid config structure, specifically the viable names of modules, parametersets and parameters. When reading in an existing config or adding new components, MC will throw validation errors if the valid config structure is not maintained.
+MC has a built-in representation of a valid config structure, specifically the viable names of modules, parametersets and parameters. When reading in an existing config or adding new components, MC will throw validation errors if the valid config structure is not maintained.
 
 ```
 empty_config = build.Config()
@@ -239,7 +239,11 @@ empty_config['NotAModule']['coordinateSystem'] = 'EPSG:27700'
 KeyError: "key:'NotAModule' not found in modules"
 ```
 
-This system is useful for preventing typos, but has to be maintained and updated for changes to valid configs. The valid mapping is describes in the `mc.valid` module. An example of this was the addition of a new `hermes` module:
+This system is useful for preventing typos, but has to be
+[maintained and updated for changes to valid configs](#updating-mc-for-config-changes). The valid mapping is described in the `mc.valid` module.
+
+## Updating MC for Config Changes
+An example of how to update the validation mapping can be seen with the addition of a new `hermes` module:
 
 ```{xml}
   <module name="hermes" >
@@ -250,7 +254,7 @@ This system is useful for preventing typos, but has to be maintained and updated
   </module>
 ```
 
-In order to make this hermes module available, the following is added to `mc/valid.py`:
+In order to make this hermes module available to MC's validation, the following is added to `mc/valid.py`:
 
 ```{json}
   "hermes": {
