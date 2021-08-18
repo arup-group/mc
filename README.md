@@ -14,6 +14,9 @@ Got a `config.xml` that you love? Let me know and get it added to the CLI genera
 * [Usage](#markdown-header-usage)
 * [Command Line](#markdown-header-command-line)
 * [Programming Interface](#markdown-header-programming-interface)
+* [Find](#markdown-header-find)
+* [Validation](#matsim-header-validation)
+* [Updating MC for config changes](#markdown-header-updating-mc-for-config-changes)
 * [Tests](#markdown-header-tests)
 * [Contact](#markdown-header-contacts)
 * [Todo](#markdown-header-todo)
@@ -223,18 +226,54 @@ param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg subpop B car
 
 In the examples above, you can see that wildcarding with `*` can be used to return 'all' config elements. The `*` operator tells the find method to search all at a given level. As shown above, it is useful for returning all elements within a parameterset or explicitly describing levels to search.
 
+## Validation
+
+MC has a build in representation of a valid config structure, specifically the viable names of modules, parametersets and parameters. When reading in an existing config or adding new components, MC will throw validation errors if the valid config structure is not maintained.
+
+```
+empty_config = build.Config()
+empty_config['NotAModule']['coordinateSystem'] = 'EPSG:27700'
+```
+```
+...
+KeyError: "key:'NotAModule' not found in modules"
+```
+
+This system is useful for preventing typos, but has to be maintained and updated for changes to valid configs. The valid mapping is describes in the `mc.valid` module. An example of this was the addition of a new `hermes` module:
+
+```{xml}
+  <module name="hermes" >
+      <param name="endTime" value="32:00:00" />
+      <param name="flowCapacityFactor" value="0.01" />
+      <param name="mainMode" value="car" />
+      ...
+  </module>
+```
+
+In order to make this hermes module available, the following is added to `mc/valid.py`:
+
+```{json}
+  "hermes": {
+      "params": {
+            "mainMode": "car",
+            "endTime": "36:00:00",
+            "flowCapacityFactor": "0.01",
+            ...
+      }
+  },
+```
+
 ## Tests
 
-Run the tests (from root dir)
-----
+```{bash}
     python -m pytest -vv tests
+```
 
-Generate a code coverage report
-----
 To generate XML & HTML coverage reports to `reports/coverage`:
 
+```{bash}
     ./scripts/code-coverage.sh
-
+```
 
 ## Contact
 
