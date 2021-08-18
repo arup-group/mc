@@ -10,16 +10,16 @@ Got a `config.xml` that you love? Let me know and get it added to the CLI genera
 
 ## Contents
 
-* [Installation](#markdown-header-installation)
-* [Usage](#markdown-header-usage)
-* [Command Line](#markdown-header-command-line)
-* [Programming Interface](#markdown-header-programming-interface)
-* [Find](#markdown-header-find)
-* [Validation](#matsim-header-validation)
-* [Updating MC for config changes](#markdown-header-updating-mc-for-config-changes)
-* [Tests](#markdown-header-tests)
-* [Contact](#markdown-header-contacts)
-* [Todo](#markdown-header-todo)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Command Line](#command-line)
+* [Programming Interface](#programming-interface)
+* [Find](#find)
+* [Validation](#validation)
+* [Updating MC for config changes](#updating-mc-for-config-changes)
+* [Tests](#tests)
+* [Contact](#contacts)
+* [Todo](#todo)
 
 ## Installation
 
