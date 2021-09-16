@@ -3,13 +3,13 @@ Command line interface for MC.
 """
 from pathlib import Path
 from typing import Tuple
-
 import click
-
-from mc.autostep import autostep_config
+import logging
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
-from mc.fill import fill_config
+from mc.fill import match_replace
+from mc.fill import param_replace
 from mc.step import step_config
+from mc.autostep import autostep_config
 
 
 @click.group()
@@ -35,7 +35,7 @@ def step(
 
 
 @cli.command()
-@click.argument('sim_root', type=click.Path(exists=False))
+@click.argument('sim_root', type=click.Path(exists=True))
 @click.argument('seed_matsim_config_path', type=click.Path(writable=True))
 @click.argument('start_index', type=str)
 @click.argument('total_iterations', type=str)
@@ -65,6 +65,7 @@ def autostep(
     )
 
 
+# For backwards compat - deprecated by `match_replace` below    
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.argument('write_path', type=click.Path(writable=True))
@@ -77,7 +78,48 @@ def fill(
     """
     Read an existing wildcarded config, apply overrides and write out.
     """
-    fill_config(read_path, write_path, overrides)
+    logging.warn("`fill` is deprecated, use `matchreplace` instead")
+    match_replace(read_path, write_path, overrides)
+
+
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.argument('write_path', type=click.Path(writable=True))
+@click.argument('overrides', nargs=-1)
+def matchreplace(
+        read_path: Path,
+        write_path: Path,
+        overrides
+) -> None:
+    """
+    Read an existing wildcarded config, apply overrides and write out.
+    """
+    match_replace(read_path, write_path, overrides)
+
+
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.argument('write_path', type=click.Path(writable=True))
+@click.argument('overrides', nargs=-1)
+def paramreplace(
+        read_path: Path,
+        write_path: Path,
+        overrides
+) -> None:
+    """
+    Read an existing config, apply overrides and write out. 
+    E.g. 
+
+    ```
+
+    mc paramreplace ./qux.xml ./quxo.xml 'inputPlansFile' '/my/path/to/plans.xml' 'inputNetworkFile' '/my/path/to/network.xml' 'randomSeed' '31415926'
+
+    ```
+
+    reads input file `qux.xml` updates the fields `inputPlansFile`, `inputNetworkFile', and `randomSeed` and writes to the file `quxo.xml`.
+    Note: All instances or the parameter will be updated.
+    """
+    param_replace(read_path, write_path, overrides)
 
 
 @cli.command()
