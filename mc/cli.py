@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import Tuple
 import click
 import logging
+from mc.autostep import autostep_config
 from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import match_replace
 from mc.fill import param_replace
 from mc.step import step_config
-from mc.autostep import autostep_config
 
 
 @click.group()
@@ -35,7 +35,7 @@ def step(
 
 
 @cli.command()
-@click.argument('sim_root', type=click.Path(exists=True))
+@click.argument('sim_root', type=click.Path(exists=False))
 @click.argument('seed_matsim_config_path', type=click.Path(writable=True))
 @click.argument('start_index', type=str)
 @click.argument('total_iterations', type=str)

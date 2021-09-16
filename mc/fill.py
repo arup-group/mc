@@ -1,8 +1,8 @@
 import ast
-import logging
 from pathlib import Path
 import os
 import re
+from mc.logger import logging
 
 def match_replace(input_file: str, output_file: str, overrides):
     """
