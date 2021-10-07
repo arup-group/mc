@@ -925,9 +925,14 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
         return paramset_type, key
 
     if paramset_type in ["strategysettings"]:
-        subpop, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
-        strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
-        key = paramset_type + ":" + subpop + ":" + strategy
+        has_subpop = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+        if has_subpop:
+            subpop, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+            strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
+            key = paramset_type + ":" + subpop + ":" + strategy
+        else:
+            strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
+            key = paramset_type + ":" + strategy
         return paramset_type, key
 
     if paramset_type in ["modeMapping"]:

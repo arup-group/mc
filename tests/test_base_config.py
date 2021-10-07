@@ -4,6 +4,7 @@ BaseConfig method tests.
 
 import pytest
 import env
+import os
 
 env.set_module()
 from mc.base import BaseConfig, Module, ParamSet, Param
@@ -25,6 +26,11 @@ def test_default_read_xml():
 def test_default_read_json():
     test_config = BaseConfig(path=env.test_json_path)
     assert len(test_config.modules)
+
+
+def test_read_config_with_no_subpops():
+    config = BaseConfig(path=env.test_no_subpops_path)
+    assert len(config.modules)
 
 
 def test_param_equality_same():
@@ -72,6 +78,16 @@ def test_build_xml():
 def test_write_xml():
     test_config = BaseConfig(path=env.test_xml_path)
     test_config.write_xml(env.test_temp_xml_path)
+
+
+def test_config_with_no_subpops_is_written_correctly_to_xml(tmpdir):
+    config = BaseConfig(path=env.test_no_subpops_path)
+
+    out_config_path = os.path.join(tmpdir, 'output_config.xml')
+    config.write_xml(out_config_path)
+    out_config = BaseConfig(path=out_config_path)
+
+    assert config == out_config
 
 
 def test_build_json_dict():
