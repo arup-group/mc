@@ -56,7 +56,7 @@ def param_replace(input_file: str, output_file: str, overrides):
     with open(output_file, 'w') as o:
         for line in input_lines:
             for (token,val) in override_map.items():
-                m = re.compile(r'(?<=param name="{}" value=").*(?="/>)'.format(token))
+                m = re.compile(r'(?<=param name="{}" value=").*(?="\s*/>)'.format(token))
                 line = m.sub(val,line)
             o.write(line)
            
