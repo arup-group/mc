@@ -65,7 +65,7 @@ def autostep(
     )
 
 
-# For backwards compat - deprecated by `match_replace` below    
+# For backwards compat - deprecated by `match_replace` below
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
 @click.argument('write_path', type=click.Path(writable=True))
@@ -107,16 +107,18 @@ def paramreplace(
         overrides
 ) -> None:
     """
-    Read an existing config, apply overrides and write out. 
-    E.g. 
+    Read an existing config, apply overrides and write out.
+    E.g.
 
     ```
 
-    mc paramreplace ./qux.xml ./quxo.xml 'inputPlansFile' '/my/path/to/plans.xml' 'inputNetworkFile' '/my/path/to/network.xml' 'randomSeed' '31415926'
+    mc paramreplace ./qux.xml ./quxo.xml 'inputPlansFile' '/my/path/to/plans.xml'
+    'inputNetworkFile' '/my/path/to/network.xml' 'randomSeed' '31415926'
 
     ```
 
-    reads input file `qux.xml` updates the fields `inputPlansFile`, `inputNetworkFile', and `randomSeed` and writes to the file `quxo.xml`.
+    reads input file `qux.xml` updates the fields `inputPlansFile`, `inputNetworkFile',
+     and `randomSeed` and writes to the file `quxo.xml`.
     Note: All instances or the parameter will be updated.
     """
     param_replace(read_path, write_path, overrides)
