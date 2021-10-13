@@ -1,7 +1,7 @@
 import filecmp
 import os
 
-from mc.fill import match_replace
+from mc.fill import match_replace, param_replace
 
 
 def test_matchreplace_config_update_one_matching_fill():
@@ -39,13 +39,24 @@ def test_matchreplace_config_no_update_when_no_match():
     os.remove(out_file)
 
 
-def test_paramreplace_config_update_one_matching_fill():
-    assert 1 == 2
-
-
 def test_paramreplace_config_update_one_matching_fill_xml():
-    assert 1 == 2
+    in_file = "tests/test_data/test_wildcard.xml"
+    out_file = "tests/test_data/test_paramreplace_out.xml"
+    correct_ouput = "tests/test_data/test_paramreplace_filled.xml"
+    overrides = ["fluxCapacitorFactor", "1955"]
+
+    param_replace(in_file, out_file, overrides)
+
+    assert filecmp.cmp(out_file, correct_ouput)
+    os.remove(out_file)
 
 
-def test_paramreplace_config_no_update_when_no_match():
-    assert 1 == 2
+def test_paramreplace_config_no_update_when_no_match_xml():
+    in_file = "tests/test_data/test_wildcard.xml"
+    out_file = "tests/test_data/test_paramreplace_out.xml"
+    overrides = ["fluxResistorFactor", "1955"]
+
+    match_replace(in_file, out_file, overrides)
+
+    assert filecmp.cmp(out_file, in_file)
+    os.remove(out_file)
