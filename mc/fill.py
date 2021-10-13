@@ -38,10 +38,13 @@ def match_replace(input_file: str, output_file: str, overrides):
 def param_replace(input_file: str, output_file: str, overrides):
     """
     Overwrite a config from a passed input_file and output to output_file
-    :param input_file: str path of input
-    :param output_file: str path of output
+    :param input_file: str path of input .xml file
+    :param output_file: str path of output .xml file
     :param overrides: str representation of params and new values e.g. 'p1' v1' 'p2' 'v2'
     """
+    if not input_file.lower().endswith('.xml'):
+        raise Exception("`param_replace` is implemented for xml files only.")
+
     logging.info("Writing overrides: {} to file: {}".format(overrides, input_file))
     override_map = construct_override_map_from_list(overrides)
 
