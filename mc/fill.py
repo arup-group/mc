@@ -1,16 +1,50 @@
 import ast
 import os
-
+import re
 from mc.logger import logging
 
 
-def fill_config(input_file: str, output_file: str, overrides):
+def match_replace(input_file: str, output_file: str, overrides):
     """
     Overwrite a config from a passed input_file and output to output_file
     :param input_file: str path of input
     :param output_file: str path of output
-    :param overrides: str representation of dictioary mapping wildcard to replacing values
+    :param overrides: str representation of dictionary mapping wildcard to
+    replacing values
     """
+    logging.info("Writing overrides: {} to file: {}".format(overrides,
+                                                            input_file))
+    override_map = construct_override_map_from_list(overrides)
+
+    with open(input_file, 'r') as f:
+        input_lines = f.readlines()
+
+    # Create target directory & all intermediate directories if they don't exist
+    intermediate_dir = os.path.dirname(output_file)
+    try:
+        os.makedirs(intermediate_dir)
+        logging.info("Directory {} Created".format(intermediate_dir))
+    except FileExistsError:
+        logging.info("Directory {} already exists".format(intermediate_dir))
+
+    with open(output_file, 'w') as o:
+        for line in input_lines:
+            for token in override_map:
+                wildcard = "${}".format(token)
+                line = line.replace(wildcard, str(override_map[token]))
+            o.write(line)
+
+
+def param_replace(input_file: str, output_file: str, overrides):
+    """
+    Overwrite a config from a passed input_file and output to output_file
+    :param input_file: str path of input .xml file
+    :param output_file: str path of output .xml file
+    :param overrides: str representation of params and new values e.g. 'p1' v1' 'p2' 'v2'
+    """
+    if not input_file.lower().endswith('.xml'):
+        raise BadFileTypeError("Only XML files are supported")
+
     logging.info("Writing overrides: {} to file: {}".format(overrides, input_file))
     override_map = construct_override_map_from_list(overrides)
 
@@ -22,14 +56,14 @@ def fill_config(input_file: str, output_file: str, overrides):
     try:
         os.makedirs(intermediate_dir)
         logging.info("Directory {} Created".format(intermediate_dir))
-    except IOError:
+    except FileExistsError:
         logging.info("Directory {} already exists".format(intermediate_dir))
 
     with open(output_file, 'w') as o:
         for line in input_lines:
-            for token in override_map:
-                wildcard = "${}".format(token)
-                line = line.replace(wildcard, str(override_map[token]))
+            for (token, val) in override_map.items():
+                m = re.compile(r'(?<=param name="{}" value=").*(?="\s*/>)'.format(token))
+                line = m.sub(val, line)
             o.write(line)
 
 
@@ -42,3 +76,7 @@ def construct_override_map_from_list(overrides: tuple):
 
 def construct_override_map_from_literal(overrides):
     return ast.literal_eval(overrides)
+
+
+class BadFileTypeError(OSError):
+    pass

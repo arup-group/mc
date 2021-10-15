@@ -52,15 +52,18 @@ Options:
   --help  Show this message and exit.
 
 Commands:
-  build     Build a config with defined sub-pops, modes & activities.
-  convert   Read an existing config and write as xml or json.
-  diff      Simple diff two configs.
-  fill      Read an existing wildcarded config, fill in the target variables...
-  find      Find and print config components to terminal.
-  gen       Generate a template config: empty|default|test.
-  print     Print a config to terminal.
-  step      Read an existing config, fill in the target variables and write...
-  debug     Debug a config.
+  autostep      Read an existing config, apply overrides and write out.
+  build         Build a config with defined sub-pops, modes & activities.
+  convert       Read an existing config and write as xml or json.
+  debug         Debug a config.
+  diff          Simple diff two configs.
+  fill          Read an existing wildcarded config, apply overrides and...
+  find          Find and print config components to terminal.
+  gen           Generate a template config: empty|default|test.
+  matchreplace  Read an existing wildcarded config, apply overrides and...
+  paramreplace  Read an existing config, apply overrides and write out.
+  print         Print a config to terminal.
+  step          Read an existing config, apply overrides and write out.
 ```
 
 ## Programming Interface

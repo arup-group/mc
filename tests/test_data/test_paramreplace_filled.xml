@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+  <module name="Something">
+    <param name="wildcard" value="$wildcard"/>
+    <param name="fluxCapacitorFactor" value="1955"/>
+    <param name="gapSpeed" value="10.0"/>
+  </module>
+</config>
