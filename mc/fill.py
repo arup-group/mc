@@ -43,7 +43,7 @@ def param_replace(input_file: str, output_file: str, overrides):
     :param overrides: str representation of params and new values e.g. 'p1' v1' 'p2' 'v2'
     """
     if not input_file.lower().endswith('.xml'):
-        raise Exception("`param_replace` is implemented for xml files only.")
+        raise BadFileTypeError("Only XML files are supported")
 
     logging.info("Writing overrides: {} to file: {}".format(overrides, input_file))
     override_map = construct_override_map_from_list(overrides)
@@ -76,3 +76,7 @@ def construct_override_map_from_list(overrides: tuple):
 
 def construct_override_map_from_literal(overrides):
     return ast.literal_eval(overrides)
+
+
+class BadFileTypeError(OSError):
+    pass
