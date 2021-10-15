@@ -78,7 +78,7 @@ def fill(
     """
     Read an existing wildcarded config, apply overrides and write out.
     """
-    logging.warn("`fill` is deprecated, use `matchreplace` instead")
+    logging.warning("`fill` is deprecated, use `matchreplace` instead")
     match_replace(read_path, write_path, overrides)
 
 
