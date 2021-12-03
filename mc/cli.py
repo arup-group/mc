@@ -29,7 +29,7 @@ def step(
         overrides
 ) -> None:
     """
-    Read an existing config, apply overrides and write out.
+    Read config, apply overrides and write out.
     """
     step_config(read_path, write_path, overrides)
 
@@ -52,7 +52,7 @@ def autostep(
         overrides: tuple
 ) -> None:
     """
-    Read an existing config, apply overrides and write out.
+    Read config, apply overrides and write out.
     """
     autostep_config(
         sim_root=sim_root,
@@ -76,7 +76,7 @@ def fill(
         overrides
 ) -> None:
     """
-    Read an existing wildcarded config, apply overrides and write out.
+    Read a wildcarded config, apply overrides and write.
     """
     logging.warning("`fill` is deprecated, use `matchreplace` instead")
     match_replace(read_path, write_path, overrides)
@@ -92,7 +92,7 @@ def matchreplace(
         overrides
 ) -> None:
     """
-    Read an existing wildcarded config, apply overrides and write out.
+    Read wildcarded config, apply overrides and write.
     """
     match_replace(read_path, write_path, overrides)
 
@@ -107,16 +107,12 @@ def paramreplace(
         overrides
 ) -> None:
     """
-    Read an existing config, apply overrides and write out.
+    Read config, apply overrides and write out.
     E.g.
-
     ```
-
     mc paramreplace ./qux.xml ./quxo.xml 'inputPlansFile' '/my/path/to/plans.xml'
     'inputNetworkFile' '/my/path/to/network.xml' 'randomSeed' '31415926'
-
     ```
-
     reads input file `qux.xml` updates the fields `inputPlansFile`, `inputNetworkFile',
      and `randomSeed` and writes to the file `quxo.xml`.
     Note: All instances or the parameter will be updated.
