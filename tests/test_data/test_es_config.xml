@@ -606,7 +606,7 @@
 		<!-- Comma-separated list of transportation modes that are handled as transit. Defaults to 'pt'. -->
 		<param name="transitModes" value="pt" />
 		<!-- Input file containing the transit schedule to be simulated. -->
-		<param name="transitScheduleFile" value="~/tii/schedule-merged.xml" />
+		<param name="transitScheduleFile" value="~/test/schedule-merged.xml" />
 		<!-- Optional input file containing additional attributes for transit stop facilities, stored as ObjectAttributes. -->
 		<param name="transitStopsAttributesFile" value="null" />
 		<!-- Set this parameter to true if transit should be simulated, false if not. -->

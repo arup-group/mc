@@ -1,10 +1,7 @@
 Click==7.1.2
 flake8==3.9.2
 lxml==4.6.3
-numpy==1.20.2
-pandas==1.2.1
 pytest-cov==2.11.1
 pytest==6.2.3
 setuptools==56.0.0
 typing==3.7.4
-urllib3==1.25.1

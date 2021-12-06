@@ -12,7 +12,7 @@
       "params": {
         "inputCRS": "null",
         "inputChangeEventsFile": "null",
-        "inputNetworkFile": "~/tii/network.xml",
+        "inputNetworkFile": "~/test/network.xml",
         "laneDefinitionsFile": "null",
         "timeVariantNetwork": "false"
       }
@@ -22,8 +22,8 @@
         "insistingOnUsingDeprecatedPersonAttributeFile": "true",
         "activityDurationInterpretation": "tryEndTimeThenDuration",
         "inputCRS": "null",
-        "inputPersonAttributesFile": "~/tii/1p_models/population_attributes.xml.gz",
-        "inputPlansFile": "~/tii/1p_models/population.xml.gz",
+        "inputPersonAttributesFile": "~/test/population_attributes.xml.gz",
+        "inputPlansFile": "~/test/population.xml.gz",
         "networkRouteType": "LinkNetworkRoute",
         "removingUnnecessaryPlanAttributes": "false",
         "subpopulationAttributeName": "subpopulation"
@@ -34,10 +34,10 @@
         "inputScheduleCRS": "null",
         "transitLinesAttributesFile": "null",
         "transitModes": "bus,train",
-        "transitScheduleFile": "~/tii/schedule-merged.xml",
+        "transitScheduleFile": "~/test/schedule-merged.xml",
         "transitStopsAttributesFile": "null",
         "useTransit": "true",
-        "vehiclesFile": "~/tii/vehicles.xml"
+        "vehiclesFile": "~/test/vehicles.xml"
       }
     },
     "swissRailRaptor": {
@@ -102,7 +102,7 @@
         "firstIteration": "0",
         "lastIteration": "100",
         "mobsim": "qsim",
-        "outputDirectory": "home/arup/tii/1p_models/3_default_config/model_out",
+        "outputDirectory": "model_out",
         "overwriteFiles": "failIfDirectoryExists",
         "routingAlgorithmType": "Dijkstra",
         "runId": "null",

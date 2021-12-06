@@ -10,15 +10,15 @@
 </module>
 <!-- ====================================================================== -->
 <module name="network" >
-	<param name="inputNetworkFile" value="./tii/network.xml" />
+	<param name="inputNetworkFile" value="./test/network.xml" />
 </module>
 <!-- ====================================================================== -->
 <module name="plans" >
-	<param name="inputPlansFile" value="../tii/1p_models/population.xml.gz" />
+	<param name="inputPlansFile" value="../test/population.xml.gz" />
 </module>
 <!-- ====================================================================== -->
 <module name="transit" >
-	<param name="transitScheduleFile" value="~/tii/schedule-merged.xml" />
-	<param name="vehiclesFile" value="/tii/vehicles.xml" />
+	<param name="transitScheduleFile" value="~/test/schedule-merged.xml" />
+	<param name="vehiclesFile" value="/test/vehicles.xml" />
 </module>
 </config>

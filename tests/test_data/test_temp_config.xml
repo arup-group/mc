@@ -10,7 +10,7 @@
   <module name="network">
     <param name="inputCRS" value="null"/>
     <param name="inputChangeEventsFile" value="null"/>
-    <param name="inputNetworkFile" value="~/tii/network.xml"/>
+    <param name="inputNetworkFile" value="~/test/network.xml"/>
     <param name="laneDefinitionsFile" value="null"/>
     <param name="timeVariantNetwork" value="false"/>
   </module>
@@ -18,8 +18,8 @@
     <param name="insistingOnUsingDeprecatedPersonAttributeFile" value="true"/>
     <param name="activityDurationInterpretation" value="tryEndTimeThenDuration"/>
     <param name="inputCRS" value="null"/>
-    <param name="inputPersonAttributesFile" value="~/tii/1p_models/population_attributes.xml.gz"/>
-    <param name="inputPlansFile" value="~/tii/1p_models/population.xml.gz"/>
+    <param name="inputPersonAttributesFile" value="~/test/population_attributes.xml.gz"/>
+    <param name="inputPlansFile" value="~/test/population.xml.gz"/>
     <param name="networkRouteType" value="LinkNetworkRoute"/>
     <param name="removingUnnecessaryPlanAttributes" value="false"/>
     <param name="subpopulationAttributeName" value="subpopulation"/>
@@ -28,10 +28,10 @@
     <param name="inputScheduleCRS" value="null"/>
     <param name="transitLinesAttributesFile" value="null"/>
     <param name="transitModes" value="bus,train"/>
-    <param name="transitScheduleFile" value="~/tii/schedule-merged.xml"/>
+    <param name="transitScheduleFile" value="~/test/schedule-merged.xml"/>
     <param name="transitStopsAttributesFile" value="null"/>
     <param name="useTransit" value="true"/>
-    <param name="vehiclesFile" value="~/tii/vehicles.xml"/>
+    <param name="vehiclesFile" value="~/test/vehicles.xml"/>
   </module>
   <module name="swissRailRaptor">
     <param name="useModeMappingForPassengers" value="true"/>
@@ -76,7 +76,7 @@
     <param name="firstIteration" value="0"/>
     <param name="lastIteration" value="100"/>
     <param name="mobsim" value="qsim"/>
-    <param name="outputDirectory" value="home/arup/tii/1p_models/3_default_config/model_out"/>
+    <param name="outputDirectory" value="model_out"/>
     <param name="overwriteFiles" value="failIfDirectoryExists"/>
     <param name="routingAlgorithmType" value="Dijkstra"/>
     <param name="runId" value="null"/>
