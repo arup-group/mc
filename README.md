@@ -30,7 +30,7 @@ pip3 install -e .
 pytest
 ```
 
-Although we recomment using a virtual environment as shown above (`virtualenv...` & `source...`), mc requirements are minimal so you may get away with your default environment.
+Although we recomment using a virtual environment as shown above (`virtualenv...` & `source...`), MC requirements are minimal so you may get away with your default environment.
 
 ## Usage
 
@@ -69,7 +69,7 @@ Commands:
 
 ### Print Example
 
-(from mc root)
+(from MC root)
 
 ```{bash}
 ❯ mc print tests/test_data/test_config.xml
@@ -92,7 +92,7 @@ module {'name': 'global'}
 
 ### Diff Example
 
-(from mc root)
+(from MC root)
 
 ```{bash}
 ❯ mc diff tests/test_data/test_config.xml tests/test_data/test_config_v12.xml
@@ -106,7 +106,7 @@ module {'name': 'global'}
 
 ### Find Example
 
-(from mc root)
+(from MC root)
 
 ```{bash}
 ❯ mc find tests/test_data/test_config.xml coordinateSystem
@@ -124,7 +124,7 @@ You can read about more complex addressing in [Find](##find).
 from mc import build
 ```
 
-To facilitate a beautiful future where humans never need edit xml and machines start to explore MATSim simulation config parameter spaces themselves, mc makes a dictionary-like `mc.build.Config` object available. `Config` objects can read and write to MATSim `.xml` config format (and `.json` just in case).
+To facilitate a beautiful future where humans never need edit xml and machines start to explore MATSim simulation config parameter spaces themselves, MC makes a dictionary-like `mc.build.Config` object available. `Config` objects can read and write to MATSim `.xml` config format (and `.json` just in case).
 
 ```{python}
 config = build.Config(path='tests/test_data/test_config.xml')
@@ -137,9 +137,13 @@ config == config2
 True
 ```
 
+### Quick Reminder
+
+MATSim configs consist of modules, these modules can contain either parameters and/or parameter***sets*** (ie sets of paramaters). Paramater***sets*** can then contain either parameters and/or more parameter***sets***.
+
 ### Setting and Getting
 
-`Config` objects consist of nested `Modules`, `ParamSets` and `Params` (just like a MATSim xml formatted config). All of which will behave like a nested set of dicts. For example supporting getting and setting methods:
+`Config` objects consist of nested `Modules`, `ParamSets` and `Params` (just like a MATSim xml formatted config). All of which will behave like a nested set of dicts. Icluding supporting getting and setting methods:
 
 ```{python}
 # get and print module contents:
@@ -211,7 +215,7 @@ objects via `.valid_keys`. Note that valid keys and values are hardcoded in `mc.
 
 ### Unique Parameterset Keys
 
-MATSim configurations include parametersets for which the unique identification (such as the mode or subpopulation) is contained as a parameter. So that we can provide unique keys for the parameterset, we therefore suffix ParamSet keys as `<paramset_name>:<uid>` where `uid` is the appropriate parameterset
+MATSim configurations include parameter***sets*** for which the unique identification (such as the mode or subpopulation) is contained as a parameter. So that we can provide unique keys for the parameter***set***, we therefore suffix parameter***set*** keys as `<paramset_name>:<uid>` where `uid` is the appropriate parameterset
 subpopulation, mode or activity:
 
 ```{python}
