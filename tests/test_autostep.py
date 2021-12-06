@@ -85,40 +85,40 @@ def test_fix_relative_input_paths_to_abs(test_path_config):
     seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
     config_dir = os.path.dirname(seed_matsim_config_path)
 
-    assert test_path_config['network']['inputNetworkFile'] == "./tii/network.xml"
-    assert test_path_config['plans']['inputPlansFile'] == "../tii/1p_models/population.xml.gz"
+    assert test_path_config['network']['inputNetworkFile'] == "./test/network.xml"
+    assert test_path_config['plans']['inputPlansFile'] == "../test/population.xml.gz"
 
     autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
 
     assert test_path_config['network']['inputNetworkFile'] == os.path.abspath(
-        os.path.join(config_dir, "tii", "network.xml")
+        os.path.join(config_dir, "test", "network.xml")
     )
     assert test_path_config['plans']['inputPlansFile'] == os.path.abspath(
-        os.path.join(config_dir, "..", "tii", "1p_models", "population.xml.gz")
+        os.path.join(config_dir, "..", "test", "population.xml.gz")
     )
 
 
 def test_absolute_input_paths_retained(test_path_config):
     seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
 
-    assert test_path_config['transit']['vehiclesFile'] == "/tii/vehicles.xml"
+    assert test_path_config['transit']['vehiclesFile'] == "/test/vehicles.xml"
 
     autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
 
     assert test_path_config['transit']['vehiclesFile'] == os.path.abspath(
-        os.path.join("/", "tii", "vehicles.xml")
+        os.path.join("/", "test", "vehicles.xml")
     )
 
 
 def test_fix_relative_home_input_paths_to_abs(test_path_config):
     seed_matsim_config_path = os.path.join(this_dir(), "test_data/test_path_config.xml")
 
-    assert test_path_config['transit']['transitScheduleFile'] == "~/tii/schedule-merged.xml"
+    assert test_path_config['transit']['transitScheduleFile'] == "~/test/schedule-merged.xml"
 
     autostep.fix_relative_input_paths_to_abs(test_path_config, seed_matsim_config_path)
 
     assert test_path_config['transit']['transitScheduleFile'] == os.path.expanduser(
-        os.path.join("~", "tii", "schedule-merged.xml")
+        os.path.join("~", "test", "schedule-merged.xml")
     )
 
 
@@ -180,16 +180,16 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "network.xml")
+        os.path.expanduser(os.path.join("~", "test", "network.xml")
     ))
     assert config['plans']['inputPlansFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "1p_models", "population.xml.gz")
+        os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
     ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "schedule-merged.xml")
+        os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
     ))
     assert config['transit']['vehiclesFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "vehicles.xml")
+        os.path.expanduser(os.path.join("~", "test", "vehicles.xml")
     ))
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
@@ -280,16 +280,16 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     assert config['controler']['lastIteration'] == '10'
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "network.xml")
+        os.path.expanduser(os.path.join("~", "test", "network.xml")
     ))
     assert config['plans']['inputPlansFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "1p_models", "population.xml.gz")
+        os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
     ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "schedule-merged.xml")
+        os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
     ))
     assert config['transit']['vehiclesFile'] == os.path.abspath(
-        os.path.expanduser(os.path.join("~", "tii", "vehicles.xml")
+        os.path.expanduser(os.path.join("~", "test", "vehicles.xml")
     ))
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"

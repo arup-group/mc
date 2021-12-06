@@ -14,7 +14,7 @@
 	<!-- The Coordinates Reference System in which the coordinates are expressed in the input file. At import, the coordinates will be converted to the coordinate system defined in "global", and willbe converted back at export. If not specified, no conversion happens. -->
 	<param name="inputCRS" value="null" />
 	<param name="inputChangeEventsFile" value="null" />
-	<param name="inputNetworkFile" value="~/tii/network.xml" />
+	<param name="inputNetworkFile" value="~/test/network.xml" />
 	<param name="laneDefinitionsFile" value="null" />
 	<param name="timeVariantNetwork" value="false" />
 </module>
@@ -25,7 +25,7 @@
 	<!-- The Coordinates Reference System in which the coordinates are expressed in the input file. At import, the coordinates will be converted to the coordinate system defined in "global", and willbe converted back at export. If not specified, no conversion happens. -->
 	<param name="inputCRS" value="null" />
 	<!-- Path to a file containing person attributes (required file format: ObjectAttributes). -->
-	<param name="inputPlansFile" value="~/tii/1p_models/population.xml.gz" />
+	<param name="inputPlansFile" value="~/test/population.xml.gz" />
 	<!-- Defines how routes are stored in memory. Currently supported: LinkNetworkRoute, CompressedNetworkRoute. -->
 	<param name="networkRouteType" value="LinkNetworkRoute" />
 	<!-- (not tested) will remove plan attributes that are presumably not used, such as activityStartTime. default=false -->
@@ -42,13 +42,13 @@
 	<!-- Comma-separated list of transportation modes that are handled as transit. Defaults to 'pt'. -->
 	<param name="transitModes" value="bus,train" />
 	<!-- Input file containing the transit schedule to be simulated. -->
-	<param name="transitScheduleFile" value="~/tii/schedule-merged.xml" />
+	<param name="transitScheduleFile" value="~/test/schedule-merged.xml" />
 	<!-- Optional input file containing additional attributes for transit stop facilities, stored as ObjectAttributes. -->
 	<param name="transitStopsAttributesFile" value="null" />
 	<!-- Set this parameter to true if transit should be simulated, false if not. -->
 	<param name="useTransit" value="true" />
 	<!-- Input file containing the vehicles used by the departures in the transit schedule. -->
-	<param name="vehiclesFile" value="~/tii/vehicles.xml" />
+	<param name="vehiclesFile" value="~/test/vehicles.xml" />
 </module>
 <!-- ====================================================================== -->
 <module name="swissRailRaptor">
@@ -119,7 +119,7 @@
 	Depending on the chosen mobsim, you'll have to add additional config modules to configure the corresponding mobsim.
 	For 'qsim', add a module 'qsim' to the config. -->
 	<param name="mobsim" value="qsim" />
-	<param name="outputDirectory" value="home/arup/tii/1p_models/3_default_config/model_out" />
+	<param name="outputDirectory" value="model_out" />
 	<!-- Possible values: failIfDirectoryExists, overwriteExistingFiles, deleteDirectoryIfExists -->
 	<param name="overwriteFiles" value="failIfDirectoryExists" />
 	<!-- The type of routing (least cost path) algorithm used, may have the values: Dijkstra, FastDijkstra, AStarLandmarks or FastAStarLandmarks -->

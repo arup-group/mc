@@ -38,7 +38,7 @@ MC has a Command Line Interface (CLI), but also a useful pythonic API for bespok
 
 The CLI provides a number of features, introduced below. These include some general purpose functionality such as `diff`, as well as some bespoke features required for other tooling, such as `paramreplace`, `step` and `autostep`.
 
-We are also interested in maintaining a `debug` command to catch common config mistakes. If you have a feature in mind, such as debugging of a common config mistake please add it to the projects issues.
+We are also interested in maintaining a `debug` command to catch common config mistakes. If you have a feature in mind, such as debugging of a common config mistake please add it to the project issues.
 
 ## Command Line
 
@@ -84,7 +84,7 @@ module {'name': 'global'}
  module {'name': 'network'}
    param {'name': 'inputCRS', 'value': 'null'}
    param {'name': 'inputChangeEventsFile', 'value': 'null'}
-   param {'name': 'inputNetworkFile', 'value': '~/tii/network.xml'}
+   param {'name': 'inputNetworkFile', 'value': '~/test/network.xml'}
    param {'name': 'laneDefinitionsFile', 'value': 'null'}
    param {'name': 'timeVariantNetwork', 'value': 'false'}
    ...
@@ -238,14 +238,13 @@ Both the CLI and API support searches for config components using an addressing 
 
 ```{python}
 config = build.Config(path='tests/test_data/test_config.xml')
-config['plans']['inputPlansFile'] = 'PATH'
 search = config.find("plans/inputPlansFile")
 for i in search:
   i.print()
 ```
 
 ```{python}
-param {'name': 'inputPlansFile', 'value': '~/tii/1p_models/population.xml.gz'}
+param {'name': 'inputPlansFile', 'value': '~/test/population.xml.gz'}
 ```
 
 Find is returning a list because it supports partial addresses which result in multiple finds:
