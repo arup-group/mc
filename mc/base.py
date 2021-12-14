@@ -595,7 +595,6 @@ class Module(Base):
         Returns:
             list: found config elements
         """
-
         list_address = address.strip("/").split("/")
 
         if len(list_address) == 1:  # reached end of address
@@ -612,7 +611,8 @@ class Module(Base):
                 for candidate in self.parametersets:
                     if specials_snap(candidate, address):
                         snaps.append(self.parametersets[candidate])
-                return snaps
+                if snaps:
+                    return snaps
 
         if list_address[0] in self.parametersets:  # regular find recurse
             found = list_address.pop(0)
@@ -741,7 +741,6 @@ class ParamSet(Base):
         Returns:
             list: found config elements
         """
-
         list_address = address.strip("/").split("/")
 
         if len(list_address) == 1:  # end recursion as address is all used
@@ -758,7 +757,8 @@ class ParamSet(Base):
                 for candidate in self.parametersets:
                     if specials_snap(candidate, address):
                         snaps.append(self.parametersets[candidate])
-                return snaps
+                if snaps:
+                    return snaps
 
         if list_address[0] in self.parametersets:
             found = list_address.pop(0)
