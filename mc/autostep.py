@@ -73,7 +73,7 @@ def autostep_config(
     # after first iteration, matsim should have created the dir already (for previous step outputs).
     biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
     config.write(biteration_matsim_config_path)
-    
+
     # summarise the key information from matsim config to a text file
     write_summary_log(config, biteration_matsim_config_path)
 
