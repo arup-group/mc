@@ -44,7 +44,7 @@ def write_text(text, output_path):
     """
     Write the key information into a text file
     """
-    textfile = open(os.path.join(output_path,'simulation_log.txt'), 'w')
+    textfile = open(os.path.join(output_path, 'simulation_log.txt'), 'w')
     for element in text:
         textfile.write(element + "\n")
     textfile.close()
