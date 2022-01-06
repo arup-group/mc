@@ -1,7 +1,7 @@
 import os
 
 
-def write_summary_log(config, output_path):
+def build_summary(config):
     """
     Summarise the key information as text log from matsim config when submitting jobs via the Bitsim Orchestration
     """
@@ -37,9 +37,19 @@ def write_summary_log(config, output_path):
 {score_para['modeParams:' + str(i)]['marginalUtilityOfTraveling_util_hr']}")
         message.append(f"monetary_distance_rate:\
 {score_para['modeParams:' + str(i)]['monetaryDistanceRate']}")
+    return message
 
-    # write the above key information to a text file
-    textfile = open(os.path.join(output_path, 'simulation_log.txt'), 'w')
-    for element in message:
+
+def write_text(text, output_path):
+    """
+    Write the key information into a text file
+    """
+    textfile = open(os.path.join(output_path,'simulation_log.txt'), 'w')
+    for element in text:
         textfile.write(element + "\n")
     textfile.close()
+
+
+def summarise_config(config, output_path):
+    text = build_summary(config)
+    write_text(text, output_path)
