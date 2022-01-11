@@ -1,9 +1,10 @@
 import os
 
 
-def build_summary(config):
+def diretory_log_summary(config):
     """
-    Summarise the key information as text log from matsim config when submitting jobs via the Bitsim Orchestration
+    Summarise the input and out diretories and key information as text log from matsim config
+    When submitting jobs via the Bitsim Orchestration
     """
     message = []
 
@@ -14,29 +15,71 @@ def build_summary(config):
     message.append(f"schedule_path:{config['transit']['transitScheduleFile']}")
     message.append(f"vehicles_path:{config['transit']['vehiclesFile']}")
 
+    # add paths of the output diretory
+    message.append("{:=^100s}".format("output directory"))
+    message.append(f"output_directory:{config['controler']['outputDirectory']}")
+
     # add mobsim setting summary
     message.append("{:=^100s}".format("mobsim setting"))
     message.append(f"mobsim:{config['controler']['mobsim']}")
     message.append(f"Flow_Capacity_Factor:{config[config['controler']['mobsim']]['flowCapacityFactor']}")
     message.append(f"Storage_Capacity_Factor:{config[config['controler']['mobsim']]['storageCapacityFactor']}")
 
+    return message
+
+
+def scoring_summary(config):
+    """
+    Summarise the key scoring parameters
+
+    """
+    message = diretory_log_summary(config)
+
     # check mode choice
     message.append("{:=^100s}".format("mode"))
     message.append(f"{config['subtourModeChoice']['modes']}")
+    dict1 = {}
+    for mode in (config['subtourModeChoice']['modes'].split(',')):
+        dict1[mode] = ["mode_specific_constant:",
+                       "marginal_utility_of_distance:",
+                       "marginal_utility_of_traveling:",
+                       "monetary_distance_rate:"]
+
+    # add subpopulation in the score calcualtion
+    subpopulation_set = set()
+    subpop = 'subpopulation: '
+    for i in config['planCalcScore'].find('subpopulation'):
+        subpopulation_set.add(i.value)
+        subpop = subpop + str(i.value) + ','
 
     # summarise the scoring parameters for each mode
+    performing = "performing:"
+    utility = 'marginalUtilityOfMoney:'
     message.append("{:=^100s}".format("parameters for scoring"))
-    for i in config['subtourModeChoice']['modes'].split(','):
-        message.append("{:-^100s}".format("mode:" + str(i)))
-        score_para = config['planCalcScore']['scoringParameters:default']
-        message.append(f"mode_specific_constant:\
-{score_para['modeParams:' + str(i)]['monetaryDistanceRate']}")
-        message.append(f"marginal_utility_of_distance:\
-{score_para['modeParams:' + str(i)]['marginalUtilityOfDistance_util_m']}")
-        message.append(f"marginal_utility_of_traveling:\
-{score_para['modeParams:' + str(i)]['marginalUtilityOfTraveling_util_hr']}")
-        message.append(f"monetary_distance_rate:\
-{score_para['modeParams:' + str(i)]['monetaryDistanceRate']}")
+    for i in subpopulation_set:
+        score_para = config['planCalcScore']['scoringParameters:' + str(i)]
+        performing += score_para['performing'] + ','
+        utility += score_para['marginalUtilityOfMoney'] + ','
+
+        for idx, mode in enumerate(config['subtourModeChoice']['modes'].split(',')):
+            dict1[mode][0] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+            dict1[mode][1] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
+            dict1[mode][2] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
+            dict1[mode][3] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+
+    # add scoring parameters for different subpopulation
+    message.append("{:=^100s}".format("subpopulation"))
+    message.append(subpop)
+    message.append("{:=^50s}".format("scoring parameters for subpopulation"))
+    message.append(utility)
+    message.append(performing)
+
+    # append the scoring parameters for each mode to the log
+    for mode in (config['subtourModeChoice']['modes'].split(',')):
+        message.append("{:-^50s}".format("mode:" + str(mode)))
+        for para in dict1[mode]:
+            message.append(para)
+
     return message
 
 
@@ -51,5 +94,5 @@ def write_text(text, output_path):
 
 
 def summarise_config(config, output_path):
-    text = build_summary(config)
+    text = scoring_summary(config)
     write_text(text, output_path)
