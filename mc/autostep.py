@@ -3,6 +3,7 @@ from pathlib import Path
 
 from mc.base import BaseConfig, Param
 from mc.logger import logging
+from mc.summarise import summarise_config
 
 DEFAULT_MATSIM_CONFIG_NAME = "matsim_config.xml"
 DEFAULT_PLANS_NAME = "output_plans.xml.gz"
@@ -72,6 +73,10 @@ def autostep_config(
     # after first iteration, matsim should have created the dir already (for previous step outputs).
     biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
     config.write(biteration_matsim_config_path)
+
+    # summarise the key information from matsim config to a text file
+    text_log_path = biteration_matsim_config_path.parent
+    summarise_config(config, text_log_path)
 
     logging.info("Autostep complete")
 
