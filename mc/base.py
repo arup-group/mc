@@ -145,8 +145,9 @@ class Base:
                 self.modules[key] = Module(key, xml_object=sub_object)
 
             elif sub_object.tag == "parameterset":
-                _, key = build_paramset_key(sub_object)
-                self.parametersets[key] = ParamSet(key, xml_object=sub_object)
+                _, key, uid = build_paramset_key(sub_object)
+
+                self.parametersets[key] = ParamSet(key, xml_object=sub_object, uid=uid)
 
             else:
                 continue
@@ -529,14 +530,17 @@ class Module(Base):
 
     class_type = "module"
 
-    def __init__(self, name, xml_object=None, json_object=None) -> None:
+    def __init__(self, name, xml_object=None, json_object=None, uid=None) -> None:
         """
         Module object contains nested parametersets and params.
         :param name: str
         :param xml_object:
         :param json_object:
         """
+        self.key = name
+        self.ident = name
         self.name = name
+        self.uid = uid
         self.ident = self.name
         self.data = {'name': self.name}
         self.params = {}
@@ -575,7 +579,7 @@ class Module(Base):
         # build and return new paramset if valid
         if self.valid_paramset_key(key):
             print(f"INFO creating new empty parameterset: {key}")
-            self.parametersets[key] = ParamSet(ident=key)
+            self.parametersets[key] = ParamSet(name=key)
             return self.parametersets[key]
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
@@ -591,7 +595,6 @@ class Module(Base):
         Returns:
             list: found config elements
         """
-
         list_address = address.strip("/").split("/")
 
         if len(list_address) == 1:  # reached end of address
@@ -608,7 +611,8 @@ class Module(Base):
                 for candidate in self.parametersets:
                     if specials_snap(candidate, address):
                         snaps.append(self.parametersets[candidate])
-                return snaps
+                if snaps:
+                    return snaps
 
         if list_address[0] in self.parametersets:  # regular find recurse
             found = list_address.pop(0)
@@ -673,15 +677,18 @@ class ParamSet(Base):
 
     class_type = "paramset"
 
-    def __init__(self, ident, xml_object=None, json_object=None) -> None:
+    def __init__(self, name, xml_object=None, json_object=None, uid=None) -> None:
         """
         Parameterset object, holding nested parametersets and params.
         :param ident: str
         :param xml_object: Element
         :param json_object: dict
         """
-        self.ident = ident
-        self.type = get_paramset_type(ident)
+        self.key = name
+        self.ident = name
+        self.name = name
+        self.uid = uid
+        self.type = get_paramset_type(name)
         self.data = {'type': self.type}
         self.params = {}
         self.parametersets = {}
@@ -718,7 +725,7 @@ class ParamSet(Base):
         # build and return new paramset if valid
         if self.valid_paramset_key(key):
             print(f"INFO creating new empty parameterset: {key}")
-            self.parametersets[key] = ParamSet(ident=key)
+            self.parametersets[key] = ParamSet(name=key)
             return self.parametersets[key]
 
         raise KeyError(f"key:'{key}' not found in params/sets and not valid")
@@ -734,7 +741,6 @@ class ParamSet(Base):
         Returns:
             list: found config elements
         """
-
         list_address = address.strip("/").split("/")
 
         if len(list_address) == 1:  # end recursion as address is all used
@@ -751,7 +757,8 @@ class ParamSet(Base):
                 for candidate in self.parametersets:
                     if specials_snap(candidate, address):
                         snaps.append(self.parametersets[candidate])
-                return snaps
+                if snaps:
+                    return snaps
 
         if list_address[0] in self.parametersets:
             found = list_address.pop(0)
@@ -819,19 +826,21 @@ class Param(Base):
 
     class_type = "param"
 
-    def __init__(self, name: str, value: str) -> None:
+    def __init__(self, name: str, value: str, uid=None) -> None:
         """
         Parameter object.
         :param name: str
         :param value: str
         """
+        self.key = name
         self.ident = name
         self.name = name
+        self.uid = uid
         self.value = value
         self.data = {'name': self.name, 'value': self.value}
 
     def __str__(self) -> str:
-        return super().__str__()
+        return self.data
 
     def __getitem__(self, key):
         return self.data[key]
@@ -899,7 +908,7 @@ def json_path(path: Path) -> bool:
     return False
 
 
-def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
+def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
     """
     Function to extract the appropriate suffix from a given parameterset xml element. Returns the
     element type (either for subpopulation, mode or activity) and new key. This key is used to
@@ -910,30 +919,31 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str]:
     paramset_type = elem.attrib["type"]
 
     if paramset_type == "activityParams":
-        name, = [p.attrib['value'] for p in elem.xpath("./param[@name='activityType']")]
-        key = paramset_type + ":" + name
-        return paramset_type, key
+        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='activityType']")]
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
 
     if paramset_type in ["modeParams", "teleportedModeParameters", "intermodalAccessEgress"]:
-        name, = [p.attrib['value'] for p in elem.xpath("./param[@name='mode']")]
-        key = paramset_type + ":" + name
-        return paramset_type, key
+        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='mode']")]
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
 
     if paramset_type in ["scoringParameters"]:
-        name, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
-        key = paramset_type + ":" + name
-        return paramset_type, key
+        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
 
     if paramset_type in ["strategysettings"]:
         subpop, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
         strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
-        key = paramset_type + ":" + subpop + ":" + strategy
-        return paramset_type, key
+        uid = subpop + ":" + strategy
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
 
     if paramset_type in ["modeMapping"]:
-        name, = [p.attrib['value'] for p in elem.xpath("./param[@name='passengerMode']")]
-        key = paramset_type + ":" + name
-        return paramset_type, key
+        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='passengerMode']")]
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
 
     raise ValueError(f"unrecognised parameterset of type: {paramset_type} in xml")
 
