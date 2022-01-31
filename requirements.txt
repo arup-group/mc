@@ -1,6 +1,6 @@
 Click==7.1.2
 flake8==3.9.2
-lxml==4.6.3
+lxml==4.6.5
 pytest-cov==2.11.1
 pytest==6.2.3
 setuptools==56.0.0
