@@ -1,4 +1,5 @@
 import os
+from datetime import date
 
 
 def diretory_log_summary(config):
@@ -7,6 +8,8 @@ def diretory_log_summary(config):
     When submitting jobs via the Bitsim Orchestration
     """
     message = []
+    # add the date
+    message.append(f"Date:{date.today()}")
 
     # add paths of the input files
     message.append("{:=^100s}".format("input files"))
@@ -46,11 +49,13 @@ def scoring_summary(config):
                        "monetary_distance_rate:"]
 
     # add subpopulation in the score calcualtion
-    subpopulation_set = set()
+    subpopulation_set = {}
     subpop = 'subpopulation: '
     for i in config['planCalcScore'].find('subpopulation'):
-        subpopulation_set.add(i.value)
+        subpopulation_set.setdefault(str(i.value), [])
         subpop = subpop + str(i.value) + ','
+        for j in config.find("scoringParameters:" + str(i.value) + "/mode"):
+            subpopulation_set[str(i.value)].append(j.value)
 
     # summarise the scoring parameters for each mode
     performing = "performing:"
@@ -62,10 +67,16 @@ def scoring_summary(config):
         utility += score_para['marginalUtilityOfMoney'] + ','
 
         for idx, mode in enumerate(config['subtourModeChoice']['modes'].split(',')):
-            dict1[mode][0] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
-            dict1[mode][1] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
-            dict1[mode][2] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
-            dict1[mode][3] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+            if mode not in subpopulation_set[str(i)]:
+                dict1[mode][0] += 'NA'
+                dict1[mode][1] += 'NA'
+                dict1[mode][2] += 'NA'
+                dict1[mode][3] += 'NA'
+            else:
+                dict1[mode][0] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+                dict1[mode][1] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
+                dict1[mode][2] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
+                dict1[mode][3] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
 
     # add scoring parameters for different subpopulation
     message.append("{:=^100s}".format("subpopulation"))
