@@ -1,10 +1,9 @@
+Date:2022-02-01
 ============================================input files=============================================
 network_path:~/test/network.xml
 plans_path:~/test/population.xml.gz
 schedule_path:~/test/schedule-merged.xml
 vehicles_path:~/test/vehicles.xml
-==========================================output directory==========================================
-output_directory:model_out
 ===========================================mobsim setting===========================================
 mobsim:qsim
 Flow_Capacity_Factor:0.01
@@ -18,17 +17,17 @@ subpopulation: default,unknown,
 marginalUtilityOfMoney:0.0,0.0,
 performing:6.0,6.0,
 ---------------------mode:car---------------------
-mode_specific_constant:-0.0,-0.0,
+mode_specific_constant:0.0,0.0,
 marginal_utility_of_distance:0.0,0.0,
 marginal_utility_of_traveling:-6.0,-6.0,
 monetary_distance_rate:-0.0,-0.0,
 ---------------------mode:bus---------------------
-mode_specific_constant:-0.0,-0.0,
+mode_specific_constant:0.0,0.0,
 marginal_utility_of_distance:-0.0,-0.0,
 marginal_utility_of_traveling:-12.0,-12.0,
 monetary_distance_rate:-0.0,-0.0,
 --------------------mode:train--------------------
-mode_specific_constant:-0.0,-0.0,
+mode_specific_constant:0.0,0.0,
 marginal_utility_of_distance:-0.0,-0.0,
 marginal_utility_of_traveling:-12.0,-12.0,
 monetary_distance_rate:-0.0,-0.0,
@@ -38,7 +37,7 @@ marginal_utility_of_distance:-0.0,-0.0,
 marginal_utility_of_traveling:-12.0,-12.0,
 monetary_distance_rate:0.0,0.0,
 --------------------mode:bike---------------------
-mode_specific_constant:-0.0,-0.0,
+mode_specific_constant:0.0,0.0,
 marginal_utility_of_distance:-0.0,-0.0,
 marginal_utility_of_traveling:-12.0,-12.0,
 monetary_distance_rate:-0.0,-0.0,
