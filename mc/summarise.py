@@ -72,7 +72,7 @@ def scoring_summary(config):
                 parm[mode][2] += 'NA'
                 parm[mode][3] += 'NA'
             else:
-                parm[mode][0] += str(score_parm['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+                parm[mode][0] += str(score_parm['modeParams:' + str(mode)]['constant'] + ',')
                 parm[mode][1] += str(score_parm['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
                 parm[mode][2] += str(score_parm['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
                 parm[mode][3] += str(score_parm['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
