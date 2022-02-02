@@ -1,12 +1,15 @@
 import os
+from datetime import date
 
 
-def diretory_log_summary(config):
+def directory_log_summary(config):
     """
     Summarise the input and out diretories and key information as text log from matsim config
     When submitting jobs via the Bitsim Orchestration
     """
     message = []
+    # add the date
+    message.append(f"Date:{date.today()}")
 
     # add paths of the input files
     message.append("{:=^100s}".format("input files"))
@@ -33,39 +36,46 @@ def scoring_summary(config):
     Summarise the key scoring parameters
 
     """
-    message = diretory_log_summary(config)
+    message = directory_log_summary(config)
 
     # check mode choice
     message.append("{:=^100s}".format("mode"))
     message.append(f"{config['subtourModeChoice']['modes']}")
-    dict1 = {}
+    parm = {}
     for mode in (config['subtourModeChoice']['modes'].split(',')):
-        dict1[mode] = ["mode_specific_constant:",
-                       "marginal_utility_of_distance:",
-                       "marginal_utility_of_traveling:",
-                       "monetary_distance_rate:"]
-
+        parm[mode] = ["mode_specific_constant:",
+                      "marginal_utility_of_distance:",
+                      "marginal_utility_of_traveling:",
+                      "monetary_distance_rate:"]
     # add subpopulation in the score calcualtion
-    subpopulation_set = set()
+    subpopulation_set = {}
     subpop = 'subpopulation: '
     for i in config['planCalcScore'].find('subpopulation'):
-        subpopulation_set.add(i.value)
+        subpopulation_set.setdefault(str(i.value), [])
         subpop = subpop + str(i.value) + ','
+        for j in config.find("scoringParameters:" + str(i.value) + "/mode"):
+            subpopulation_set[str(i.value)].append(j.value)
 
     # summarise the scoring parameters for each mode
     performing = "performing:"
     utility = 'marginalUtilityOfMoney:'
     message.append("{:=^100s}".format("parameters for scoring"))
     for i in subpopulation_set:
-        score_para = config['planCalcScore']['scoringParameters:' + str(i)]
-        performing += score_para['performing'] + ','
-        utility += score_para['marginalUtilityOfMoney'] + ','
+        score_parm = config['planCalcScore']['scoringParameters:' + str(i)]
+        performing += score_parm['performing'] + ','
+        utility += score_parm['marginalUtilityOfMoney'] + ','
 
         for idx, mode in enumerate(config['subtourModeChoice']['modes'].split(',')):
-            dict1[mode][0] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
-            dict1[mode][1] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
-            dict1[mode][2] += str(score_para['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
-            dict1[mode][3] += str(score_para['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+            if mode not in subpopulation_set[str(i)]:
+                parm[mode][0] += 'NA'
+                parm[mode][1] += 'NA'
+                parm[mode][2] += 'NA'
+                parm[mode][3] += 'NA'
+            else:
+                parm[mode][0] += str(score_parm['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
+                parm[mode][1] += str(score_parm['modeParams:' + str(mode)]['marginalUtilityOfDistance_util_m'] + ',')
+                parm[mode][2] += str(score_parm['modeParams:' + str(mode)]['marginalUtilityOfTraveling_util_hr'] + ',')
+                parm[mode][3] += str(score_parm['modeParams:' + str(mode)]['monetaryDistanceRate'] + ',')
 
     # add scoring parameters for different subpopulation
     message.append("{:=^100s}".format("subpopulation"))
@@ -77,7 +87,7 @@ def scoring_summary(config):
     # append the scoring parameters for each mode to the log
     for mode in (config['subtourModeChoice']['modes'].split(',')):
         message.append("{:-^50s}".format("mode:" + str(mode)))
-        for para in dict1[mode]:
+        for para in parm[mode]:
             message.append(para)
 
     return message

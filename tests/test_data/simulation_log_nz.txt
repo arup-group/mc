@@ -1,0 +1,53 @@
+Date:2022-02-01
+============================================input files=============================================
+network_path:/efs/executions/sixteen-skylark-winner-sweet/new_lane_defaults/network.xml
+plans_path:/efs/inputs/population/v2_20210629/combined/population.xml
+schedule_path:/efs/executions/sixteen-skylark-winner-sweet/genet_output/updated_vehicle_network_20211103/schedule.xml
+vehicles_path:/efs/executions/sixteen-skylark-winner-sweet/genet_output/updated_vehicle_network_20211103/vehicles_1perc.xml
+===========================================mobsim setting===========================================
+mobsim:hermes
+Flow_Capacity_Factor:0.01
+Storage_Capacity_Factor:0.05
+================================================mode================================================
+bus,bike,walk,rail,car,ferry,cablecar
+=======================================parameters for scoring=======================================
+===========================================subpopulation============================================
+subpopulation: default,hhs_carAvailyes,hhs_carAvailnever,hgv,
+=======scoring parameters for subpopulation=======
+marginalUtilityOfMoney:10,10,10,10,
+performing:100,100,100,100,
+---------------------mode:bus---------------------
+mode_specific_constant:-1,-1,-1,NA
+marginal_utility_of_distance:0.0,0.0,0.0,NA
+marginal_utility_of_traveling:-2,-2,-2,NA
+monetary_distance_rate:-0.00036832,-0.00036832,-0.00036832,NA
+--------------------mode:bike---------------------
+mode_specific_constant:-20,-20,-20,NA
+marginal_utility_of_distance:-0.1,-0.1,-0.1,NA
+marginal_utility_of_traveling:0,0,0,NA
+monetary_distance_rate:-0.0,-0.0,-0.0,NA
+--------------------mode:walk---------------------
+mode_specific_constant:-0,-0,-0,NA
+marginal_utility_of_distance:-0.01,-0.01,-0.01,NA
+marginal_utility_of_traveling:0,0,0,NA
+monetary_distance_rate:0.0,0.0,0.0,NA
+--------------------mode:rail---------------------
+mode_specific_constant:-1,-1,-1,NA
+marginal_utility_of_distance:0.0,0.0,0.0,NA
+marginal_utility_of_traveling:-1,-1,-1,NA
+monetary_distance_rate:-0.00011177,-0.00011177,-0.00011177,NA
+---------------------mode:car---------------------
+mode_specific_constant:-20,-20,-20,-20,
+marginal_utility_of_distance:0.0,0.0,0.0,-0.0,
+marginal_utility_of_traveling:-0.0,-0.0,-0.0,-0.0,
+monetary_distance_rate:-0.0001,-0.0001,-0.0001,-0.0001,
+--------------------mode:ferry--------------------
+mode_specific_constant:-1,-1,-1,NA
+marginal_utility_of_distance:0.0,0.0,0.0,NA
+marginal_utility_of_traveling:-2,-2,-2,NA
+monetary_distance_rate:-0.00036832,-0.00036832,-0.00036832,NA
+------------------mode:cablecar-------------------
+mode_specific_constant:-1,-1,-1,NA
+marginal_utility_of_distance:0.0,0.0,0.0,NA
+marginal_utility_of_traveling:-2,-2,-2,NA
+monetary_distance_rate:-0.00036832,-0.00036832,-0.00036832,NA
