@@ -391,9 +391,6 @@ class BaseConfig(Base, BaseDebug):
         if path is None:
             return None
 
-        if path is None:
-            return None
-
         if isinstance(path, str):
             path = Path(path)
 

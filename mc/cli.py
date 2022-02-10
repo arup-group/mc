@@ -36,7 +36,7 @@ def step(
 
 @cli.command()
 @click.argument('sim_root', type=click.Path(exists=False))
-@click.argument('seed_matsim_config_path', type=click.Path(writable=True))
+@click.argument('seed_matsim_config_path', type=click.Path(exists=True))
 @click.argument('start_index', type=str)
 @click.argument('total_iterations', type=str)
 @click.argument('step', type=str)
