@@ -1,0 +1,13 @@
+venv/
+reports/
+scripts/
+tests/
+
+mc.egg-info/
+.github
+.coverage
+.gitignore
+.dockerignore
+
+Dockerfile
+*.md
