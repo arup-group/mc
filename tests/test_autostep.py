@@ -51,7 +51,7 @@ def test_set_innovation(config):
 
 def test_set_cooling(config, total_iterations, start_index, step, new_fraction):
     assert not config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
-    autostep.set_cooling(config=config, total_iterations=total_iterations, start_index=start_index, step=step)
+    autostep.set_cooling(config=config, total_iterations=total_iterations, start_index=start_index, step=step, target=10)
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == new_fraction
 
 
@@ -355,7 +355,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
             "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
             )
         )
-    
+
     assert set(os.listdir(tmp_path)) == {"0", "10", "20"}
     for i in range(10, 30, 10):
         out_dir = os.path.join(tmp_path, str(i+10))
@@ -403,7 +403,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
             "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
             )
         )
-    
+
     assert set(os.listdir(tmp_path)) == {"0", "10", "20", "30"}
     for i in range(10, 30, 10):
         out_dir = os.path.join(tmp_path, str(i+10))
