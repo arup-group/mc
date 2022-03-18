@@ -93,12 +93,12 @@ def construct_override_map_from_tuple(overrides: tuple) -> dict:
 def set_cooling(config, total_iterations, start_index, step):
     """
     Set fractionOfIterationsToDisableInnovation to 0 if iterations exceeded.
-    Otherwise set for lesser of [0.8*step, 10]
+    Otherwise set for lesser of [0.2 * step, 20]
     """
     if start_index > total_iterations:  # assume cooling
         set_innovation(config=config, new_fraction="0")
     else:
-        desired_intermediate_cooling_steps = min([(0.2 * step), 10])
+        desired_intermediate_cooling_steps = min([(0.2 * step), 20])
         new_fraction = 1 - (desired_intermediate_cooling_steps / step)
         set_innovation(config=config, new_fraction=str(new_fraction))
 
