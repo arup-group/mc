@@ -150,6 +150,29 @@ def test_find_and_set_params(config):
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
     assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
 
+
+def test_find_and_set_params_with_overrides_log(config, tmp_path):
+
+    autostep.find_and_set_overrides(
+        config,
+        {
+            "modeParams:car/constant": "-1.0",
+            "scoringParameters:unknown/modeParams:bus/constant": "-1.0"
+            },
+        log_root=tmp_path
+        )
+    log_path = os.path.join(tmp_path, "matsim_overrides.log")
+    assert os.path.exists(log_path)
+    with open(log_path) as file:
+        lines = file.readlines()
+    print(lines)
+    assert lines == [
+        'modeParams:car/constant: 0.0 -> -1.0\n',
+        'modeParams:car/constant: 0.0 -> -1.0\n',
+        'scoringParameters:unknown/modeParams:bus/constant: 0.0 -> -1.0\n'
+    ]
+
+
 def test_finding_and_setting_bad_param_leaves_config_unchanged(config):
     cnfg = deepcopy(config)
     autostep.find_and_set_overrides(
