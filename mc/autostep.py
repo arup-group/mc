@@ -57,13 +57,14 @@ def autostep_config(
     set_default_behaviours(config, step, seed_matsim_config_path)
 
     first_iteration = start_index - step
+    prev_write_path = sim_root / str(first_iteration)
     last_iteration = start_index
     new_write_path = sim_root / str(last_iteration)
 
     set_cooling(config=config, total_iterations=total_iterations, start_index=last_iteration, step=step)
     set_write_path(config=config, new_write_path=new_write_path)
     set_iterations(config=config, first_iteration=first_iteration, last_iteration=last_iteration)
-    find_and_set_overrides(config=config, overrides=overrides)
+    find_and_set_overrides(config=config, overrides=overrides, log_root=prev_write_path)
 
     if not first_iteration == 0:  # if first iteration - don't update input paths
         previous_root = sim_root / str(first_iteration)
@@ -198,7 +199,7 @@ def set_iterations(config: BaseConfig, first_iteration: int, last_iteration: int
     logging.info(f"lastIteration (step) override: {old_lastIteration} to: {last_iteration}")
 
 
-def find_and_set_overrides(config: BaseConfig, overrides: dict) -> None:
+def find_and_set_overrides(config: BaseConfig, overrides: dict, log_root=None) -> None:
     """
     Set mutations (for example from a random or grid search) based on
     mc addresses in the overrides. For example given:
@@ -211,6 +212,7 @@ def find_and_set_overrides(config: BaseConfig, overrides: dict) -> None:
         'strategy/strategysettings:default/weight': '0'
     }
     """
+    log = []
     for k, v in overrides.items():
         params = config.find(k)
         for param in params:
@@ -218,3 +220,17 @@ def find_and_set_overrides(config: BaseConfig, overrides: dict) -> None:
                 old_value = param.value
                 param.value = v
                 logging.info(f"Override {param.ident}: {old_value} to: {v}")
+                log.append(f"{k}: {old_value} -> {v}")
+
+    if log_root is not None and os.path.exists(log_root):
+        dump_log_to_disk(log, log_root / "matsim_overrides.log")
+
+
+def dump_log_to_disk(log: list, path):
+    """
+    Dump list of strings log to text.
+    path (str): path.log
+    """
+    with open(path, 'w') as out:
+        for line in log:
+            out.write(line + '\n')
