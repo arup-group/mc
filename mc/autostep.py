@@ -58,13 +58,23 @@ def autostep_config(
 
     first_iteration = start_index - step
     prev_write_path = sim_root / str(first_iteration)
+    # is_first_iteration = prev_iteration == 0
     last_iteration = start_index
     new_write_path = sim_root / str(last_iteration)
 
-    set_cooling(config=config, total_iterations=total_iterations, start_index=last_iteration, step=step)
+    set_cooling(config=config, total_iterations=total_iterations,
+                start_index=last_iteration, step=step)
     set_write_path(config=config, new_write_path=new_write_path)
-    set_iterations(config=config, first_iteration=first_iteration, last_iteration=last_iteration)
-    find_and_set_overrides(config=config, overrides=overrides, log_root=prev_write_path)
+    set_iterations(config=config, first_iteration=first_iteration,
+                   last_iteration=last_iteration)
+    find_and_set_overrides(
+        config=config, overrides=overrides, log_root=prev_write_path)
+    # if prev_iteration != 0:
+    #     find_and_set_overrides(
+    #         config=config, overrides=overrides, log_root=None)  # as above but without log
+    # else:
+    #     find_and_set_overrides(
+    #         config=config, overrides=overrides, log_root=prev_write_path)
 
     if not first_iteration == 0:  # if first iteration - don't update input paths
         previous_root = sim_root / str(first_iteration)
@@ -82,7 +92,7 @@ def autostep_config(
     # summarise the matsim overrides log information for different executions from the batch file
     file_name = 'matsim_overrides'
     simulation_root_dir = sim_root.parent
-    if first_iteration:
+    if first_iteration == 0:
         summarise_overrides_log(file_name, simulation_root_dir)
 
     logging.info("Autostep complete")
@@ -114,9 +124,11 @@ def set_innovation(config, new_fraction):
     """
     Set config fractionOfIterationsToDisableInnovation.
     """
-    fraction = config['strategy'].get('fractionOfIterationsToDisableInnovation')
+    fraction = config['strategy'].get(
+        'fractionOfIterationsToDisableInnovation')
     config['strategy']['fractionOfIterationsToDisableInnovation'] = new_fraction
-    logging.info(f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {new_fraction}")
+    logging.info(
+        f"Changing fractionOfIterationsToDisableInnovation: {fraction} to: {new_fraction}")
 
 
 def set_default_behaviours(config: BaseConfig, step: int, seed_matsim_config_path: Path):
@@ -141,7 +153,8 @@ def set_default_behaviours(config: BaseConfig, step: int, seed_matsim_config_pat
     config['planCalcScore']['writeExperiencedPlans'] = "true"
     logging.info("Forcing writeExperiencedPlans to true")
 
-    fix_relative_input_paths_to_abs(config=config, seed_matsim_config_path=seed_matsim_config_path)
+    fix_relative_input_paths_to_abs(
+        config=config, seed_matsim_config_path=seed_matsim_config_path)
 
 
 def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
@@ -151,7 +164,8 @@ def set_write_path(config: BaseConfig, new_write_path: Path) -> None:
     logging.info("Write path override to config")
     old_write_path = Path(config['controler']['outputDirectory'])
     config['controler']['outputDirectory'] = str(new_write_path)
-    logging.info(f"Write file path override: {str(old_write_path)} to: {str(new_write_path)}")
+    logging.info(
+        f"Write file path override: {str(old_write_path)} to: {str(new_write_path)}")
 
 
 def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
@@ -171,7 +185,8 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
     ]:
         prev_path = config[module][param]
         new_path = root / default
-        logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
+        logging.info(
+            f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
         config[module][param] = str(new_path)
 
 
@@ -186,9 +201,11 @@ def fix_relative_input_paths_to_abs(config: BaseConfig, seed_matsim_config_path:
         prev_path = Path(config[module][param])
         if not prev_path.is_absolute():
             new_path = Path(os.path.join(
-                os.path.dirname(seed_matsim_config_path), os.path.expanduser(prev_path)
+                os.path.dirname(
+                    seed_matsim_config_path), os.path.expanduser(prev_path)
             )).resolve()
-            logging.info(f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
+            logging.info(
+                f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
             config[module][param] = str(new_path)
 
 
@@ -199,10 +216,12 @@ def set_iterations(config: BaseConfig, first_iteration: int, last_iteration: int
     logging.info("Step overrides to config")
     old_firstIteration = config['controler']['firstIteration']
     config['controler']['firstIteration'] = str(first_iteration)
-    logging.info(f"firstIteration (step) override: {old_firstIteration} to: {first_iteration}")
+    logging.info(
+        f"firstIteration (step) override: {old_firstIteration} to: {first_iteration}")
     old_lastIteration = config['controler']['lastIteration']
     config['controler']['lastIteration'] = str(last_iteration)
-    logging.info(f"lastIteration (step) override: {old_lastIteration} to: {last_iteration}")
+    logging.info(
+        f"lastIteration (step) override: {old_lastIteration} to: {last_iteration}")
 
 
 def find_and_set_overrides(config: BaseConfig, overrides: dict, log_root=None) -> None:
