@@ -56,33 +56,33 @@ def autostep_config(
     config = BaseConfig(seed_matsim_config_path)
     set_default_behaviours(config, step, seed_matsim_config_path)
 
-    first_iteration = start_index - step
-    prev_write_path = sim_root / str(first_iteration)
-    # is_first_iteration = prev_iteration == 0
+    prev_iteration = start_index - step
+    is_first_iteration = prev_iteration == 0
+    prev_write_path = sim_root / str(prev_iteration)
     last_iteration = start_index
     new_write_path = sim_root / str(last_iteration)
+
+    # after first iteration, matsim should have created the dir already (for previous step outputs).
+    biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
 
     set_cooling(config=config, total_iterations=total_iterations,
                 start_index=last_iteration, step=step)
     set_write_path(config=config, new_write_path=new_write_path)
-    set_iterations(config=config, first_iteration=first_iteration,
+    set_iterations(config=config, first_iteration=prev_iteration,
                    last_iteration=last_iteration)
-    find_and_set_overrides(
-        config=config, overrides=overrides, log_root=prev_write_path)
-    # if prev_iteration != 0:
-    #     find_and_set_overrides(
-    #         config=config, overrides=overrides, log_root=None)  # as above but without log
-    # else:
-    #     find_and_set_overrides(
-    #         config=config, overrides=overrides, log_root=prev_write_path)
 
-    if not first_iteration == 0:  # if first iteration - don't update input paths
-        previous_root = sim_root / str(first_iteration)
+    if is_first_iteration:
+        find_and_set_overrides(
+            config=config, overrides=overrides, log_root=prev_write_path)
+    else:
+        find_and_set_overrides(
+            config=config, overrides=overrides, log_root=None)  # as above but without log
+
+    if not is_first_iteration:  # if first iteration - don't update input paths
+        previous_root = sim_root / str(prev_iteration)
         auto_set_input_paths(config=config, root=previous_root)
 
     logging.info(f"Writing config to: {biteration_matsim_config_path}")
-    # after first iteration, matsim should have created the dir already (for previous step outputs).
-    biteration_matsim_config_path.parent.mkdir(parents=True, exist_ok=True)
     config.write(biteration_matsim_config_path)
 
     # summarise the key information from matsim config to a text file
@@ -92,7 +92,7 @@ def autostep_config(
     # summarise the matsim overrides log information for different executions from the batch file
     file_name = 'matsim_overrides'
     simulation_root_dir = sim_root.parent
-    if first_iteration == 0:
+    if prev_iteration == 0:
         summarise_overrides_log(file_name, simulation_root_dir)
 
     logging.info("Autostep complete")
@@ -246,7 +246,6 @@ def find_and_set_overrides(config: BaseConfig, overrides: dict, log_root=None) -
                 param.value = v
                 logging.info(f"Override {param.ident}: {old_value} to: {v}")
                 log.append(f"{k}: {old_value} -> {v}")
-
     if log_root is not None and os.path.exists(log_root):
         dump_log_to_disk(log, log_root / "matsim_overrides.log")
 
