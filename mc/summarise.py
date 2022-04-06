@@ -47,7 +47,7 @@ def scoring_summary(config):
                       "marginal_utility_of_distance:",
                       "marginal_utility_of_traveling:",
                       "monetary_distance_rate:"]
-    # add subpopulation in the score calcualtion
+    # add subpopulation in the score calculation
     subpopulation_set = {}
     subpop = 'subpopulation: '
     for i in config['planCalcScore'].find('subpopulation'):
@@ -106,3 +106,35 @@ def write_text(text, output_path):
 def summarise_config(config, output_path):
     text = scoring_summary(config)
     write_text(text, output_path)
+
+
+def find_log_files(file_name, root_dir):
+    """
+    Find the path for log files for the jobs from different simulation jobs
+    """
+    file_directory = []
+    for root, dirs, files in os.walk(root_dir):
+        for file in files:
+            if file.startswith(file_name):
+                if str(root)[-2:] == '/0':  # find the file in zero iteration only in the simulation folder
+                    file_directory.append(os.path.join(root, file))
+    return file_directory
+
+
+def merge_files(file_directory, root_dir):
+    """
+    Combine and update the matsim_overrides log from different simulation jobs
+    """
+    with open(os.path.join(root_dir, 'matsim_overrides_summary.log'), "w") as outfile:
+        for f in file_directory:
+            with open(f) as infile:
+                text = infile.readlines()
+                text.insert(0, f + "\n")
+                text.insert(0, "log_path:")
+                text.insert(0, "-" * 100 + '\n')  # split line
+                outfile.write(''.join(text))
+
+
+def summarise_overrides_log(file_name, root_dir):
+    file_directory = find_log_files(file_name, root_dir)
+    merge_files(file_directory, root_dir)
