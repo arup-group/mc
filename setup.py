@@ -15,7 +15,7 @@ setup(
     name="mc",
     version=__version__,
     description="A command line tool for using MATSim config files.",
-    packages=find_packages(exclude="tests*"),
+    packages=find_packages(exclude=["tests*"]),
     install_requires=install_requires,
     entry_points={"console_scripts": ["mc = mc.cli:cli"]},
 )
