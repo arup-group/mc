@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 
-__version__ = "1.0.0"
+__version__ = "1.0.2"
 _ROOT = Path(os.path.abspath(os.path.dirname(__file__)))
 
 _DEFAULTS_DIR = _ROOT / 'default_data'
