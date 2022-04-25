@@ -17,7 +17,7 @@ from lxml import etree as et
 from lxml.etree import Element
 from pathlib import Path
 import json
-from typing import Tuple
+from typing import Dict, Tuple
 from mc.debug import BaseDebug
 from mc.valid import VALID_MAP
 
@@ -539,7 +539,7 @@ class Module(Base):
         self.name = name
         self.uid = uid
         self.ident = self.name
-        self.data = {'name': self.name}
+        self.data = self._data()
         self.params = {}
         self.parametersets = {}
 
@@ -554,6 +554,9 @@ class Module(Base):
             self.build_from_xml(xml_object)
         elif json_object is not None:
             self.build_from_json(json_object)
+
+    def _data(self):
+        return {'name': self.name}
 
     def __getitem__(self, key):
         if key in self.params:
@@ -686,7 +689,7 @@ class ParamSet(Base):
         self.name = name
         self.uid = uid
         self.type = get_paramset_type(name)
-        self.data = {'type': self.type}
+        self.data = self._data()
         self.params = {}
         self.parametersets = {}
         self.valid_param_keys = list(get_params_search(VALID_MAP, self.type))
@@ -699,6 +702,9 @@ class ParamSet(Base):
             self.build_from_xml(xml_object)
         elif json_object is not None:
             self.build_from_json(json_object)
+
+    def _data(self):
+        return {'type': self.type}
 
     def __getitem__(self, key):
 
@@ -834,7 +840,10 @@ class Param(Base):
         self.name = name
         self.uid = uid
         self.value = value
-        self.data = {'name': self.name, 'value': self.value}
+        self.data = self._data()
+
+    def _data(self) -> dict:
+        return {'name': self.name, 'value': self.value}
 
     def __str__(self) -> str:
         return self.data
