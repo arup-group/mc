@@ -35,13 +35,13 @@ class Base:
     ident = ''
     name = ''
     value = ''
-    data = {}
     valid_keys = []
     valid_param_keys = []
     valid_paramset_keys = []
     modules = {}
     params = {}
     parametersets = {}
+    indenter = "   "
 
     # Dictionary like behaviours:
 
@@ -216,23 +216,28 @@ class Base:
         with open(path, 'w', encoding='utf-8') as outfile:
             json.dump(data, outfile, ensure_ascii=False, indent=2)
 
-    def build_xml(self, top: str) -> Element:
+    def build_xml(self, top: str = "config", **kwargs) -> Element:
         """
         Recursively build xml elements.
         :param top: str (name of parent)
         :return: Element
         """
         root = et.Element(top)
-        dat, = self.data.items()
-        root.set(*dat)
+        # root.set("name", self.name)
+        for k, v in kwargs.items():
+            root.set(k, v)
 
+        if self.modules:
+            for module_name, module in self.modules.items():
+                elem = module.build_xml('module', name=module_name)
+                root.append(elem)
         if self.params:
             for param_name, param in self.params.items():
                 elem = et.Element('param', name=param_name, value=param.value)
                 root.append(elem)
         if self.parametersets:
             for _, paramset in self.parametersets.items():
-                elem = paramset.build_xml('parameterset')
+                elem = paramset.build_xml('parameterset', type=paramset.type)
                 root.append(elem)
         return root
 
@@ -253,21 +258,6 @@ class Base:
                 build[ps_name] = paramset.build_json()
             builds['parametersets'] = build
         return builds
-
-    # Debugging/printing:
-
-    def print(self, i: int = 0) -> None:
-        """
-        Recursively print configuration objects.
-        :param i: int, starting indentation level.
-        """
-        indent = "\t" * i
-        print(indent, self.class_type, self.data)
-        if self.class_type != "param":
-            for _, param in self.params.items():
-                param.print(i+1)
-            for _, paramset in self.parametersets.items():
-                paramset.print(i+1)
 
     def __str__(self) -> str:
         """
@@ -343,7 +333,7 @@ class Base:
                 if other_param:
                     param.diff(other.params[k], self.ident, diffs)
                 else:
-                    diff = f"+ param@{self.ident}: {param.data}"
+                    diff = f"+ param@{self.ident}: {str(param)}"
                     diffs.extend([diff])
 
             for k, other_param in other.params.items():
@@ -385,7 +375,6 @@ class BaseConfig(Base, BaseDebug):
         """
         self.modules = {}
         self.ident = 'config'
-        self.data = {'name': 'config'}
         self.valid_keys = list(VALID_MAP['modules'])
 
         if path is None:
@@ -494,12 +483,12 @@ class BaseConfig(Base, BaseDebug):
             build[name] = module.build_json()
         return {"modules": build}
 
-    def build_xml(self, top='config') -> Element:
-        root = et.Element(top)
-        for module in self.modules.values():
-            elem = module.build_xml('module')
-            root.append(elem)
-        return root
+    # def build_xml(self, top='config') -> Element:
+    #     root = et.Element(top)
+    #     for module in self.modules.values():
+    #         elem = module.build_xml('module')
+    #         root.append(elem)
+    #     return root
 
     def valid_key(self, key: str) -> bool:
         """
@@ -539,7 +528,6 @@ class Module(Base):
         self.name = name
         self.uid = uid
         self.ident = self.name
-        self.data = {'name': self.name}
         self.params = {}
         self.parametersets = {}
 
@@ -554,6 +542,20 @@ class Module(Base):
             self.build_from_xml(xml_object)
         elif json_object is not None:
             self.build_from_json(json_object)
+
+    def __str__(self) -> str:
+        return f"{self.class_type.upper()}: {self.name} {self.class_type}"
+
+    def print(self, i: int = 0) -> None:
+        """
+        Recursively print configuration objects.
+        :param i: int, starting indentation level.
+        """
+        print(self.indenter * i, self)
+        for _, param in self.params.items():
+            param.print(i+1)
+        for _, paramset in self.parametersets.items():
+            paramset.print(i+1)
 
     def __getitem__(self, key):
         if key in self.params:
@@ -686,7 +688,6 @@ class ParamSet(Base):
         self.name = name
         self.uid = uid
         self.type = get_paramset_type(name)
-        self.data = {'type': self.type}
         self.params = {}
         self.parametersets = {}
         self.valid_param_keys = list(get_params_search(VALID_MAP, self.type))
@@ -699,6 +700,20 @@ class ParamSet(Base):
             self.build_from_xml(xml_object)
         elif json_object is not None:
             self.build_from_json(json_object)
+
+    def __str__(self) -> str:
+        return f"{self.class_type.upper()}: {self.type} ({self.name})"
+
+    def print(self, i: int = 0) -> None:
+        """
+        Recursively print configuration objects.
+        :param i: int, starting indentation level.
+        """
+        print(self.indenter * i, self)
+        for _, param in self.params.items():
+            param.print(i+1)
+        for _, paramset in self.parametersets.items():
+            paramset.print(i+1)
 
     def __getitem__(self, key):
 
@@ -834,13 +849,17 @@ class Param(Base):
         self.name = name
         self.uid = uid
         self.value = value
-        self.data = {'name': self.name, 'value': self.value}
+        # self.data = {'name': self.name, 'value': self.value}
 
     def __str__(self) -> str:
-        return self.data
+        return f"{self.class_type.upper()}: {self.name}, {self.value}"
 
-    def __getitem__(self, key):
-        return self.data[key]
+    def print(self, i: int = 0) -> None:
+        """
+        Recursively print configuration objects.
+        :param i: int, starting indentation level.
+        """
+        print(self.indenter * i, self)
 
     def __delitem__(self, key):
         raise NotImplementedError('dict type delete not supported for params.')

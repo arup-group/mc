@@ -118,7 +118,7 @@ def test_config_dict_navigation():
     scoringParameters = test_module.parametersets['scoringParameters:default']
     activityParams = scoringParameters.parametersets['activityParams:home']
     activityType = activityParams.params['activityType']
-    assert activityType.data['value'] == 'home'
+    assert activityType.value == 'home'
 
 
 def test_module_dict_get():
