@@ -34,7 +34,6 @@ class Base:
     class_type = ''
     ident = ''
     name = ''
-    value = ''
     valid_keys = []
     valid_param_keys = []
     valid_paramset_keys = []
