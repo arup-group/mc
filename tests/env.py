@@ -21,6 +21,7 @@ def root():
 
 test_xml_path = this_dir() / 'test_data' / 'test_config.xml'
 test_v12_xml_path = this_dir() / 'test_data' / 'test_config_v12.xml'
+test_v14_xml_path = this_dir() / 'test_data' / 'test_config_v14.xml'
 test_json_path = this_dir() / 'test_data' / 'test_config.json'
 test_temp_xml_path = this_dir() / 'test_data' / 'test_temp_config.xml'
 test_temp_json_path = this_dir() / 'test_data' / 'test_temp_config.json'

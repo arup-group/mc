@@ -153,6 +153,21 @@ def test_diff(tmpdir):
     assert result.exit_code == 0
 
 
+def test_summary(tmpdir):
+    runner = CliRunner()
+    result = runner.invoke(
+        cli.cli,
+        [
+            "summary",
+            str(env.test_v12_xml_path),
+            "-d"
+            ]
+        )
+    if result.exception:
+        traceback.print_exception(*result.exc_info)
+    assert result.exit_code == 0
+
+
 def test_debug(tmpdir):
     runner = CliRunner()
     result = runner.invoke(
@@ -160,7 +175,7 @@ def test_debug(tmpdir):
         [
             "debug",
             str(env.test_v12_xml_path),
-            "-p"
+            "-s"
             ]
         )
     if result.exception:

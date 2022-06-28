@@ -11,61 +11,60 @@ env.set_module()
 from mc.base import BaseConfig
 from mc.debug import *
 
+def test_get_subpopulations():
+    assert BaseConfig(path=env.test_v14_xml_path).get_subpopulations() == {'default', 'hhs_caravail_yes', 'hhs_caravail_no'}
+
+def test_get_modes():
+    assert BaseConfig(path=env.test_v14_xml_path).get_main_mode() == {"car"}
+    assert BaseConfig(path=env.test_v14_xml_path).get_mode_choices() == {'bus'  , 'train', 'tram', 'subway', 'walk', 'bike', 'train', 'ferry', 'car'}
+    assert BaseConfig(path=env.test_v14_xml_path).get_chained_modes() == {"car", "bike"}
+    assert BaseConfig(path=env.test_v14_xml_path).get_transit_modes() == {"bus", "tram", "train", "ferry", "subway", "helicopter"}
+    assert BaseConfig(path=env.test_v14_xml_path).get_deterministic_modes() == {"tram", "rail", "ferry", "subway"}
+    assert BaseConfig(path=env.test_v14_xml_path).get_intermodal_access_egress_modes() == {"car", "bike", "walk"}
+    assert BaseConfig(path=env.test_v14_xml_path).get_scoring_modes() == {'bus', 'pt', 'rail', 'tram', 'subway', 'walk', 'bike', 'ferry', 'car'}
+    assert BaseConfig(path=env.test_v14_xml_path).get_modes() == {'bus', 'pt', 'rail', 'train', 'tram', 'subway', 'walk', 'helicopter', 'bike', 'train', 'ferry', 'car'}
+
+def test_get_activities():
+    assert BaseConfig(path=env.test_v14_xml_path).get_activities() == {
+        'other',
+        'escort_education',
+        'work',
+        'visit',
+        'shop',
+        'escort_shop',
+        'depot',
+        'delivery',
+        'escort_work',
+        'medical',
+        'business',
+        'home',
+        'escort_home',
+        'education',
+        'escort_other',
+        'escort_business'
+        }
+
+def test_get_strategies():
+        assert BaseConfig(path=env.test_v14_xml_path).get_strategies() == {
+        'ChangeExpBeta',
+        'SubtourModeChoice',
+        'ReRoute',
+        'TimeAllocationMutator_ReRoute',
+        }
 
 def test_path_good():
-    assert not bad_path('test_path', 'good.xml')
-    assert not bad_path('test_path', 'good.xml.gz')
-    assert bad_path('test_path', '')
-    assert bad_path('test_path', 'bad.csv')
+    assert check_path('test_path', 'good.xml')
+    assert check_path('test_path', 'good.xml.gz')
+    assert not check_path('test_path', '')
+    assert not check_path('test_path', None)
+    assert not check_path('test_path', 'bad.csv')
 
 
-def test_multimodal_validate():
-    test_config = BaseConfig(path=env.test_mm_path)
-    logs = test_config.log_multimodal_module()
-    assert len(logs) == 3
-
-
-def test_path_validate():
-    test_config = BaseConfig(path=env.test_xml_path)
-    logs = test_config.log_bad_paths()
-    assert len(logs) == 0
-    bad_config = BaseConfig(path=env.test_bad_config_path)
-    logs = bad_config.log_bad_paths()
-    assert logs
-
-
-def test_path_v12_validate():
-    test_config = BaseConfig(path=env.test_v12_xml_path)
-    logs = test_config.log_bad_paths()
-    assert len(logs) == 1
-
-
-def test_subpop_validate_good():
-    test_config = BaseConfig(path=env.test_xml_path)
-    log = test_config.log_bad_subpopulations()
-    assert len(log) == 0
-
-
-def test_subpop_validate_bad():
-    bad_config = BaseConfig(path=env.test_bad_config_path)
-    assert bad_config.log_bad_subpopulations()
-
-
-def test_mode_validate_good():
-    test_config = BaseConfig(path=env.test_xml_path)
-    assert len(test_config.log_bad_scoring()) == 4
-
-
-def test_mode_validate_bad():
-    bad_config = BaseConfig(path=env.test_bad_config_path)
-    assert bad_config.log_bad_scoring()
-
-
-def test_find_missing_modes_good():
-    test_config = BaseConfig(path=env.test_xml_path)
-    assert len(test_config.log_missing_modes()) == 0
-
-
-def test_find_missing_modes_bad():
-    bad_config = BaseConfig(path=env.test_bad_config_path)
-    assert(bad_config.log_missing_modes())
+def test_smoke_debugs():
+    BaseConfig(path=env.test_xml_path).debug()
+    BaseConfig(path=env.test_v12_xml_path).debug()
+    BaseConfig(path=env.test_v14_xml_path).debug()
+    BaseConfig(path=env.test_json_path).debug()
+    BaseConfig(path=env.test_temp_xml_path).debug()
+    BaseConfig(path=env.test_temp_json_path).debug()
+    BaseConfig(path=env.test_mm_path).debug()

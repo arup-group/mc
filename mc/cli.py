@@ -209,7 +209,7 @@ def build_config(
         acts=activities
     )
     if show:
-        config.print()
+        config.summary()
     if debugger:
         config.debug()
     careful_write(config, write_path)
@@ -234,17 +234,33 @@ def difference(
 
 @cli.command()
 @click.argument('read_path', type=click.Path(exists=True))
-@click.option('--show', '-p', is_flag=True, default=False, show_default=True)
+@click.option('--debug', '-d', is_flag=True, default=False, show_default=True)
+def summary(
+        read_path: Path,
+        debug: bool
+) -> None:
+    """
+    Summarise a config.
+    """
+    config = Config(path=Path(read_path))
+    config.summary()
+    if debug:
+        config.debug()
+
+
+@cli.command()
+@click.argument('read_path', type=click.Path(exists=True))
+@click.option('--summary', '-s', is_flag=True, default=False, show_default=True)
 def debug(
         read_path: Path,
-        show: bool
+        summary: bool
 ) -> None:
     """
     Debug a config.
     """
     config = Config(path=Path(read_path))
-    if show:
-        config.print()
+    if summary:
+        config.summary()
     config.debug()
 
 

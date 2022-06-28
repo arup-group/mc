@@ -66,6 +66,7 @@ Commands:
   paramreplace  Read config, apply overrides and write out.
   print         Print a config to terminal.
   step          Read config, apply overrides and write out.
+  summary       Summarise a config.
 ```
 
 ### Print Example
