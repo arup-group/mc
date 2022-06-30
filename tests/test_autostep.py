@@ -66,6 +66,7 @@ def test_set_default_behaviours(config, tmp_path):
     assert config['controler']['overwriteFiles'] == "deleteDirectoryIfExists"
     assert config['controler']['writeEventsInterval'] == "5"
     assert config['controler']['writePlansInterval'] == "5"
+    assert config['parallelEventHandling']['estimatedNumberOfEvents'] == "270000000"
 
 
 def test_set_write_path(config):
