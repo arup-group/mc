@@ -142,7 +142,6 @@
 <module name="planCalcScore">
 
       <param name="BrainExpBeta" value="1.0" />
-      <param name="writeExperiencedPlans" value="true" />
 
      <!-- Subpopulations: {'hhs_caravail_no', 'hhs_caravail_yes', 'lgv'} -->
      <!-- Activities: {'business', 'education', 'escort_business', 'escort_education', 'escort_home', 'escort_other', 'escort_shop', 'escort_work', 'home', 'medical', 'other', 'shop', 'visit', 'work'} -->

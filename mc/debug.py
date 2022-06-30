@@ -63,6 +63,7 @@ class BaseDebug:
         print(f"{TEXT.TITLE}Debug:{TEXT.END}")
         self.log_controler_module()
         self.log_version()
+        self.log_write_experienced_plans()
         self.log_subtour_mode_choice_module()
         self.log_transit_router_module()
         self.log_deterministic()
@@ -336,6 +337,13 @@ class BaseDebug:
             fail("MISSING MODULE: no controler module defined (note that it is spelt with and single 'l'.")
         if not self.get("controler", {}).get("mobsim") == "hermes":
             check("CONTROLER MODULE: recommended you use the 'hermes' mobsim.")
+
+    def log_write_experienced_plans(self):
+        if not self.get("planCalcScore", {}).get("writeExperiencedPlans") == "true":
+            check(
+                "EXPERIENCED PLANS: you must set 'writeExperiencedPlans' to 'true' "
+                "if you wish to see plans as experience in final iteration."
+                )
 
     def log_deterministic(self):
         if not self.get("hermes", {}).get("useDeterministicPt") == "true":
