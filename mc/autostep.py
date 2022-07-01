@@ -153,8 +153,8 @@ def set_default_behaviours(config: BaseConfig, step: int, seed_matsim_config_pat
     config['planCalcScore']['writeExperiencedPlans'] = "true"
     logging.info("Forcing writeExperiencedPlans to true")
 
-    config['parallelEventHandling']['estimatedNumberOfEvents'] = "270000000"
-    logging.info("Forcing writeExperiencedPlans to 270 million")
+    config['parallelEventHandling']['eventsQueueSize'] = "270000000"
+    logging.info("Forcing 'eventsQueueSize' to 270 million")
 
     fix_relative_input_paths_to_abs(
         config=config, seed_matsim_config_path=seed_matsim_config_path)
