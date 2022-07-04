@@ -136,7 +136,7 @@ def convert(
     """
     config = Config(path=Path(read_path))
     if show:
-        config.print()
+        config.summary()
     if debugger:
         config.debug()
     careful_write(config, write_path)
@@ -158,7 +158,7 @@ def generate_config(
     """
     config = CONFIG_MAP[config]()
     if show:
-        config.print()
+        config.summary()
     if debugger:
         config.debug()
     careful_write(config, write_path)

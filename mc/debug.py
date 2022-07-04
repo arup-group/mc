@@ -61,6 +61,7 @@ class BaseDebug:
 
     def debug(self):
         print(f"{TEXT.TITLE}Debug:{TEXT.END}")
+        self.log_bad_paths()
         self.log_controler_module()
         self.log_version()
         self.log_write_experienced_plans()
@@ -70,7 +71,6 @@ class BaseDebug:
         self.log_inconsistent_iterations()
         self.log_parallel_event_handling()
         self.log_multimodal_module()
-        self.log_bad_paths()
         self.log_subpopulation_consistency()
         self.log_missing_mode_scoring()
         self.log_plan_calc_scoring_module()
@@ -123,7 +123,7 @@ class BaseDebug:
         print(f"{TEXT.HEADER}Scored modes:{TEXT.END} {self.get_scoring_modes()}")
 
     def get_main_mode(self) -> set:
-        return {self.get("hermes", self.get("qsim", {})).get("mainMode", set())}
+        return {self.get("hermes", self.get("qsim", {})).get("mainMode", frozenset())}
 
     def get_mode_choices(self) -> set:
         # TODO not sure if subtourModeChoice are network or passenger modes?
@@ -402,10 +402,10 @@ class BaseDebug:
                 )
 
     def log_parallel_event_handling(self):
-        estimated_events = self.get("parallelEventHandling", {}).get("estimatedNumberOfEvents")
+        estimated_events = self.get("parallelEventHandling", {}).get("parallelEventHandling")
         if estimated_events is None or estimated_events == "null":
             check(
-                "CHECK: recommend setting 'estimatedNumberOfEvents' in 'parallelEventHandling' "
+                "CHECK: recommend setting 'parallelEventHandling' in 'parallelEventHandling' "
                 "module to something high for big sims."
                 )
 
@@ -578,8 +578,8 @@ class BaseDebug:
                     modes.append(mode)
             for _mode in all_modes:
                 if _mode not in modes:
-                    fail(
-                        f"MISSING MODE SCORING: {_mode} not found in: planCalcScore:{subpopulation}"
+                    check(
+                        f"CHECK MODE SCORING: {_mode} not found in: planCalcScore:{subpopulation}"
                     )
 
 

@@ -15,14 +15,30 @@ def test_get_subpopulations():
     assert BaseConfig(path=env.test_v14_xml_path).get_subpopulations() == {'default', 'hhs_caravail_yes', 'hhs_caravail_no'}
 
 def test_get_modes():
-    assert BaseConfig(path=env.test_v14_xml_path).get_main_mode() == {"car"}
-    assert BaseConfig(path=env.test_v14_xml_path).get_mode_choices() == {'bus'  , 'train', 'tram', 'subway', 'walk', 'bike', 'train', 'ferry', 'car'}
-    assert BaseConfig(path=env.test_v14_xml_path).get_chained_modes() == {"car", "bike"}
-    assert BaseConfig(path=env.test_v14_xml_path).get_transit_modes() == {"bus", "tram", "train", "ferry", "subway", "helicopter"}
-    assert BaseConfig(path=env.test_v14_xml_path).get_deterministic_modes() == {"tram", "rail", "ferry", "subway"}
-    assert BaseConfig(path=env.test_v14_xml_path).get_intermodal_access_egress_modes() == {"car", "bike", "walk"}
-    assert BaseConfig(path=env.test_v14_xml_path).get_scoring_modes() == {'bus', 'pt', 'rail', 'tram', 'subway', 'walk', 'bike', 'ferry', 'car'}
-    assert BaseConfig(path=env.test_v14_xml_path).get_modes() == {'bus', 'pt', 'rail', 'train', 'tram', 'subway', 'walk', 'helicopter', 'bike', 'train', 'ferry', 'car'}
+    assert BaseConfig(path=env.test_v14_xml_path).get_main_mode() == {
+        "car"
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_mode_choices() == {
+        'bus'  , 'train', 'tram', 'subway', 'walk', 'bike', 'train', 'ferry', 'car'
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_chained_modes() == {
+        "car", "bike"
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_transit_modes() == {
+        "bus", "tram", "train", "ferry", "subway", "helicopter"
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_deterministic_modes() == {
+        "tram", "rail", "ferry", "subway"
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_intermodal_access_egress_modes() == {
+        "car", "bike", "walk"
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_scoring_modes() == {
+        'bus', 'pt', 'rail', 'tram', 'subway', 'walk', 'bike', 'ferry', 'car'
+        }
+    assert BaseConfig(path=env.test_v14_xml_path).get_modes() == {
+        'bus', 'pt', 'rail', 'train', 'tram', 'subway', 'walk', 'helicopter', 'bike', 'ferry', 'car'
+        }
 
 def test_get_activities():
     assert BaseConfig(path=env.test_v14_xml_path).get_activities() == {
