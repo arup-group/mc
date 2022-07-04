@@ -1,6 +1,7 @@
 Click==7.1.2
 flake8>=3.0.0
 lxml==4.6.5
+prettytable==3.3.0
 pytest-cov>=2.0.0
 pytest>=6.0.0
 setuptools==56.0.0
