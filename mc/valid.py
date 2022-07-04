@@ -205,6 +205,7 @@ VALID_MAP = {
         "parallelEventHandling": {
             "params": {
                 "estimatedNumberOfEvents": "null",
+                "eventsQueueSize": "null",
                 "numberOfThreads": "32",
                 "oneThreadPerHandler": "false",
                 "synchronizeOnSimSteps": "true"
