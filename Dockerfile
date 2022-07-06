@@ -9,6 +9,6 @@ RUN apt-get update \
 COPY . .
 RUN pip3 install -e .
 
-RUN groupadd -r arup && useradd --no-log-init -r -g arup arup
+RUN groupadd -r arup && useradd --no-log-init -r -g arup arup -G sudo
 
 ENTRYPOINT ["mc"]
