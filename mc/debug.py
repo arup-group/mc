@@ -74,6 +74,7 @@ class BaseDebug:
         self.log_subpopulation_consistency()
         self.log_missing_mode_scoring()
         self.log_plan_calc_scoring_module()
+        self.log_strategies()
 
     # TOP
 
@@ -581,6 +582,19 @@ class BaseDebug:
                     check(
                         f"CHECK MODE SCORING: {_mode} not found in: planCalcScore:{subpopulation}"
                     )
+
+    def log_strategies(self):
+        if not self.get("strategy"):
+            fail("STRATEGY: No strategy module found")
+        else:
+            if self["strategy"].get("fractionOfIterationsToDisableInnovation") in [None, "null"]:
+                warning("STRATEGY: No cooling defined (fractionOfIterationsToDisableInnovation)")
+            for subpop in self.get_subpopulations():
+                sets = [ps for ps in self['strategy'].parametersets.values() if ps["subpopulation"] == subpop]
+                if not sets:
+                    fail(f"STRATEGY: No strategies defined for subpopulation '{subpop}'")
+                if self['strategy'].get(f"{subpop}:SelectExpBeta") is None:
+                    warning(f"STRATEGY: You will need to set a 'SelectExpBeta' strategy for {subpop} if you wish to use cooling")
 
 
 def check_path(name: str, path: str) -> bool:
