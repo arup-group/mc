@@ -594,7 +594,7 @@ class BaseDebug:
                 if not sets:
                     fail(f"STRATEGY: No strategies defined for subpopulation '{subpop}'")
                 if self['strategy'].get(f"{subpop}:SelectExpBeta") is None:
-                    warning(f"STRATEGY: You will need to set a 'SelectExpBeta' strategy for {subpop} if you wish to use cooling")
+                    warning(f"STRATEGY: Requires 'SelectExpBeta' strategy for {subpop} if you wish to use cooling")
 
 
 def check_path(name: str, path: str) -> bool:
