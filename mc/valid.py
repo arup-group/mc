@@ -340,10 +340,10 @@ VALID_MAP = {
 
         "roadpricing" : {
             "params": {
-                "enforcementEfficiency" : "null",
-                "tollLinksFile" : "null"
+                "enforcementEfficiency": "null",
+                "tollLinksFile": "null"
             }
-        }
+        },
 
         "scenario": {},
 
