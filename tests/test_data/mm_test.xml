@@ -14,6 +14,9 @@
     <param name="inputPersonAttributesFile" value="test_inputs/attributes.xml"/>
     <param name="subpopulationAttributeName" value="subpopulation"/>
   </module>
+  <module name="vehicles" >
+    <param name="vehiclesFile" value="test_inputs/all_vehicles.xml" />
+  </module>
   <module name="transit">
     <param name="useTransit" value="true"/>
     <param name="transitScheduleFile" value="test_inputs/transitschedule.xml"/>

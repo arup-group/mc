@@ -71,6 +71,12 @@ VALID_MAP = {
             }
         },
 
+        "vehicles": {
+            "params": {
+                "vehiclesFile": "./output_vehicles.xml.gz"
+            }
+        },
+
         "transit": {
             "params": {
                 "insistingOnUsingDeprecatedPersonAttributeFile": "true",

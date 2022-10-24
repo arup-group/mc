@@ -18,6 +18,10 @@
 		<param name="subpopulationAttributeName" value="subpopulation" />
 	</module>
 
+	<module name="vehicles" >
+		<param name="vehiclesFile" value="$matsim_source/output_vehicles.xml.gz" />
+	</module>
+
 	<module name="transit">
 		<param name="useTransit" value="true" />
 		<param name="transitScheduleFile" value="$matsim_source/output_transitSchedule.xml.gz" />

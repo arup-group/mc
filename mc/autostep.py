@@ -10,6 +10,7 @@ DEFAULT_PLANS_NAME = "output_plans.xml.gz"
 DEFAULT_NETWORK_NAME = "output_network.xml.gz"
 DEFAULT_TRANSITSCHEDULE_NAME = "output_transitSchedule.xml.gz"
 DEFAULT_TRANSITVEHICLES_NAME = "output_transitVehicles.xml.gz"
+DEFAULT_ALL_VEHICLES_NAME = "output_vehicles.xml.gz"
 DEFAULT_FRACTION_OF_ITERATIONS_TO_DISABLE_INNOVATION = 0.8
 
 
@@ -185,6 +186,7 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
         ("plans", "inputPlansFile", DEFAULT_PLANS_NAME),
         ("transit", "transitScheduleFile", DEFAULT_TRANSITSCHEDULE_NAME),
         ("transit", "vehiclesFile", DEFAULT_TRANSITVEHICLES_NAME),
+        ("vehicles", "vehiclesFile", DEFAULT_ALL_VEHICLES_NAME),
     ]:
         prev_path = config[module][param]
         new_path = root / default
@@ -200,6 +202,7 @@ def fix_relative_input_paths_to_abs(config: BaseConfig, seed_matsim_config_path:
         ("plans", "inputPlansFile"),
         ("transit", "transitScheduleFile"),
         ("transit", "vehiclesFile"),
+        ("vehicles", "vehiclesFile"),
     ]:
         prev_path = Path(config[module][param])
         if not prev_path.is_absolute():

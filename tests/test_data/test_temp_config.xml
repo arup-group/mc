@@ -24,6 +24,9 @@
     <param name="removingUnnecessaryPlanAttributes" value="false"/>
     <param name="subpopulationAttributeName" value="subpopulation"/>
   </module>
+  <module name="vehicles">
+    <param name="vehiclesFile" value="~/test/all_vehicles.xml"/>
+  </module>
   <module name="transit">
     <param name="inputScheduleCRS" value="null"/>
     <param name="transitLinesAttributesFile" value="null"/>

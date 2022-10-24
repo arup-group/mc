@@ -78,6 +78,7 @@ def test_autoset_input_paths(config):
     autostep.auto_set_input_paths(config, Path("test/ing"))
     assert config['network']['inputNetworkFile'] == 'test/ing/output_network.xml.gz'
     assert config['plans']['inputPlansFile'] == 'test/ing/output_plans.xml.gz'
+    assert config['vehicles']['vehiclesFile'] == 'test/ing/output_vehicles.xml.gz'
     assert config['transit']['transitScheduleFile'] == 'test/ing/output_transitSchedule.xml.gz'
     assert config['transit']['vehiclesFile'] == 'test/ing/output_transitVehicles.xml.gz'
 
@@ -209,6 +210,9 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['plans']['inputPlansFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
     ))
+    assert config['vehicles']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "test", "all_vehicles.xml")
+    ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
     ))
@@ -243,6 +247,7 @@ def test_autostep_config(tmp_path):
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, "10", "output_network.xml.gz")
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_vehicles.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -309,6 +314,9 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     assert config['plans']['inputPlansFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
     ))
+    assert config['vehicles']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "test", "all_vehicles.xml")
+    ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
     ))
@@ -343,6 +351,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, "10", "output_network.xml.gz")
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_vehicles.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -390,6 +399,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
         assert config['controler']['outputDirectory'] == out_dir
         assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
         assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+        assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
         assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
         assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
         assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -438,6 +448,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
         assert config['controler']['outputDirectory'] == out_dir
         assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
         assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+        assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
         assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
         assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
         assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -454,6 +465,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
