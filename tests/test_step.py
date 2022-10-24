@@ -9,7 +9,7 @@ from mc import step
 
 @pytest.fixture()
 def config():
-    in_file = Path("tests/test_data/test_config.xml")
+    in_file = Path(os.path.join(os.path.dirname(__file__), 'test_data', 'test_config.xml'))
     return BaseConfig(in_file)
 
 
@@ -71,7 +71,7 @@ def test_construct_overrides_map_from_tuple():
 
 
 def test_step_config(tmp_path):
-    in_file = "tests/test_data/test_config.xml"
+    in_file = os.path.join(os.path.dirname(__file__), 'test_data', 'test_config.xml')
     out_file = os.path.join(tmp_path, "test_config.xml")
     step.step_config(
         input_file=in_file,

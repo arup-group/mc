@@ -185,7 +185,7 @@ def test_finding_and_setting_bad_param_leaves_config_unchanged(config):
 
 
 def test_autostep_config_first_iteration(tmp_path):
-    in_file = os.path.join("tests", "test_data", "test_config.xml")
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "10")
     out_file = os.path.join(tmp_path, "0", "matsim_config.xml")
     autostep.autostep_config(
@@ -226,7 +226,7 @@ def test_autostep_config_first_iteration(tmp_path):
 
 
 def test_autostep_config(tmp_path):
-    in_file = os.path.join("tests", "test_data", "test_config.xml")
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "20")
     out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
     autostep.autostep_config(
@@ -281,7 +281,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     event = {
         "orchestration": {
             "sim_root": str(tmp_path),
-            "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+            "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
             "start_index": "0",
             "total_iterations": "100",
             "step": "10",
@@ -364,7 +364,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
 
     orchestration = {
         "sim_root": str(tmp_path),
-        "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+        "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
         "start_index": "0",
         "total_iterations": "30",
         "step": "10",
@@ -412,7 +412,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
 
     orchestration = {
         "sim_root": str(tmp_path),
-        "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+        "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
         "start_index": "0",
         "total_iterations": "30",
         "step": "10",
