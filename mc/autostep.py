@@ -197,22 +197,25 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
 
 def fix_relative_input_paths_to_abs(config: BaseConfig, seed_matsim_config_path: Path):
     logging.info("Input path overrides to config")
-    for module, param in [
-        ("network", "inputNetworkFile"),
-        ("plans", "inputPlansFile"),
-        ("transit", "transitScheduleFile"),
-        ("transit", "vehiclesFile"),
-        ("vehicles", "vehiclesFile"),
+    for module, param, optional_in_config in [
+        ("network", "inputNetworkFile", False),
+        ("plans", "inputPlansFile", False),
+        ("transit", "transitScheduleFile", False),
+        ("transit", "vehiclesFile", False),
+        ("vehicles", "vehiclesFile", True),
     ]:
-        prev_path = Path(config[module][param])
-        if not prev_path.is_absolute():
-            new_path = Path(os.path.join(
-                os.path.dirname(
-                    seed_matsim_config_path), os.path.expanduser(prev_path)
-            )).resolve()
-            logging.info(
-                f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
-            config[module][param] = str(new_path)
+        if (module in config) or not optional_in_config:
+            prev_path = Path(config[module][param])
+            if not prev_path.is_absolute():
+                new_path = Path(os.path.join(
+                    os.path.dirname(
+                        seed_matsim_config_path), os.path.expanduser(prev_path)
+                )).resolve()
+                logging.info(
+                    f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
+                config[module][param] = str(new_path)
+        else:
+            print(f"Optional module '{module}' was not found in the config")
 
 
 def set_iterations(config: BaseConfig, first_iteration: int, last_iteration: int) -> None:

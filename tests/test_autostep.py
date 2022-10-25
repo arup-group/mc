@@ -225,6 +225,46 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
 
 
+def test_nonexistent_optional_input_module_ignored_when_fixing_relative_paths():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
+    config = BaseConfig(config_path)
+    assert 'vehicles' not in config
+
+    autostep.fix_relative_input_paths_to_abs(
+        config,
+        config_path
+    )
+
+    assert 'vehicles' not in config
+
+
+def test_optional_vehicles_module_gets_relative_path_fixed():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
+    config = BaseConfig(config_path)
+    assert not Path(config['vehicles']['vehiclesFile']).is_absolute()
+
+    autostep.fix_relative_input_paths_to_abs(
+        config,
+        config_path
+    )
+
+    assert Path(config['vehicles']['vehiclesFile']).is_absolute()
+
+
+def test_missing_nonoptional_module_throws_key_error_when_trying_to_fix_relative_paths():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
+    config = BaseConfig(config_path)
+    del config['network']
+
+    with pytest.raises(KeyError) as error_info:
+        autostep.fix_relative_input_paths_to_abs(
+            config,
+            config_path
+        )
+
+    assert "'inputNetworkFile' not found in params/sets" in str(error_info.value)
+
+
 def test_autostep_config(tmp_path):
     in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "20")
