@@ -296,6 +296,55 @@ def test_autostep_config(tmp_path):
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
 
 
+def test_autostep_with_missing_optional_allvehicles_ignores_vehicles_module(tmp_path):
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
+    out_dir = os.path.join(tmp_path, "20")
+    out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    autostep.autostep_config(
+        sim_root=tmp_path,
+        seed_matsim_config_path=in_file,
+        start_index="20",
+        total_iterations="100",
+        step="10",
+        biteration_matsim_config_path=out_file,
+        overrides=(
+           "modeParams:car/constant", "-1.0",
+           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
+        )
+    )
+    assert os.path.exists(out_file)
+    config = BaseConfig(out_file)
+    assert config['controler']['lastIteration'] == '20'
+    assert config['controler']['outputDirectory'] == out_dir
+    assert 'vehicles' not in config
+
+
+def test_autostep_with_missing_allvehicles_updates_other_module_paths(tmp_path):
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
+    out_dir = os.path.join(tmp_path, "20")
+    out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    autostep.autostep_config(
+        sim_root=tmp_path,
+        seed_matsim_config_path=in_file,
+        start_index="20",
+        total_iterations="100",
+        step="10",
+        biteration_matsim_config_path=out_file,
+        overrides=(
+           "modeParams:car/constant", "-1.0",
+           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
+        )
+    )
+    assert os.path.exists(out_file)
+    config = BaseConfig(out_file)
+    assert config['controler']['lastIteration'] == '20'
+    assert config['controler']['outputDirectory'] == out_dir
+    assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, "10", "output_network.xml.gz")
+    assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
+    assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
+    assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
+
+
 @pytest.fixture()
 def fake_lambda_handler():
     return lambda_handler

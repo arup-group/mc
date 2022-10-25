@@ -181,18 +181,21 @@ def auto_set_input_paths(config: BaseConfig, root: Path) -> None:
     """
 
     logging.info("Input path overrides to config")
-    for module, param, default in [
-        ("network", "inputNetworkFile", DEFAULT_NETWORK_NAME),
-        ("plans", "inputPlansFile", DEFAULT_PLANS_NAME),
-        ("transit", "transitScheduleFile", DEFAULT_TRANSITSCHEDULE_NAME),
-        ("transit", "vehiclesFile", DEFAULT_TRANSITVEHICLES_NAME),
-        ("vehicles", "vehiclesFile", DEFAULT_ALL_VEHICLES_NAME),
+    for module, param, default, optional_in_config in [
+        ("network", "inputNetworkFile", DEFAULT_NETWORK_NAME, False),
+        ("plans", "inputPlansFile", DEFAULT_PLANS_NAME, False),
+        ("transit", "transitScheduleFile", DEFAULT_TRANSITSCHEDULE_NAME, False),
+        ("transit", "vehiclesFile", DEFAULT_TRANSITVEHICLES_NAME, False),
+        ("vehicles", "vehiclesFile", DEFAULT_ALL_VEHICLES_NAME, True),
     ]:
-        prev_path = config[module][param]
-        new_path = root / default
-        logging.info(
-            f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
-        config[module][param] = str(new_path)
+        if (module in config) or not optional_in_config:
+            prev_path = config[module][param]
+            new_path = root / default
+            logging.info(
+                f"Input ({param}) file path override: {str(prev_path)} to: {str(new_path)}")
+            config[module][param] = str(new_path)
+        else:
+            print(f"Optional module '{module}' was not found in the config")
 
 
 def fix_relative_input_paths_to_abs(config: BaseConfig, seed_matsim_config_path: Path):
