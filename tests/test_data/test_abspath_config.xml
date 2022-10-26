@@ -18,6 +18,10 @@
 	<param name="inputPlansFile" value="/test/population.xml.gz" />
 </module>
 <!-- ====================================================================== -->
+<module name="vehicles" >
+	<param name="vehiclesFile" value="/test/all_vehicles.xml" />
+</module>
+<!-- ====================================================================== -->
 <module name="transit" >
 	<param name="transitScheduleFile" value="/test/schedule-merged.xml" />
 	<param name="vehiclesFile" value="/test/vehicles.xml" />

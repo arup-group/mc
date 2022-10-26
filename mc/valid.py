@@ -71,6 +71,12 @@ VALID_MAP = {
             }
         },
 
+        "vehicles": {
+            "params": {
+                "vehiclesFile": "null"
+            }
+        },
+
         "transit": {
             "params": {
                 "insistingOnUsingDeprecatedPersonAttributeFile": "true",
@@ -379,12 +385,6 @@ VALID_MAP = {
                 "extensionRadius": "100.0",
                 "maxBeelineWalkConnectionDistance": "100.0",
                 "searchRadius": "1000.0"
-            }
-        },
-
-        "vehicles": {
-            "params": {
-                "vehiclesFile": "null"
             }
         },
 

@@ -13,6 +13,11 @@
     <param name="inputPlansFile" value="/efs/population/population_xml/v5_20220429_TE/plans.xml.pz" />
   </module>
 
+
+  <module name="vehicles" >
+      <param name="vehiclesFile" value="~/test/all_vehicles.xml" />
+  </module>
+
   <module name="transit">
     <param name="useTransit" value="true" />
     <param name="transitScheduleFile" value="/efs/networks/network_0.75_freespeed/schedule.xml.gz" />

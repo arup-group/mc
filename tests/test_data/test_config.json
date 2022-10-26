@@ -29,6 +29,11 @@
         "subpopulationAttributeName": "subpopulation"
       }
     },
+    "vehicles": {
+      "params": {
+        "vehiclesFile": "~/test/all_vehicles.xml"
+      }
+    },
     "transit": {
       "params": {
         "inputScheduleCRS": "null",

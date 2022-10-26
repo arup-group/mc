@@ -78,6 +78,7 @@ def test_autoset_input_paths(config):
     autostep.auto_set_input_paths(config, Path("test/ing"))
     assert config['network']['inputNetworkFile'] == 'test/ing/output_network.xml.gz'
     assert config['plans']['inputPlansFile'] == 'test/ing/output_plans.xml.gz'
+    assert config['vehicles']['vehiclesFile'] == 'test/ing/output_vehicles.xml.gz'
     assert config['transit']['transitScheduleFile'] == 'test/ing/output_transitSchedule.xml.gz'
     assert config['transit']['vehiclesFile'] == 'test/ing/output_transitVehicles.xml.gz'
 
@@ -184,7 +185,7 @@ def test_finding_and_setting_bad_param_leaves_config_unchanged(config):
 
 
 def test_autostep_config_first_iteration(tmp_path):
-    in_file = os.path.join("tests", "test_data", "test_config.xml")
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "10")
     out_file = os.path.join(tmp_path, "0", "matsim_config.xml")
     autostep.autostep_config(
@@ -209,6 +210,9 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['plans']['inputPlansFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
     ))
+    assert config['vehicles']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "test", "all_vehicles.xml")
+    ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
     ))
@@ -221,8 +225,102 @@ def test_autostep_config_first_iteration(tmp_path):
     assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
 
 
+def test_nonexistent_optional_input_module_ignored_when_fixing_relative_paths():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
+    config = BaseConfig(config_path)
+    assert 'vehicles' not in config
+
+    autostep.fix_relative_input_paths_to_abs(
+        config,
+        config_path
+    )
+
+    assert 'vehicles' not in config
+
+
+def test_optional_vehicles_module_gets_relative_path_fixed():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
+    config = BaseConfig(config_path)
+    assert not Path(config['vehicles']['vehiclesFile']).is_absolute()
+
+    autostep.fix_relative_input_paths_to_abs(
+        config,
+        config_path
+    )
+
+    assert Path(config['vehicles']['vehiclesFile']).is_absolute()
+
+
+def test_missing_nonoptional_module_throws_key_error_when_trying_to_fix_relative_paths():
+    config_path = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
+    config = BaseConfig(config_path)
+    del config['network']
+
+    with pytest.raises(KeyError) as error_info:
+        autostep.fix_relative_input_paths_to_abs(
+            config,
+            config_path
+        )
+
+    assert "'inputNetworkFile' not found in params/sets" in str(error_info.value)
+
+
 def test_autostep_config(tmp_path):
-    in_file = os.path.join("tests", "test_data", "test_config.xml")
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
+    out_dir = os.path.join(tmp_path, "20")
+    out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    autostep.autostep_config(
+        sim_root=tmp_path,
+        seed_matsim_config_path=in_file,
+        start_index="20",
+        total_iterations="100",
+        step="10",
+        biteration_matsim_config_path=out_file,
+        overrides=(
+           "modeParams:car/constant", "-1.0",
+           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
+        )
+    )
+    assert os.path.exists(out_file)
+    config = BaseConfig(out_file)
+    assert config['controler']['lastIteration'] == '20'
+    assert config['controler']['outputDirectory'] == out_dir
+    assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, "10", "output_network.xml.gz")
+    assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_vehicles.xml.gz")
+    assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
+    assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
+    assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
+    assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
+    assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
+    assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
+
+
+def test_autostep_with_missing_optional_allvehicles_ignores_vehicles_module(tmp_path):
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
+    out_dir = os.path.join(tmp_path, "20")
+    out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    autostep.autostep_config(
+        sim_root=tmp_path,
+        seed_matsim_config_path=in_file,
+        start_index="20",
+        total_iterations="100",
+        step="10",
+        biteration_matsim_config_path=out_file,
+        overrides=(
+           "modeParams:car/constant", "-1.0",
+           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
+        )
+    )
+    assert os.path.exists(out_file)
+    config = BaseConfig(out_file)
+    assert config['controler']['lastIteration'] == '20'
+    assert config['controler']['outputDirectory'] == out_dir
+    assert 'vehicles' not in config
+
+
+def test_autostep_with_missing_allvehicles_updates_other_module_paths(tmp_path):
+    in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
     out_dir = os.path.join(tmp_path, "20")
     out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
     autostep.autostep_config(
@@ -245,10 +343,6 @@ def test_autostep_config(tmp_path):
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
-    assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
-    assert config['planCalcScore']['scoringParameters:unknown']['modeParams:car']["constant"] == "-1.0"
-    assert config['planCalcScore']['scoringParameters:unknown']['modeParams:bus']["constant"] == "-1.0"
-    assert config['strategy']['fractionOfIterationsToDisableInnovation'] == "0.8"
 
 
 @pytest.fixture()
@@ -276,7 +370,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     event = {
         "orchestration": {
             "sim_root": str(tmp_path),
-            "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+            "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
             "start_index": "0",
             "total_iterations": "100",
             "step": "10",
@@ -308,6 +402,9 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     ))
     assert config['plans']['inputPlansFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "population.xml.gz")
+    ))
+    assert config['vehicles']['vehiclesFile'] == os.path.abspath(
+        os.path.expanduser(os.path.join("~", "test", "all_vehicles.xml")
     ))
     assert config['transit']['transitScheduleFile'] == os.path.abspath(
         os.path.expanduser(os.path.join("~", "test", "schedule-merged.xml")
@@ -343,6 +440,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, "10", "output_network.xml.gz")
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, "10", "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_vehicles.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, "10", "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, "10", "output_transitVehicles.xml.gz")
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -355,7 +453,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
 
     orchestration = {
         "sim_root": str(tmp_path),
-        "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+        "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
         "start_index": "0",
         "total_iterations": "30",
         "step": "10",
@@ -390,6 +488,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
         assert config['controler']['outputDirectory'] == out_dir
         assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
         assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+        assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
         assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
         assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
         assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -402,7 +501,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
 
     orchestration = {
         "sim_root": str(tmp_path),
-        "seed_matsim_config_path": os.path.join("tests", "test_data", "test_config.xml"),
+        "seed_matsim_config_path": os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml"),
         "start_index": "0",
         "total_iterations": "30",
         "step": "10",
@@ -438,6 +537,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
         assert config['controler']['outputDirectory'] == out_dir
         assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
         assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+        assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
         assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
         assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
         assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
@@ -454,6 +554,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
     assert config['controler']['outputDirectory'] == out_dir
     assert config['network']['inputNetworkFile'] == os.path.join(tmp_path, str(i), "output_network.xml.gz")
     assert config['plans']['inputPlansFile'] == os.path.join(tmp_path, str(i), "output_plans.xml.gz")
+    assert config['vehicles']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_vehicles.xml.gz")
     assert config['transit']['transitScheduleFile'] == os.path.join(tmp_path, str(i), "output_transitSchedule.xml.gz")
     assert config['transit']['vehiclesFile'] == os.path.join(tmp_path, str(i), "output_transitVehicles.xml.gz")
     assert config['planCalcScore']['scoringParameters:default']['modeParams:car']["constant"] == "-1.0"
