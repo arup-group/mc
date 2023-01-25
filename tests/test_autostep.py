@@ -188,6 +188,7 @@ def test_autostep_config_first_iteration(tmp_path):
     in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "10")
     out_file = os.path.join(tmp_path, "0", "matsim_config.xml")
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
@@ -195,10 +196,7 @@ def test_autostep_config_first_iteration(tmp_path):
         total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
     assert os.path.exists(out_file)
     config = BaseConfig(out_file)
@@ -269,6 +267,7 @@ def test_autostep_config(tmp_path):
     in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config.xml")
     out_dir = os.path.join(tmp_path, "20")
     out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
@@ -276,10 +275,7 @@ def test_autostep_config(tmp_path):
         total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
     assert os.path.exists(out_file)
     config = BaseConfig(out_file)
@@ -300,6 +296,7 @@ def test_autostep_with_missing_optional_allvehicles_ignores_vehicles_module(tmp_
     in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
     out_dir = os.path.join(tmp_path, "20")
     out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
@@ -307,10 +304,7 @@ def test_autostep_with_missing_optional_allvehicles_ignores_vehicles_module(tmp_
         total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
     assert os.path.exists(out_file)
     config = BaseConfig(out_file)
@@ -323,6 +317,7 @@ def test_autostep_with_missing_allvehicles_updates_other_module_paths(tmp_path):
     in_file = os.path.join(os.path.dirname(__file__), "test_data", "test_config_missing_all_vehicles.xml")
     out_dir = os.path.join(tmp_path, "20")
     out_file = os.path.join(tmp_path, "10", "matsim_config.xml")
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
     autostep.autostep_config(
         sim_root=tmp_path,
         seed_matsim_config_path=in_file,
@@ -330,10 +325,7 @@ def test_autostep_with_missing_allvehicles_updates_other_module_paths(tmp_path):
         total_iterations="100",
         step="10",
         biteration_matsim_config_path=out_file,
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
     assert os.path.exists(out_file)
     config = BaseConfig(out_file)
@@ -367,6 +359,7 @@ def test_step_lambda(tmp_path, fake_lambda_handler):
 
 
 def test_first_two_steps(tmp_path, fake_lambda_handler):
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
     event = {
         "orchestration": {
             "sim_root": str(tmp_path),
@@ -385,10 +378,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
         total_iterations=orchestration["total_iterations"],
         step=orchestration["step"],
         biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
 
     out_dir = os.path.join(tmp_path, "10")
@@ -426,10 +416,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
         total_iterations=orchestration["total_iterations"],
         step=orchestration["step"],
         biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
-        overrides=(
-           "modeParams:car/constant", "-1.0",
-           "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-        )
+        overrides_path=overrides_path
     )
 
     out_dir = os.path.join(tmp_path, "20")
@@ -450,6 +437,7 @@ def test_first_two_steps(tmp_path, fake_lambda_handler):
 
 
 def test_stepping(tmp_path, fake_lambda_handler):
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
 
     orchestration = {
         "sim_root": str(tmp_path),
@@ -472,10 +460,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
             total_iterations=orchestration["total_iterations"],
             step=orchestration["step"],
             biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
-            overrides=(
-            "modeParams:car/constant", "-1.0",
-            "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-            )
+            overrides_path=overrides_path
         )
 
     assert set(os.listdir(tmp_path)) == {"0", "10", "20"}
@@ -498,6 +483,7 @@ def test_stepping(tmp_path, fake_lambda_handler):
 
 
 def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
+    overrides_path = os.path.join(os.path.dirname(__file__), "test_data", "test_overrides.json")
 
     orchestration = {
         "sim_root": str(tmp_path),
@@ -521,10 +507,7 @@ def test_stepping_with_cooling(tmp_path, fake_lambda_handler):
             total_iterations=orchestration["total_iterations"],
             step=orchestration["step"],
             biteration_matsim_config_path=orchestration["biteration_matsim_config_path"],
-            overrides=(
-            "modeParams:car/constant", "-1.0",
-            "scoringParameters:unknown/modeParams:bus/constant", "-1.0"
-            )
+            overrides_path=overrides_path
         )
 
     assert set(os.listdir(tmp_path)) == {"0", "10", "20", "30"}

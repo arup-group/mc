@@ -48,9 +48,7 @@ def test_autostep(tmpdir):
             "100",
             "10",
             temp_xml,
-            "a", "a",
-            "b", "b",
-            "c", "c"
+            str(env.test_overrides_path)
             ]
         )
     if result.exception:

@@ -1,4 +1,5 @@
 import os
+import json
 from pathlib import Path
 
 from mc.base import BaseConfig, Param
@@ -21,7 +22,7 @@ def autostep_config(
         total_iterations: str,
         step: str,
         biteration_matsim_config_path: Path,
-        overrides: tuple
+        overrides_path: Path
 ) -> None:
     """
     Step a config for bitsim based on arguments and an overrides map.
@@ -42,16 +43,13 @@ def autostep_config(
         total_iterations = int(total_iterations)
     if not isinstance(step, int):
         step = int(step)
-
-    if not len(overrides) % 2 == 0:
-        raise UserWarning(
-            f"""
-            Overrides must be of even length (key value pairs, eg k1, v1, k2, v2, ...).
-            Provided overrides '{overrides}' have length {len(overrides)}.
-            """
-        )
-
-    overrides = construct_override_map_from_tuple(overrides)
+    if overrides_path:
+        if not isinstance(overrides_path, Path):
+            overrides_path = Path(overrides_path)
+        logging.info(f"Loading overrides from {overrides_path}")
+        overrides = load_overrides(overrides_path)
+    else:
+        overrides = {}
 
     logging.info(f"Loading seed config from: {seed_matsim_config_path}")
     config = BaseConfig(seed_matsim_config_path)
@@ -270,3 +268,16 @@ def dump_log_to_disk(log: list, path):
     with open(path, 'w') as out:
         for line in log:
             out.write(line + '\n')
+
+
+def load_overrides(overrides_path: Path) -> dict:
+    with open(overrides_path) as o:
+        overrides = json.loads(o.read())
+        if isinstance(overrides, dict):
+            return overrides
+        if isinstance(overrides, list):
+            result = {}
+            for i, val in enumerate(overrides):
+                for k, v in val.items():
+                    result[k] = v
+            return result

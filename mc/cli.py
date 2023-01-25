@@ -41,7 +41,7 @@ def step(
 @click.argument('total_iterations', type=str)
 @click.argument('step', type=str)
 @click.argument('biteration_matsim_config_path', type=click.Path(writable=True))
-@click.argument('overrides', nargs=-1)
+@click.argument('overrides_path', type=click.Path(), required=False)
 def autostep(
         sim_root: Path,
         seed_matsim_config_path: Path,
@@ -49,7 +49,7 @@ def autostep(
         total_iterations: str,
         step: str,
         biteration_matsim_config_path: Path,
-        overrides: tuple
+        overrides_path: Path
 ) -> None:
     """
     Read config, apply overrides and write out.
@@ -61,7 +61,7 @@ def autostep(
         total_iterations=total_iterations,
         step=step,
         biteration_matsim_config_path=biteration_matsim_config_path,
-        overrides=overrides
+        overrides_path=overrides_path
     )
 
 
