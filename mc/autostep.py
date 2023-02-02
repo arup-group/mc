@@ -273,11 +273,8 @@ def dump_log_to_disk(log: list, path):
 def load_overrides(overrides_path: Path) -> dict:
     with open(overrides_path) as o:
         overrides = json.loads(o.read())
-        if isinstance(overrides, dict):
-            return overrides
-        if isinstance(overrides, list):
-            result = {}
-            for i, val in enumerate(overrides):
-                for k, v in val.items():
-                    result[k] = v
-            return result
+        result = {}
+        for i, val in enumerate(overrides):
+            for k, v in val.items():
+                result[k] = v
+        return result
