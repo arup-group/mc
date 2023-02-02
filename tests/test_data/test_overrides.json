@@ -1,0 +1,20 @@
+[
+    {
+        "scoringParameters:High_Car/marginalUtilityOfMoney": "2.5"
+    },
+    {
+        "scoringParameters:High_NoCar/marginalUtilityOfMoney": "2.5"
+    },
+    {
+        "scoringParameters:Low_Car/marginalUtilityOfMoney": "40"
+    },
+    {
+        "scoringParameters:Low_NoCar/marginalUtilityOfMoney": "40"
+    },
+    {
+        "modeParams:car/constant": "-1.0"
+    },
+    {
+        "scoringParameters:unknown/modeParams:bus/constant": "-1.0"
+    }
+]
