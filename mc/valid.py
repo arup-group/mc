@@ -352,6 +352,12 @@ VALID_MAP = {
             }
         },
 
+        "ReplanningAnnealer": {
+            "params": {
+                "activateAnnealingModule": "false",
+            }
+        },
+
         "scenario": {},
 
         "strategy": {
