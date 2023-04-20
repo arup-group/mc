@@ -10,6 +10,7 @@ from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import match_replace
 from mc.fill import param_replace
 from mc.step import step_config
+from mc.summarise import summarise_config
 
 
 @click.group()
@@ -289,6 +290,17 @@ def find(
     config = Config(path=Path(read_path))
     for found in config.find(address):
         found.print()
+
+@cli.command(name='report')
+@click.argument('config_path', type=click.Path(exists=True))
+@click.argument('output_path', type=click.Path(writable=True))
+def report(config_path: Path, output_path: Path) -> None:
+    """
+    Generate a simulation_log.csv report from a given MATSim config file.
+    """
+    config = Config(path=config_path)
+    summarise_config(config, output_path)
+
 
 
 def careful_write(config: BaseConfig, write_path: Path) -> None:
