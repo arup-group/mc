@@ -1,0 +1,56 @@
+Date:2023-04-21
+=====================================================================input files======================================================================
+network_path:~/test/network.xml
+plans_path:~/test/population.xml.gz
+schedule_path:~/test/schedule-merged.xml
+vehicles_path:~/test/vehicles.xml
+===================================================================output directory===================================================================
+output_directory:model_out
+====================================================================mobsim setting====================================================================
+mobsim:qsim
+Flow_Capacity_Factor:0.01
+Storage_Capacity_Factor:0.01
+======================================================================== mode ========================================================================
+"mode:car,bus,train,walk,bike"
+""
+,        subpopulation         ,           default            ,           unknown            ,
+,             car              ,                              ,                              ,
+,    marginalUtilityOfMoney    ,             0.0              ,             0.0              ,
+,          performing          ,             6.0              ,             6.0              ,
+,     utilityOfLineSwitch      ,             -1.0             ,             -1.0             ,
+,    mode_specific_constant    ,             0.0              ,             0.0              ,
+, marginal_utility_of_distance ,             0.0              ,             0.0              ,
+,marginal_utility_of_traveling ,             -6.0             ,             -6.0             ,
+,    monetary_distance_rate    ,             -0.0             ,             -0.0             ,
+,             bus              ,                              ,                              ,
+,    marginalUtilityOfMoney    ,             0.0              ,             0.0              ,
+,          performing          ,             6.0              ,             6.0              ,
+,     utilityOfLineSwitch      ,             -1.0             ,             -1.0             ,
+,    mode_specific_constant    ,             0.0              ,             0.0              ,
+, marginal_utility_of_distance ,             -0.0             ,             -0.0             ,
+,marginal_utility_of_traveling ,            -12.0             ,            -12.0             ,
+,    monetary_distance_rate    ,             -0.0             ,             -0.0             ,
+,            train             ,                              ,                              ,
+,    marginalUtilityOfMoney    ,             0.0              ,             0.0              ,
+,          performing          ,             6.0              ,             6.0              ,
+,     utilityOfLineSwitch      ,             -1.0             ,             -1.0             ,
+,    mode_specific_constant    ,             0.0              ,             0.0              ,
+, marginal_utility_of_distance ,             -0.0             ,             -0.0             ,
+,marginal_utility_of_traveling ,            -12.0             ,            -12.0             ,
+,    monetary_distance_rate    ,             -0.0             ,             -0.0             ,
+,             walk             ,                              ,                              ,
+,    marginalUtilityOfMoney    ,             0.0              ,             0.0              ,
+,          performing          ,             6.0              ,             6.0              ,
+,     utilityOfLineSwitch      ,             -1.0             ,             -1.0             ,
+,    mode_specific_constant    ,             0.0              ,             0.0              ,
+, marginal_utility_of_distance ,             -0.0             ,             -0.0             ,
+,marginal_utility_of_traveling ,            -12.0             ,            -12.0             ,
+,    monetary_distance_rate    ,             0.0              ,             0.0              ,
+,             bike             ,                              ,                              ,
+,    marginalUtilityOfMoney    ,             0.0              ,             0.0              ,
+,          performing          ,             6.0              ,             6.0              ,
+,     utilityOfLineSwitch      ,             -1.0             ,             -1.0             ,
+,    mode_specific_constant    ,             0.0              ,             0.0              ,
+, marginal_utility_of_distance ,             -0.0             ,             -0.0             ,
+,marginal_utility_of_traveling ,            -12.0             ,            -12.0             ,
+,    monetary_distance_rate    ,             -0.0             ,             -0.0             ,
