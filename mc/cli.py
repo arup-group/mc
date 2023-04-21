@@ -11,6 +11,7 @@ from mc.fill import match_replace
 from mc.fill import param_replace
 from mc.step import step_config
 from mc.summarise import summarise_config
+import os
 
 
 @click.group()
@@ -291,6 +292,7 @@ def find(
     for found in config.find(address):
         found.print()
 
+
 @cli.command(name='report')
 @click.argument('config_path', type=click.Path(exists=True))
 @click.argument('output_path', type=click.Path(writable=True))
@@ -301,6 +303,11 @@ def report(config_path: Path, output_path: Path) -> None:
     config = Config(path=config_path)
     summarise_config(config, output_path)
 
+    # Read and print the content of simulation_log.txt
+    log_file_path = os.path.join(output_path, 'simulation_log.txt')
+    with open(log_file_path, 'r') as log_file:
+        log_content = log_file.read()
+        print(log_content)
 
 
 def careful_write(config: BaseConfig, write_path: Path) -> None:

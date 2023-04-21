@@ -73,7 +73,6 @@ def scoring_summary(config):
         message.append(row_data)
         message.append("-" * (31 * (len(subpopulation_set) + 1)))
         # iterate through the scoring parameters and add the values to the
-        # table
         for row_idx, row_name in enumerate(
                 ["marginalUtilityOfMoney", "performing", "utilityOfLineSwitch"] + parm[mode]):
             row_data = "|{:^30}|".format(row_name)
@@ -92,19 +91,45 @@ def scoring_summary(config):
                         cell_value = "NA"
                     else:
                         if row_name == "mode_specific_constant":
-                            cell_value = config['planCalcScore']['scoringParameters:' + \
-                                subpop_name]['modeParams:' + mode]['constant']
+                            cell_value = config[
+                                'planCalcScore'
+                            ][
+                                'scoringParameters:' + subpop_name
+                            ][
+                                'modeParams:' + mode
+                            ][
+                                'constant'
+                            ]
                         elif row_name == "marginal_utility_of_distance":
-                            cell_value = config['planCalcScore']['scoringParameters:' +
-                                                                 subpop_name]['modeParams:' +
-                                                                              mode]['marginalUtilityOfDistance_util_m']
+                            cell_value = config[
+                                'planCalcScore'
+                            ][
+                                'scoringParameters:' + subpop_name
+                            ][
+                                'modeParams:' + mode
+                            ][
+                                'marginalUtilityOfDistance_util_m'
+                            ]
                         elif row_name == "marginal_utility_of_traveling":
-                            cell_value = config['planCalcScore']['scoringParameters:' +
-                                                                 subpop_name]['modeParams:' +
-                                                                              mode]['marginalUtilityOfTraveling_util_hr']
+                            cell_value = config[
+                                'planCalcScore'
+                            ][
+                                'scoringParameters:' + subpop_name
+                            ][
+                                'modeParams:' + mode
+                            ][
+                                'marginalUtilityOfTraveling_util_hr'
+                            ]
                         elif row_name == "monetary_distance_rate":
-                            cell_value = config['planCalcScore']['scoringParameters:' + \
-                                subpop_name]['modeParams:' + mode]['monetaryDistanceRate']
+                            cell_value = config[
+                                'planCalcScore'
+                            ][
+                                'scoringParameters:' + subpop_name
+                            ][
+                                'modeParams:' + mode
+                            ][
+                                'monetaryDistanceRate'
+                            ]
                 row_data += "{:^30}|".format(cell_value)
             message.append(row_data)
             message.append("-" * (31 * (len(subpopulation_set) + 1)))
