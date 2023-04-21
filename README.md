@@ -65,6 +65,7 @@ Commands:
   matchreplace  Read wildcarded config, apply overrides and write.
   paramreplace  Read config, apply overrides and write out.
   print         Print a config to terminal.
+  report        Generate a csv report with scoring parameters.
   step          Read config, apply overrides and write out.
   summary       Summarise a config.
 ```
@@ -328,6 +329,38 @@ KeyError: "key:'NotAModule' not found in modules"
 
 This system is useful for preventing typos, but has to be
 [maintained and updated for changes to valid configs](#updating-mc-for-config-changes). The valid mapping is described in the `mc.valid` module.
+
+## Report
+The CLI supports to generate a CSV report for summrising the scoring parameters for different modes and subpopulations in a tabular format from a given MATSim config.
+```py
+ mc report <MATSIM_CONFIF><OUTPUT_DIR>
+ mc report tests/test_data/test_config.xml tests/test_data    
+```
+
+```
+mode:car,bus,train,walk,bike
+
+|        subpopulation         |           default            |           unknown            |
+---------------------------------------------------------------------------------------------
+|             car              |                              |                              |
+---------------------------------------------------------------------------------------------
+|    marginalUtilityOfMoney    |             0.0              |             0.0              |
+---------------------------------------------------------------------------------------------
+|          performing          |             6.0              |             6.0              |
+---------------------------------------------------------------------------------------------
+|     utilityOfLineSwitch      |             -1.0             |             -1.0             |
+---------------------------------------------------------------------------------------------
+|    mode_specific_constant    |             0.0              |             0.0              |
+---------------------------------------------------------------------------------------------
+| marginal_utility_of_distance |             0.0              |             0.0              |
+---------------------------------------------------------------------------------------------
+|marginal_utility_of_traveling |             -6.0             |             -6.0             |
+---------------------------------------------------------------------------------------------
+|    monetary_distance_rate    |             -0.0             |             -0.0             |
+---------------------------------------------------------------------------------------------
+```
+
+
 
 ## Updating MC for Config Changes
 

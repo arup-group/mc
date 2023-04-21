@@ -37,7 +37,7 @@ def directory_log_summary(config):
 
 def scoring_summary(config):
     """
-    Display a table with scoring parameters for different modes and subpopulations in tabular format    
+    Display a table with scoring parameters for different modes and subpopulations in tabular format
     """
     message = directory_log_summary(config)
     # add a header for the mode section
