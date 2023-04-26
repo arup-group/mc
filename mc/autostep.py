@@ -4,7 +4,7 @@ from pathlib import Path
 
 from mc.base import BaseConfig, Param
 from mc.logger import logging
-from mc.summarise import summarise_config, summarise_overrides_log
+from mc.report import report_config, summarise_overrides_log
 
 DEFAULT_MATSIM_CONFIG_NAME = "matsim_config.xml"
 DEFAULT_PLANS_NAME = "output_plans.xml.gz"
@@ -86,7 +86,7 @@ def autostep_config(
 
     # summarise the key information from matsim config to a text file
     text_log_path = biteration_matsim_config_path.parent
-    summarise_config(config, text_log_path)
+    report_config(config, text_log_path)
 
     # summarise the matsim overrides log information for different executions from the batch file
     file_name = 'matsim_overrides'
