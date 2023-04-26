@@ -331,7 +331,7 @@ This system is useful for preventing typos, but has to be
 [maintained and updated for changes to valid configs](#updating-mc-for-config-changes). The valid mapping is described in the `mc.valid` module.
 
 ## Report
-The CLI supports to generate a CSV report for summrising the scoring parameters for different modes and subpopulations in a tabular format from a given MATSim config.
+The CLI supports to generate a CSV report for summarising the scoring parameters for different modes and subpopulations in a tabular format from a given MATSim config.
 ```py
  mc report <MATSIM_CONFIF><OUTPUT_DIR>
  mc report tests/test_data/test_config.xml tests/test_data    

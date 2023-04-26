@@ -3,9 +3,9 @@ from datetime import date
 import csv
 
 
-def directory_log_summary(config):
+def add_directory_to_report(config):
     """
-    Summarise the input and out diretories and key information as text log from matsim config
+    Add the input and out diretories and key information as text log from matsim config
     When submitting jobs via the Bitsim Orchestration
     """
     message = []
@@ -35,11 +35,11 @@ def directory_log_summary(config):
     return message
 
 
-def scoring_summary(config):
+def add_scoring_to_report(config):
     """
     Display a table with scoring parameters for different modes and subpopulations in tabular format
     """
-    message = directory_log_summary(config)
+    message = add_directory_to_report(config)
     # add a header for the mode section
     message.append("{:=^150s}".format(" mode "))
     message.append(f"mode:{config['subtourModeChoice']['modes']}")
@@ -142,7 +142,7 @@ def write_text(text, output_path):
     """
     Write the key information into a text file
     """
-    textfile = open(os.path.join(output_path, 'simulation_log.txt'), 'w')
+    textfile = open(os.path.join(output_path, 'simulation_report.txt'), 'w')
     for element in text:
         textfile.write(element + "\n")
     textfile.close()
@@ -152,7 +152,7 @@ def write_csv(data, output_path):
     """
     Write the key information into a CSV file
     """
-    with open(os.path.join(output_path, 'simulation_log.csv'), 'w', newline='') as csvfile:
+    with open(os.path.join(output_path, 'simulation_report.csv'), 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         for row in data:
             # Skip rows with dividing lines
@@ -161,8 +161,8 @@ def write_csv(data, output_path):
             csv_writer.writerow(row.split('|'))
 
 
-def summarise_config(config, output_path):
-    text = scoring_summary(config)
+def report_config(config, output_path):
+    text = add_scoring_to_report(config)
     write_text(text, output_path)
     write_csv(text, output_path)
 

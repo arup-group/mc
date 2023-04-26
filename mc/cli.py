@@ -10,8 +10,7 @@ from mc.build import Config, BuildConfig, BaseConfig, CONFIG_MAP
 from mc.fill import match_replace
 from mc.fill import param_replace
 from mc.step import step_config
-from mc.summarise import summarise_config
-import os
+from mc.report import add_scoring_to_report, write_text, write_csv
 
 
 @click.group()
@@ -298,16 +297,19 @@ def find(
 @click.argument('output_path', type=click.Path(writable=True))
 def report(config_path: Path, output_path: Path) -> None:
     """
-    Generate a simulation_log.csv report from a given MATSim config file.
+    Generate a config report with scoring parameters.
     """
     config = Config(path=config_path)
-    summarise_config(config, output_path)
 
-    # Read and print the content of simulation_log.txt
-    log_file_path = os.path.join(output_path, 'simulation_log.txt')
-    with open(log_file_path, 'r') as log_file:
-        log_content = log_file.read()
-        print(log_content)
+    # Generate the report content
+    report_content = add_scoring_to_report(config)
+
+    # Write report content to text and CSV files
+    write_text(report_content, output_path)
+    write_csv(report_content, output_path)
+
+    # Print the report content
+    print(report_content)
 
 
 def careful_write(config: BaseConfig, write_path: Path) -> None:
