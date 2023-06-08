@@ -155,3 +155,11 @@ def test_nested_set_paramsets_fail():
     c = BaseConfig()
     with pytest.raises(KeyError):
         c['planCalcScore']['INVALID:group1']['earlyDeparture'] = '1'
+
+
+def test_load_v12():
+    BaseConfig(path=env.test_v12_xml_path)
+
+
+def test_load_v14():
+    BaseConfig(path=env.test_v14_xml_path)

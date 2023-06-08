@@ -13,6 +13,15 @@
     <param name="inputPlansFile" value="/efs/population/population_xml/v5_20220429_TE/plans.xml.pz" />
   </module>
 
+  <module name="roadpricing" >
+    <param name="enforcementEfficiency" value="1.0" />
+    <param name="tollLinksFile" value="null" />
+  </module>
+
+  <module name="ReplanningAnnealer" >
+    <!-- Activate the scaling of replanning modules using an annealing approach rather than fixed rates. -->
+    <param name="activateAnnealingModule" value="false" />
+  </module>
 
   <module name="vehicles" >
       <param name="vehiclesFile" value="~/test/all_vehicles.xml" />
@@ -25,63 +34,63 @@
     <param name="transitModes" value="bus,rail,ferry,subway,tram,helicopter" />
   </module>
 
-	<module name="swissRailRaptor">
+  <module name="swissRailRaptor">
 
-		<param name="useModeMappingForPassengers" value="true" />
-		<param name="useIntermodalAccessEgress" value="true" />
-		<param name="intermodalAccessEgressModeSelection" value="RandomSelectOneModePerRoutingRequestAndDirection" />
+    <param name="useModeMappingForPassengers" value="true" />
+    <param name="useIntermodalAccessEgress" value="true" />
+    <param name="intermodalAccessEgressModeSelection" value="RandomSelectOneModePerRoutingRequestAndDirection" />
 
-		<parameterset type="intermodalAccessEgress">
-		  <param name="mode" value="walk" />
-		  <param name="initialSearchRadius" value="500" />
-		  <param name="maxRadius" value="2000" />
-		</parameterset>
+    <parameterset type="intermodalAccessEgress">
+      <param name="mode" value="walk" />
+      <param name="initialSearchRadius" value="500" />
+      <param name="maxRadius" value="2000" />
+    </parameterset>
 
-		<parameterset type="intermodalAccessEgress">
-		  <param name="mode" value="bike" />
-		  <param name="initialSearchRadius" value="2000" />
-		  <param name="maxRadius" value="5000" />
-		  <!-- <param name="linkIdAttribute" value="accessLinkId_bike" /> -->
-		  <!-- <param name="personFilterAttribute" value="hasBike" />
-		  <param name="personFilterValue" value="true" /> -->
-		  <!-- <param name="stopFilterAttribute" value="bikeAccessible" />
-		  <param name="stopFilterValue" value="true" /> -->
-		</parameterset>
+    <parameterset type="intermodalAccessEgress">
+      <param name="mode" value="bike" />
+      <param name="initialSearchRadius" value="2000" />
+      <param name="maxRadius" value="5000" />
+      <!-- <param name="linkIdAttribute" value="accessLinkId_bike" /> -->
+      <!-- <param name="personFilterAttribute" value="hasBike" />
+      <param name="personFilterValue" value="true" /> -->
+      <!-- <param name="stopFilterAttribute" value="bikeAccessible" />
+      <param name="stopFilterValue" value="true" /> -->
+    </parameterset>
 
-		<parameterset type="intermodalAccessEgress">
-		  <param name="mode" value="car" />
-		  <param name="initialSearchRadius" value="5000" />
-		  <param name="searchExtensionRadius" value="1000.0" />
-		  <param name="maxRadius" value="10000" />
-		  <param name="linkIdAttribute" value="accessLinkId_car" />
-		  <param name="personFilterAttribute" value="hasCar" />
-		  <param name="personFilterValue" value="true" />
-		  <param name="stopFilterAttribute" value="carAccessible" />
-		  <param name="stopFilterValue" value="true" />
-		</parameterset>
+    <parameterset type="intermodalAccessEgress">
+      <param name="mode" value="car" />
+      <param name="initialSearchRadius" value="5000" />
+      <param name="searchExtensionRadius" value="1000.0" />
+      <param name="maxRadius" value="10000" />
+      <param name="linkIdAttribute" value="accessLinkId_car" />
+      <param name="personFilterAttribute" value="hasCar" />
+      <param name="personFilterValue" value="true" />
+      <param name="stopFilterAttribute" value="carAccessible" />
+      <param name="stopFilterValue" value="true" />
+    </parameterset>
 
-		<parameterset type="modeMapping">
-			<param name="routeMode" value="bus" />
-			<param name="passengerMode" value="bus" />
-		  </parameterset>
-		  <parameterset type="modeMapping">
-			<param name="routeMode" value="rail" />
-			<param name="passengerMode" value="train" />
-		</parameterset>
     <parameterset type="modeMapping">
-			<param name="routeMode" value="ferry" />
-			<param name="passengerMode" value="ferry" />
-		  </parameterset>
-		  <parameterset type="modeMapping">
-			<param name="routeMode" value="subway" />
-			<param name="passengerMode" value="subway" />
-		</parameterset>
-		  <parameterset type="modeMapping">
-			<param name="routeMode" value="tram" />
-			<param name="passengerMode" value="tram" />
-		</parameterset>
+      <param name="routeMode" value="bus" />
+      <param name="passengerMode" value="bus" />
+      </parameterset>
+      <parameterset type="modeMapping">
+      <param name="routeMode" value="rail" />
+      <param name="passengerMode" value="train" />
+    </parameterset>
+    <parameterset type="modeMapping">
+      <param name="routeMode" value="ferry" />
+      <param name="passengerMode" value="ferry" />
+      </parameterset>
+      <parameterset type="modeMapping">
+      <param name="routeMode" value="subway" />
+      <param name="passengerMode" value="subway" />
+    </parameterset>
+      <parameterset type="modeMapping">
+      <param name="routeMode" value="tram" />
+      <param name="passengerMode" value="tram" />
+    </parameterset>
 
-	</module>
+  </module>
 
    <module name="transitRouter" >
     <!-- additional time the router allocates when a line switch happens, Can be interpreted as a 'savity' time that agents need to savely transfer from one line to another -->
@@ -127,7 +136,7 @@
     <param name = "numberOfThreads" value="32"/>
   </module>
 
-	<module name="hermes" >
+  <module name="hermes" >
     <!-- <!– Simulation End Time –> -->
     <param name="endTime" value="32:00:00" />
     <param name="flowCapacityFactor" value="0.01" />

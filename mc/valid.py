@@ -345,6 +345,19 @@ VALID_MAP = {
             }
         },
 
+        "roadpricing": {
+            "params": {
+                "enforcementEfficiency": "null",
+                "tollLinksFile": "null"
+            }
+        },
+
+        "ReplanningAnnealer": {
+            "params": {
+                "activateAnnealingModule": "false",
+            }
+        },
+
         "scenario": {},
 
         "strategy": {
