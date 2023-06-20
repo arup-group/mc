@@ -5,7 +5,13 @@ Dictionary of valid config names for modules, paramsets and params.
 VALID_MAP = {
 
     "modules": {
-
+        "ArupReplanning": {
+            "params": {
+                "maximumBikeTourDistance_m": "45000",
+                "maximumWalkTourDistance_m": "12500",
+                "minimumTimeMutationStep_s": "300",
+            }
+        },
         "swissRailRaptor": {
             "params": {
                 "scoringParameters": "Default",
