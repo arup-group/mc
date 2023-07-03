@@ -3,14 +3,20 @@ Dictionary of valid config names for modules, paramsets and params.
 """
 
 VALID_MAP = {
-
     "modules": {
         "ArupReplanning": {
             "params": {
                 "maximumBikeTourDistance_m": "45000",
                 "maximumWalkTourDistance_m": "12500",
                 "minimumTimeMutationStep_s": "300",
-            }
+            },
+            "parametersets": {
+                "modeRangeRestrictionSet": {
+                    "mode": "bike",
+                    "minDistance": "0",
+                    "maxDistance": "0",
+                }
+            },
         },
         "swissRailRaptor": {
             "params": {
@@ -25,27 +31,17 @@ VALID_MAP = {
             },
             "parametersets": {
                 "intermodalAccessEgress": {
-                    "params": {
-                        "mode": "walk",
-                        "radius": "1000"
-                    }
+                    "params": {"mode": "walk", "radius": "1000"}
                 },
-                "modeMapping": {
-                    "params": {
-                        "routeMode": "bus",
-                        "passengerMode": "bus"
-                    }
-                }
-            }
+                "modeMapping": {"params": {"routeMode": "bus", "passengerMode": "bus"}},
+            },
         },
-
         "SBBPt": {
             "params": {
                 "createLinkEventsInterval": "1",
                 "deterministicServiceModes": "train",
             }
         },
-
         "global": {
             "params": {
                 "coordinateSystem": "EPSG:27700",
@@ -54,17 +50,15 @@ VALID_MAP = {
                 "insistingOnDeprecatedConfigVersion": "true",
             }
         },
-
         "network": {
             "params": {
                 "inputCRS": "null",
                 "inputChangeEventsFile": "null",
                 "inputNetworkFile": "./output_network.xml.gz",
                 "laneDefinitionsFile": "null",
-                "timeVariantNetwork": "false"
+                "timeVariantNetwork": "false",
             }
         },
-
         "plans": {
             "params": {
                 "inputPlansFile": "./output_plans.xml.gz",
@@ -76,13 +70,7 @@ VALID_MAP = {
                 "removingUnnecessaryPlanAttributes": "false",
             }
         },
-
-        "vehicles": {
-            "params": {
-                "vehiclesFile": "null"
-            }
-        },
-
+        "vehicles": {"params": {"vehiclesFile": "null"}},
         "transit": {
             "params": {
                 "insistingOnUsingDeprecatedPersonAttributeFile": "true",
@@ -95,7 +83,6 @@ VALID_MAP = {
                 "transitStopsAttributesFile": "null",
             }
         },
-
         "multimodal": {
             "params": {
                 "createMultiModalNetwork": "true",
@@ -107,7 +94,6 @@ VALID_MAP = {
                 "ensureActivityReachability": "true",
             }
         },
-
         "travelTimeCalculator": {
             "params": {
                 "analyzedModes": "car,bus,walk",
@@ -119,10 +105,9 @@ VALID_MAP = {
                 "travelTimeAggregator": "optimistic",
                 "travelTimeBinSize": "900",
                 "travelTimeCalculator": "TravelTimeCalculatorArray",
-                "travelTimeGetter": "average"
+                "travelTimeGetter": "average",
             }
         },
-
         "JDEQSim": {
             "params": {
                 "carSize": "7.5",
@@ -131,25 +116,17 @@ VALID_MAP = {
                 "gapTravelSpeed": "15.0",
                 "minimumInFlowCapacity": "1800.0",
                 "squeezeTime": "1800.0",
-                "storageCapacityFactor": "1.0"
+                "storageCapacityFactor": "1.0",
             }
         },
-
         "TimeAllocationMutator": {
             "params": {
                 "mutationAffectsDuration": "true",
                 "mutationRange": "1000.0",
-                "useIndividualSettingsForSubpopulations": "false"
+                "useIndividualSettingsForSubpopulations": "false",
             }
         },
-
-        "changeMode": {
-            "params": {
-                "ignoreCarAvailability": "true",
-                "modes": "car,pt"
-            }
-        },
-
+        "changeMode": {"params": {"ignoreCarAvailability": "true", "modes": "car,pt"}},
         "controler": {
             "params": {
                 "createGraphs": "true",
@@ -166,10 +143,9 @@ VALID_MAP = {
                 "snapshotFormat": "",
                 "writeEventsInterval": "1",
                 "writePlansInterval": "50",
-                "writeSnapshotsInterval": "1"
+                "writeSnapshotsInterval": "1",
             }
         },
-
         "counts": {
             "params": {
                 "analyzedModes": "car",
@@ -181,10 +157,9 @@ VALID_MAP = {
                 "inputCRS": "null",
                 "inputCountsFile": "null",
                 "outputformat": "txt",
-                "writeCountsInterval": "10"
+                "writeCountsInterval": "10",
             }
         },
-
         "facilities": {
             "params": {
                 "addEmptyActivityOption": "false",
@@ -196,34 +171,27 @@ VALID_MAP = {
                 "inputFacilitiesFile": "null",
                 "inputFacilityAttributesFile": "null",
                 "oneFacilityPerLink": "true",
-                "removingLinksAndCoordinates": "true"
+                "removingLinksAndCoordinates": "true",
             }
         },
-
         "households": {
-            "params": {
-                "inputFile": "null",
-                "inputHouseholdAttributesFile": "null"
-            }
+            "params": {"inputFile": "null", "inputHouseholdAttributesFile": "null"}
         },
-
         "linkStats": {
             "params": {
                 "averageLinkStatsOverIterations": "5",
-                "writeLinkStatsInterval": "10"
+                "writeLinkStatsInterval": "10",
             }
         },
-
         "parallelEventHandling": {
             "params": {
                 "estimatedNumberOfEvents": "null",
                 "eventsQueueSize": "null",
                 "numberOfThreads": "32",
                 "oneThreadPerHandler": "false",
-                "synchronizeOnSimSteps": "true"
+                "synchronizeOnSimSteps": "true",
             }
         },
-
         "planCalcScore": {
             "params": {
                 "BrainExpBeta": "1.0",
@@ -231,9 +199,8 @@ VALID_MAP = {
                 "fractionOfIterationsToStartScoreMSA": "null",
                 "learningRate": "1.0",
                 "usingOldScoringBelowZeroUtilityDuration": "false",
-                "writeExperiencedPlans": "false"
+                "writeExperiencedPlans": "false",
             },
-
             "parametersets": {
                 "scoringParameters": {
                     "params": {
@@ -244,9 +211,8 @@ VALID_MAP = {
                         "subpopulation": "default",
                         "utilityOfLineSwitch": "-1.0",
                         "waiting": "-1.0",
-                        "waitingPt": "-1.0"
+                        "waitingPt": "-1.0",
                     },
-
                     "parametersets": {
                         "activityParams": {
                             "params": {
@@ -259,41 +225,35 @@ VALID_MAP = {
                                 "priority": "1.0",
                                 "scoringThisActivityAtAll": "true",
                                 "typicalDuration": "06:00:00",
-                                "typicalDurationScoreComputation": "relative"
+                                "typicalDurationScoreComputation": "relative",
                             }
                         },
-
                         "modeParams": {
                             "params": {
                                 "constant": "0.0",
                                 "marginalUtilityOfDistance_util_m": "0.0",
                                 "marginalUtilityOfTraveling_util_hr": "-6.0",
                                 "mode": "car",
-                                "monetaryDistanceRate": "-0.0"
+                                "monetaryDistanceRate": "-0.0",
                             }
-                        }
-                    }
+                        },
+                    },
                 }
-            }
-        },
-
-        "planscalcroute": {
-            "params": {
-                "networkModes": "car"
             },
-
+        },
+        "planscalcroute": {
+            "params": {"networkModes": "car"},
             "parametersets": {
                 "teleportedModeParameters": {
                     "params": {
                         "beelineDistanceFactor": "1.3",
                         "mode": "bike",
                         "teleportedModeFreespeedFactor": "null",
-                        "teleportedModeSpeed": "4.166666666666667"
+                        "teleportedModeSpeed": "4.166666666666667",
                     }
                 }
-            }
+            },
         },
-
         "ptCounts": {
             "params": {
                 "countsScaleFactor": "1.0",
@@ -303,10 +263,9 @@ VALID_MAP = {
                 "inputBoardCountsFile": "null",
                 "inputOccupancyCountsFile": "null",
                 "outputformat": "null",
-                "ptCountsInterval": "10"
+                "ptCountsInterval": "10",
             }
         },
-
         "qsim": {
             "params": {
                 "creatingVehiclesForAllNetworkModes": "true",
@@ -336,10 +295,9 @@ VALID_MAP = {
                 "usingFastCapacityUpdate": "true",
                 "usingThreadpool": "true",
                 "vehicleBehavior": "teleport",
-                "vehiclesSource": "defaultVehicle"
+                "vehiclesSource": "defaultVehicle",
             }
         },
-
         "hermes": {
             "params": {
                 "mainMode": "car",
@@ -347,12 +305,10 @@ VALID_MAP = {
                 "flowCapacityFactor": "0.01",
                 "storageCapacityFactor": "0.01",
                 "stuckTime": "10.0",
-                "useDeterministicPt": "true"
+                "useDeterministicPt": "true",
             }
         },
-
         "scenario": {},
-
         "strategy": {
             "params": {
                 "ExternalExeConfigTemplate": "null",
@@ -360,9 +316,8 @@ VALID_MAP = {
                 "ExternalExeTmpFileRootDir": "null",
                 "fractionOfIterationsToDisableInnovation": "0.9",
                 "maxAgentPlanMemorySize": "5",
-                "planSelectorForRemoval": "WorstPlanSelector"
+                "planSelectorForRemoval": "WorstPlanSelector",
             },
-
             "parametersets": {
                 "strategysettings": {
                     "params": {
@@ -370,30 +325,27 @@ VALID_MAP = {
                         "executionPath": "null",
                         "strategyName": "SelectExpBeta",
                         "subpopulation": "unknown",
-                        "weight": "0.6"
+                        "weight": "0.6",
                     }
                 }
-            }
+            },
         },
-
         "subtourModeChoice": {
             "params": {
                 "chainBasedModes": "car,bike",
                 "considerCarAvailability": "false",
-                "modes": "car,pt,walk,bike"
+                "modes": "car,pt,walk,bike",
             }
         },
-
         "transitRouter": {
             "params": {
                 "additionalTransferTime": "0.0",
                 "directWalkFactor": "1.0",
                 "extensionRadius": "100.0",
                 "maxBeelineWalkConnectionDistance": "100.0",
-                "searchRadius": "1000.0"
+                "searchRadius": "1000.0",
             }
         },
-
         "vspExperimental": {
             "params": {
                 "isAbleToOverwritePtInteractionParams": "false",
@@ -401,8 +353,8 @@ VALID_MAP = {
                 "isUsingOpportunityCostOfTimeForLocationChoice": "true",
                 "logitScaleParamForPlansRemoval": "1.0",
                 "vspDefaultsCheckingLevel": "ignore",
-                "writingOutputEvents": "true"
+                "writingOutputEvents": "true",
             }
-        }
+        },
     }
 }
