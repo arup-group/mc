@@ -12,10 +12,8 @@ VALID_MAP = {
             },
             "parametersets": {
                 "modeRangeRestrictionSet": {
-                    "mode": "bike",
-                    "minDistance": "0",
-                    "maxDistance": "0",
-                }
+                    "params": {"mode": "bike", "minDistance": "0", "maxDistance": "0"}
+                },
             },
         },
         "swissRailRaptor": {

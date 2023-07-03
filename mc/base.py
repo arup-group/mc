@@ -31,9 +31,9 @@ class Base:
     - debugging and printing
     """
 
-    class_type = ''
-    ident = ''
-    name = ''
+    class_type = ""
+    ident = ""
+    name = ""
     valid_keys = []
     valid_param_keys = []
     valid_paramset_keys = []
@@ -157,7 +157,6 @@ class Base:
         :param json_object: dict
         """
         for key, value in json_object.items():
-
             if key == "params":
                 for key2, value2 in value.items():
                     self.params[key2] = Param(key2, value2)
@@ -166,7 +165,9 @@ class Base:
                     self.modules[key2] = Module(key2, json_object=module)
             elif key == "parametersets":
                 for ps_name, paramset in value.items():
-                    self.parametersets[ps_name] = ParamSet(ps_name, json_object=paramset)
+                    self.parametersets[ps_name] = ParamSet(
+                        ps_name, json_object=paramset
+                    )
 
     # Writing configuration to path
 
@@ -183,7 +184,7 @@ class Base:
         elif json_path(path):
             self.write_json(path)
         else:
-            raise NameError(f'Unknown data format for path: {path}')
+            raise NameError(f"Unknown data format for path: {path}")
 
     def write_xml(self, path):
         """
@@ -194,13 +195,14 @@ class Base:
         if isinstance(path, str):
             path = Path(path)
         root = self.build_xml()
-        tree = et.tostring(root,
-                           pretty_print=True,
-                           xml_declaration=False,
-                           encoding='UTF-8')
-        with open(path, 'wb') as file:
+        tree = et.tostring(
+            root, pretty_print=True, xml_declaration=False, encoding="UTF-8"
+        )
+        with open(path, "wb") as file:
             file.write(b'<?xml version="1.0" ?>\n')
-            file.write(b'<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">\n')
+            file.write(
+                b'<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">\n'
+            )
             file.write(tree)
 
     def write_json(self, path):
@@ -212,7 +214,7 @@ class Base:
         if isinstance(path, str):
             path = Path(path)
         data = self.build_json()
-        with open(path, 'w', encoding='utf-8') as outfile:
+        with open(path, "w", encoding="utf-8") as outfile:
             json.dump(data, outfile, ensure_ascii=False, indent=2)
 
     def build_xml(self, top: str = "config", **kwargs) -> Element:
@@ -228,15 +230,15 @@ class Base:
 
         if self.modules:
             for module_name, module in self.modules.items():
-                elem = module.build_xml('module', name=module_name)
+                elem = module.build_xml("module", name=module_name)
                 root.append(elem)
         if self.params:
             for param_name, param in self.params.items():
-                elem = et.Element('param', name=param_name, value=param.value)
+                elem = et.Element("param", name=param_name, value=param.value)
                 root.append(elem)
         if self.parametersets:
             for _, paramset in self.parametersets.items():
-                elem = paramset.build_xml('parameterset', type=paramset.type)
+                elem = paramset.build_xml("parameterset", type=paramset.type)
                 root.append(elem)
         return root
 
@@ -250,12 +252,12 @@ class Base:
             build = {}
             for param_name, param in self.params.items():
                 build[param_name] = param.value
-            builds['params'] = build
+            builds["params"] = build
         if self.parametersets:
             build = {}
             for ps_name, paramset in self.parametersets.items():
                 build[ps_name] = paramset.build_json()
-            builds['parametersets'] = build
+            builds["parametersets"] = build
         return builds
 
     def __str__(self) -> str:
@@ -271,7 +273,9 @@ class Base:
         :return: bool
         """
         if not isinstance(other, Base):
-            raise NotImplementedError("__eq__ only implemented for comparison between same class")
+            raise NotImplementedError(
+                "__eq__ only implemented for comparison between same class"
+            )
 
         if not set(self.params) == set(other.params):
             return False
@@ -288,7 +292,7 @@ class Base:
 
         return True
 
-    def diff(self, other, location: str = '', diffs: list = None) -> list:
+    def diff(self, other, location: str = "", diffs: list = None) -> list:
         """
         Recursive method for comparing two config objects and adding diff messages to a existing
         list of
@@ -302,10 +306,11 @@ class Base:
             diffs = []
 
         if not isinstance(other, Base):
-            raise NotImplementedError("__eq__ only implemented for comparison between same base class")
+            raise NotImplementedError(
+                "__eq__ only implemented for comparison between same base class"
+            )
 
         if self.class_type == "config":
-
             for k, module in self.modules.items():
                 other_module = other.modules.get(k)
                 if other_module:
@@ -322,11 +327,12 @@ class Base:
 
         elif self.class_type == "param":
             if not self.value == other.value:
-                diff = f"+/- param@{location}: {self.name}: {other.value} -> {self.value}"
+                diff = (
+                    f"+/- param@{location}: {self.name}: {other.value} -> {self.value}"
+                )
                 diffs.extend([diff])
 
-        elif self.class_type in ['module', 'paramset']:
-
+        elif self.class_type in ["module", "paramset"]:
             for k, param in self.params.items():
                 other_param = other.params.get(k)
                 if other_param:
@@ -365,6 +371,7 @@ class BaseConfig(Base, BaseDebug):
     """
     Base Configuration class.
     """
+
     class_type = "config"
 
     def __init__(self, path: Path = None) -> None:
@@ -373,8 +380,8 @@ class BaseConfig(Base, BaseDebug):
         :param path: Path, optional
         """
         self.modules = {}
-        self.ident = 'config'
-        self.valid_keys = list(VALID_MAP['modules'])
+        self.ident = "config"
+        self.valid_keys = list(VALID_MAP["modules"])
 
         if path is None:
             return None
@@ -392,9 +399,7 @@ class BaseConfig(Base, BaseDebug):
                     data = json.load(file)
                     self.build_from_json(data)
         else:
-            raise FileNotFoundError(
-                f"File ({str(path)}) not found."
-                )
+            raise FileNotFoundError(f"File ({str(path)}) not found.")
 
     def print(self, i: int = 0) -> None:
         for module in self.modules.values():
@@ -466,7 +471,9 @@ class BaseConfig(Base, BaseDebug):
 
     def __eq__(self, other):
         if not isinstance(other, BaseConfig):
-            raise NotImplementedError("__eq__ only implemented for comparison between same class")
+            raise NotImplementedError(
+                "__eq__ only implemented for comparison between same class"
+            )
 
         if not set(self.modules) == set(other.modules):
             return False
@@ -530,12 +537,15 @@ class Module(Base):
         self.params = {}
         self.parametersets = {}
 
-        self.valid_param_keys = list(VALID_MAP['modules'][name].get('params', []))
+        self.valid_param_keys = list(VALID_MAP["modules"][name].get("params", []))
         self.valid_paramset_keys = [
-            get_paramset_type(t) for t in list(VALID_MAP['modules'][name].get('parametersets', []))
+            get_paramset_type(t)
+            for t in list(VALID_MAP["modules"][name].get("parametersets", []))
         ]
-        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
-                           'valid_paramset_keys': self.valid_paramset_keys}
+        self.valid_keys = {
+            "valid_params_keys": self.valid_param_keys,
+            "valid_paramset_keys": self.valid_paramset_keys,
+        }
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -552,9 +562,9 @@ class Module(Base):
         """
         print(self.indenter * i, self)
         for _, param in self.params.items():
-            param.print(i+1)
+            param.print(i + 1)
         for _, paramset in self.parametersets.items():
-            paramset.print(i+1)
+            paramset.print(i + 1)
 
     def __getitem__(self, key):
         if key in self.params:
@@ -690,10 +700,14 @@ class ParamSet(Base):
         self.params = {}
         self.parametersets = {}
         self.valid_param_keys = list(get_params_search(VALID_MAP, self.type))
-        self.valid_paramset_keys = \
-            [get_paramset_type(t) for t in list(get_paramsets_search(VALID_MAP, self.type))]
-        self.valid_keys = {'valid_params_keys': self.valid_param_keys,
-                           'valid_paramset_keys': self.valid_paramset_keys}
+        self.valid_paramset_keys = [
+            get_paramset_type(t)
+            for t in list(get_paramsets_search(VALID_MAP, self.type))
+        ]
+        self.valid_keys = {
+            "valid_params_keys": self.valid_param_keys,
+            "valid_paramset_keys": self.valid_paramset_keys,
+        }
 
         if xml_object is not None:
             self.build_from_xml(xml_object)
@@ -710,12 +724,11 @@ class ParamSet(Base):
         """
         print(self.indenter * i, self)
         for _, param in self.params.items():
-            param.print(i+1)
+            param.print(i + 1)
         for _, paramset in self.parametersets.items():
-            paramset.print(i+1)
+            paramset.print(i + 1)
 
     def __getitem__(self, key):
-
         if key in self.params:
             return self.params[key].value
         if key in self.parametersets:
@@ -801,7 +814,6 @@ class ParamSet(Base):
         return [f for g in search for f in g]  # flatten
 
     def __setitem__(self, key, value):
-
         if not isinstance(value, (str, ParamSet, Param)):
             raise ValueError("Please use value of either type ParamSet, Param or str")
         if isinstance(value, ParamSet):
@@ -818,7 +830,6 @@ class ParamSet(Base):
         return iter(self.params)
 
     def get(self, key, default=None):
-
         if key in self.params:
             return self.params[key].value
         if key in self.parametersets:
@@ -861,11 +872,13 @@ class Param(Base):
         print(self.indenter * i, self)
 
     def __delitem__(self, key):
-        raise NotImplementedError('dict type delete not supported for params.')
+        raise NotImplementedError("dict type delete not supported for params.")
 
     def __eq__(self, other):
         if not isinstance(other, Base):
-            raise NotImplementedError("__eq__ only implemented for comparison between same class")
+            raise NotImplementedError(
+                "__eq__ only implemented for comparison between same class"
+            )
 
         if not self.value == other.value:
             return False
@@ -895,7 +908,9 @@ def path_exists(path: Path) -> bool:
     """
     if path:
         if not isinstance(path, Path):
-            raise TypeError('exists() function only implemented for pathlib Path objects.')
+            raise TypeError(
+                "exists() function only implemented for pathlib Path objects."
+            )
         if path.exists():
             return True
     return False
@@ -934,33 +949,50 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
     paramset_type = elem.attrib["type"]
 
     if paramset_type == "activityParams":
-        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='activityType']")]
+        (uid,) = [
+            p.attrib["value"] for p in elem.xpath("./param[@name='activityType']")
+        ]
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
-    if paramset_type in ["modeParams", "teleportedModeParameters", "intermodalAccessEgress"]:
-        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='mode']")]
+    if paramset_type in [
+        "modeParams",
+        "teleportedModeParameters",
+        "intermodalAccessEgress",
+        "modeRangeRestrictionSet",
+    ]:
+        (uid,) = [p.attrib["value"] for p in elem.xpath("./param[@name='mode']")]
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
     if paramset_type in ["scoringParameters"]:
-        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
+        (uid,) = [
+            p.attrib["value"] for p in elem.xpath("./param[@name='subpopulation']")
+        ]
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
     if paramset_type in ["strategysettings"]:
-        subpop, = [p.attrib['value'] for p in elem.xpath("./param[@name='subpopulation']")]
-        strategy, = [p.attrib['value'] for p in elem.xpath("./param[@name='strategyName']")]
+        (subpop,) = [
+            p.attrib["value"] for p in elem.xpath("./param[@name='subpopulation']")
+        ]
+        (strategy,) = [
+            p.attrib["value"] for p in elem.xpath("./param[@name='strategyName']")
+        ]
         uid = subpop + ":" + strategy
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
     if paramset_type in ["modeMapping"]:
-        uid, = [p.attrib['value'] for p in elem.xpath("./param[@name='passengerMode']")]
+        (uid,) = [
+            p.attrib["value"] for p in elem.xpath("./param[@name='passengerMode']")
+        ]
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
-    raise ValueError(f"unrecognised parameterset of type: {paramset_type} in xml")
+    raise ValueError(
+        f"Cannot build paramset key due to unrecognised parameterset: {paramset_type} in xml"
+    )
 
 
 def sets_diff(self: list, other: list, name: str, loc: str) -> list:
@@ -989,7 +1021,7 @@ def get_paramset_type(key: str) -> str:
     :param key: str
     :return: str
     """
-    return key.split(':')[0]
+    return key.split(":")[0]
 
 
 def get_params_search(dic: dict, target: str) -> dict:
@@ -1002,8 +1034,8 @@ def get_params_search(dic: dict, target: str) -> dict:
     target = get_paramset_type(target)
 
     if target in dic:
-        if 'params' in dic[target]:
-            return dic[target]['params']
+        if "params" in dic[target]:
+            return dic[target]["params"]
     for _, value in dic.items():
         if isinstance(value, dict):
             item = get_params_search(value, target)
@@ -1022,8 +1054,8 @@ def get_paramsets_search(dic: dict, target: str) -> dict:
     target = get_paramset_type(target)
 
     if target in dic:
-        if 'parametersets' in dic[target]:
-            return dic[target]['parametersets']
+        if "parametersets" in dic[target]:
+            return dic[target]["parametersets"]
     for _, value in dic.items():
         if isinstance(value, dict):
             item = get_paramsets_search(value, target)
