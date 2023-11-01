@@ -1,8 +1,8 @@
 # Master of Ceremonies
 
-Interfaces for making MATSim configuration less painful.
+Making [MATSim](https://github.com/matsim-org/matsim-libs) configuration less painful.
 
-Modify, generate, diff and debug configs from the command line.
+Modify, generate, diff and debug MATSim configs from the command line.
 
 ## Contents
 
