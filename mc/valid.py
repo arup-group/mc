@@ -95,24 +95,7 @@ VALID_MAP = {
         "DiscreteModeChoice": {
             "params": {
                 "modelType": "Tour",
-                "selector": "MultinomialLogit",
-                "tourConstraints": "SubtourMode",
-                "tourFinder": "PlanBased",
-                "tourEstimator": "Uniform"
-            },
-            "parametersets": {
-                "selector:MultinomialLogit": {
-                    "params": {
-                        "considerMinimumUtility": "false",
-                        "maximumUtility": "700.0",
-                        "minimumUtility": "-700.0"
-                    }
-                },
-                "modeAvailability:Car": {
-                    "params": {
-                        "availableModes": "car,pt,walk,bike"
-                    }
-                }
+                "selector": "MultinomialLogit"
             }
         },
         "travelTimeCalculator": {
