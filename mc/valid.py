@@ -92,6 +92,12 @@ VALID_MAP = {
                 "ensureActivityReachability": "true",
             }
         },
+        "DiscreteModeChoice": {
+            "params": {
+                "modelType": "Tour",
+                "selector": "MultinomialLogit"
+            }
+        },
         "travelTimeCalculator": {
             "params": {
                 "analyzedModes": "car,bus,walk",
