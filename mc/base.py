@@ -958,7 +958,6 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
         key = paramset_type + ":" + uid
         return paramset_type, key, uid
 
-
     if paramset_type == "activityParams":
         (uid,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='activityType']")
