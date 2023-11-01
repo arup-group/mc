@@ -271,10 +271,13 @@ def dump_log_to_disk(log: list, path):
 
 
 def load_overrides(overrides_path: Path) -> dict:
+    if not overrides_path.exists():
+        logging.warning(f"Overrides file not found: {overrides_path}")
+        return {}
     with open(overrides_path) as o:
         overrides = json.loads(o.read())
         result = {}
-        for i, val in enumerate(overrides):
+        for val in overrides:
             for k, v in val.items():
                 result[k] = v
         return result
