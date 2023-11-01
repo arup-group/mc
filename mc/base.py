@@ -948,6 +948,17 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
     """
     paramset_type = elem.attrib["type"]
 
+    if paramset_type == "selector:MultinomialLogit":
+        uid = "MultinomialLogit"
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
+
+    if paramset_type == "modeAvailability:Car":
+        uid = "Car"
+        key = paramset_type + ":" + uid
+        return paramset_type, key, uid
+
+
     if paramset_type == "activityParams":
         (uid,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='activityType']")
