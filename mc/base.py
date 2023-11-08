@@ -715,7 +715,10 @@ class ParamSet(Base):
             self.build_from_json(json_object)
 
     def __str__(self) -> str:
-        return f"{self.class_type.upper()}: {self.type} ({self.name})"
+        if ":" in self.type:
+            return f"{self.class_type.upper()}: {self.type} ({self.type})"
+        else:
+            return f"{self.class_type.upper()}: {self.type} ({self.name})"
 
     def print(self, i: int = 0) -> None:
         """
@@ -991,7 +994,10 @@ def build_paramset_key(elem: et.Element, seperator: str = "::") -> Tuple[str, st
         return paramset_type, key, uid
 
     if ":" in paramset_type:
-        """special cases fpr selector:MultinomialLogit and modeAvailability:Car from DMC mod"""
+        """
+        special cases when matsim config has semicolons in paramerset such as selector:MultinomialLogit
+        and modeAvailability:Car from DMC module
+        """
         uid = paramset_type.split(":")[-1]
         key = paramset_type + seperator + uid
         return paramset_type, key, uid
