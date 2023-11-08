@@ -28,14 +28,14 @@ def test_default_read_json():
 
 
 def test_param_equality_same():
-    test_config1 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters:default']["lateArrival"]
-    test_config2 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters:default']["lateArrival"]
+    test_config1 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters::default']["lateArrival"]
+    test_config2 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters::default']["lateArrival"]
     assert test_config1 == test_config2
 
 
 def test_paramset_equality_same():
-    test_config1 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters:default']
-    test_config2 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters:default']
+    test_config1 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters::default']
+    test_config2 = BaseConfig(path=env.test_xml_path)["planCalcScore"]['scoringParameters::default']
     assert test_config1 == test_config2
 
 
@@ -115,8 +115,8 @@ def test_diff():
 def test_config_dict_navigation():
     test_config = BaseConfig(path=env.test_xml_path)
     test_module = test_config.modules['planCalcScore']
-    scoringParameters = test_module.parametersets['scoringParameters:default']
-    activityParams = scoringParameters.parametersets['activityParams:home']
+    scoringParameters = test_module.parametersets['scoringParameters::default']
+    activityParams = scoringParameters.parametersets['activityParams::home']
     activityType = activityParams.params['activityType']
     assert activityType.value == 'home'
 
@@ -128,17 +128,17 @@ def test_module_dict_get():
 
 def test_paramset_level_1_dict_get():
     test_config = BaseConfig(path=env.test_xml_path)
-    assert isinstance(test_config['planCalcScore']['scoringParameters:default'], ParamSet)
+    assert isinstance(test_config['planCalcScore']['scoringParameters::default'], ParamSet)
 
 
 def test_paramset_level_2_dict_get():
     test_config = BaseConfig(path=env.test_xml_path)
-    assert isinstance(test_config['planCalcScore']['scoringParameters:default']['activityParams:home'], ParamSet)
+    assert isinstance(test_config['planCalcScore']['scoringParameters::default']['activityParams::home'], ParamSet)
 
 
 def test_param_dict_get():
     test_config = BaseConfig(path=env.test_xml_path)
-    assert isinstance(test_config['planCalcScore']['scoringParameters:default']['activityParams:home']['activityType'], str)
+    assert isinstance(test_config['planCalcScore']['scoringParameters::default']['activityParams::home']['activityType'], str)
 
 
 def test_module_dict_set():
@@ -149,18 +149,18 @@ def test_module_dict_set():
 
 
 def test_paramset_level_1_dict_set():
-    test_config_score = BaseConfig(path=env.test_bad_config_path)['planCalcScore']["scoringParameters:default"]
+    test_config_score = BaseConfig(path=env.test_bad_config_path)['planCalcScore']["scoringParameters::default"]
     test_config = BaseConfig(path=env.test_json_path)
-    test_config['planCalcScore']['scoringParameters:unknown'] = test_config_score
-    assert test_config['planCalcScore']['scoringParameters:unknown']['performing'] == '5.0'
+    test_config['planCalcScore']['scoringParameters::unknown'] = test_config_score
+    assert test_config['planCalcScore']['scoringParameters::unknown']['performing'] == '5.0'
 
 
 def test_param_dict_set():
     test_config = BaseConfig(path=env.test_json_path)
-    assert isinstance(test_config['planCalcScore']["scoringParameters:default"].params['performing'], Param)
-    test_config['planCalcScore']["scoringParameters:default"]['performing'] = '7.0'
-    assert isinstance(test_config['planCalcScore']["scoringParameters:default"].params['performing'], Param)
-    assert test_config['planCalcScore']["scoringParameters:default"]['performing'] == '7.0'
+    assert isinstance(test_config['planCalcScore']["scoringParameters::default"].params['performing'], Param)
+    test_config['planCalcScore']["scoringParameters::default"]['performing'] = '7.0'
+    assert isinstance(test_config['planCalcScore']["scoringParameters::default"].params['performing'], Param)
+    assert test_config['planCalcScore']["scoringParameters::default"]['performing'] == '7.0'
 
 
 def test_module_key_valid():
@@ -178,5 +178,5 @@ def test_paramset_level_1_key_valid():
 def test_param_level_1_key_valid():
     test_config = BaseConfig(path=env.test_json_path)
     with pytest.raises(KeyError):
-        test_config['planCalcScore']['scoringParameters:default'].is_valid_param_key('NOTVALID')
+        test_config['planCalcScore']['scoringParameters::default'].is_valid_param_key('NOTVALID')
 

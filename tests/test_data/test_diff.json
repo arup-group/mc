@@ -103,7 +103,7 @@
         "writeExperiencedPlans": "false"
       },
       "parametersets": {
-        "scoringParameters:default": {
+        "scoringParameters::default": {
           "params": {
             "earlyDeparture": "-0.0",
             "lateArrival": "-18.0",
@@ -115,7 +115,7 @@
             "waitingPt": "-1.0"
           },
           "parametersets": {
-            "activityParams:home": {
+            "activityParams::home": {
               "params": {
                 "activityType": "home",
                 "closingTime": "undefined",
@@ -129,7 +129,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "modeParams:car": {
+            "modeParams::car": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -138,7 +138,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:pt": {
+            "modeParams::pt": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -147,7 +147,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:walk": {
+            "modeParams::walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -156,7 +156,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:bike": {
+            "modeParams::bike": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -167,7 +167,7 @@
             }
           }
         },
-        "scoringParameters:unknown": {
+        "scoringParameters::unknown": {
           "params": {
             "earlyDeparture": "-0.0",
             "lateArrival": "-18.0",
@@ -179,7 +179,7 @@
             "waitingPt": "-1.0"
           },
           "parametersets": {
-            "activityParams:home": {
+            "activityParams::home": {
               "params": {
                 "activityType": "home",
                 "closingTime": "undefined",
@@ -193,7 +193,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "modeParams:car": {
+            "modeParams::car": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -202,7 +202,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:pt": {
+            "modeParams::pt": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -211,7 +211,7 @@
                 "monetaryDistanceRate": "-0.1"
               }
             },
-            "modeParams:walk": {
+            "modeParams::walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -220,7 +220,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:bike": {
+            "modeParams::bike": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -249,7 +249,7 @@
         "networkModes": "car"
       },
       "parametersets": {
-        "teleportedModeParameters:bike": {
+        "teleportedModeParameters::bike": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "bike",
@@ -257,7 +257,7 @@
             "teleportedModeSpeed": "4.166666666666667"
           }
         },
-        "teleportedModeParameters:walk": {
+        "teleportedModeParameters::walk": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "walk",
@@ -265,7 +265,7 @@
             "teleportedModeSpeed": "0.8333333333333333"
           }
         },
-        "teleportedModeParameters:egress_walk": {
+        "teleportedModeParameters::egress_walk": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "egress_walk",
@@ -273,7 +273,7 @@
             "teleportedModeSpeed": "0.8333333333333333"
           }
         },
-        "teleportedModeParameters:undefined": {
+        "teleportedModeParameters::undefined": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "undefined",
@@ -281,7 +281,7 @@
             "teleportedModeSpeed": "13.88888888888889"
           }
         },
-        "teleportedModeParameters:ride": {
+        "teleportedModeParameters::ride": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "ride",
@@ -289,7 +289,7 @@
             "teleportedModeSpeed": "null"
           }
         },
-        "teleportedModeParameters:pt": {
+        "teleportedModeParameters::pt": {
           "params": {
             "beelineDistanceFactor": "1.3",
             "mode": "pt",

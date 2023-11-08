@@ -20,7 +20,7 @@ def test_default_config_path():
 
 def test_load_config():
     config = BaseConfig(path=_DEFAULTS_DIR / 'default_config.xml')
-    assert config["planCalcScore"]['scoringParameters:default']["lateArrival"]
+    assert config["planCalcScore"]['scoringParameters::default']["lateArrival"]
 
 
 def test_init_default_config():
