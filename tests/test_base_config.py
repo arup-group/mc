@@ -39,6 +39,11 @@ def test_paramset_equality_same():
     assert test_config1 == test_config2
 
 
+def test_DMC_paramset_equality_same():
+    test_config1 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]["selector:MultinomialLogit"]
+    test_config2 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]["selector:MultinomialLogit"]
+    assert test_config1 == test_config2
+
 def test_module_equality_same():
     test_config1 = BaseConfig(path=env.test_xml_path)["planCalcScore"]
     test_config2 = BaseConfig(path=env.test_xml_path)["planCalcScore"]
@@ -60,6 +65,14 @@ def test_equality_not_same():
 def test_xml_and_json_test_configs_equal():
     test_config1 = BaseConfig(path=env.test_xml_path)
     test_config2 = BaseConfig(path=env.test_json_path)
+
+    assert test_config1 == test_config2
+
+
+def test_xml_and_json_test_DMC_paramset_equal():
+    test_config1 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]
+    test_config2 = BaseConfig(path=env.test_json_path)["DiscreteModeChoice"]
+
     assert test_config1 == test_config2
 
 
@@ -129,6 +142,11 @@ def test_module_dict_get():
 def test_paramset_level_1_dict_get():
     test_config = BaseConfig(path=env.test_xml_path)
     assert isinstance(test_config['planCalcScore']['scoringParameters::default'], ParamSet)
+
+
+def test_DMC_paramset_level_1():
+    test_config = BaseConfig(path=env.test_xml_path)
+    assert isinstance(test_config['DiscreteModeChoice']['selector:MultinomialLogit'], ParamSet)
 
 
 def test_paramset_level_2_dict_get():
