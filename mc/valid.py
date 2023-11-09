@@ -95,7 +95,10 @@ VALID_MAP = {
         "DiscreteModeChoice": {
             "params": {
                 "modelType": "Tour",
-                "selector": "MultinomialLogit"
+                "selector": "MultinomialLogit",
+                "tourConstraints": "SubtourMode",
+                "tourFinder": "PlanBased",
+                "tourEstimator": "Uniform"
             },
             "parametersets": {
                 "selector:MultinomialLogit": {

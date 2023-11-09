@@ -145,7 +145,6 @@ class Base:
 
             elif sub_object.tag == "parameterset":
                 _, key, uid = build_paramset_key(sub_object)
-
                 self.parametersets[key] = ParamSet(key, xml_object=sub_object, uid=uid)
 
             else:
@@ -999,7 +998,7 @@ def build_paramset_key(elem: et.Element, seperator: str = "::") -> Tuple[str, st
         and modeAvailability:Car from DMC module
         """
         uid = paramset_type.split(":")[-1]
-        key = paramset_type + seperator + uid
+        key = paramset_type
         return paramset_type, key, uid
 
     raise ValueError(
