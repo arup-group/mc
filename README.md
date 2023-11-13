@@ -305,6 +305,11 @@ param {'name': 'monetaryDistanceRate', 'value': '-0.0001'}  # eg subpop B car
 
 In the examples above, you can see that wildcarding with `*` can be used to return 'all' config elements. The `*` operator tells the find method to search all at a given level. As shown above, it is useful for returning all elements within a parameterset or explicitly describing levels to search.
 
+The CLI supports to find the specific modules from given matsim config:
+```py
+mc find tests/test_data/test_config.json network
+```
+
 ### Find and Set
 
 Note that the `find` method is returning a reference to the found config objects, which can then be set:

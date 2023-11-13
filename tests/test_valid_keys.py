@@ -169,3 +169,24 @@ def test_nested_set_paramsets_fail():
     c = BaseConfig()
     with pytest.raises(KeyError):
         c["planCalcScore"]["INVALID::group1"]["earlyDeparture"] = "1"
+
+
+def test_dmc_module_parameters():
+    test_config = BaseConfig(path=env.test_json_path)
+    dmc_module = test_config["DiscreteModeChoice"]
+    assert dmc_module["modelType"] == "Tour"
+    assert dmc_module["selector"] == "MultinomialLogit"
+
+
+def test_dmc_module_parameter_sets():
+    test_config = BaseConfig(path=env.test_json_path)
+    dmc_module = test_config["DiscreteModeChoice"]
+    multinomial_logit_paramset = dmc_module["selector:MultinomialLogit"]
+    assert multinomial_logit_paramset["maximumUtility"] == "700.0"
+
+
+def test_dmc_mode_availability_car_parameter_set():
+    test_config = BaseConfig(path=env.test_json_path)
+    dmc_module = test_config["DiscreteModeChoice"]
+    mode_availability_car_paramset = dmc_module["modeAvailability:Car"]
+    assert mode_availability_car_paramset["availableModes"] == "car,pt,walk,bike"

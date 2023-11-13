@@ -4,9 +4,11 @@ BaseConfig method tests.
 
 import pytest
 import env
+from unittest.mock import MagicMock
+
 
 env.set_module()
-from mc.base import BaseConfig, Module, ParamSet, Param
+from mc.base import BaseConfig, Module, ParamSet, Param, build_paramset_key
 
 
 def test_test_env_paths():
@@ -39,7 +41,7 @@ def test_paramset_equality_same():
     assert test_config1 == test_config2
 
 
-def test_DMC_paramset_equality_same():
+def test_dmc_paramset_equality_same():
     test_config1 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]["selector:MultinomialLogit"]
     test_config2 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]["selector:MultinomialLogit"]
     assert test_config1 == test_config2
@@ -62,17 +64,18 @@ def test_equality_not_same():
     assert not test_config1 == test_config2
 
 
-def test_xml_and_json_test_configs_equal():
-    test_config1 = BaseConfig(path=env.test_xml_path)
-    test_config2 = BaseConfig(path=env.test_json_path)
+def test_xml_and_json_test_dmc_paramset_equal():
+    test_config1 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]
+    test_config2 = BaseConfig(path=env.test_json_path)["DiscreteModeChoice"]
 
     assert test_config1 == test_config2
 
 
-def test_xml_and_json_test_DMC_paramset_equal():
-    test_config1 = BaseConfig(path=env.test_xml_path)["DiscreteModeChoice"]
-    test_config2 = BaseConfig(path=env.test_json_path)["DiscreteModeChoice"]
+def test_xml_and_json_test_configs_equal():
+    test_config1 = BaseConfig(path=env.test_xml_path)
+    test_config2 = BaseConfig(path=env.test_json_path)
 
+    assert set(test_config1.modules.keys()) == set(test_config2.modules.keys())
     assert test_config1 == test_config2
 
 
@@ -144,7 +147,7 @@ def test_paramset_level_1_dict_get():
     assert isinstance(test_config['planCalcScore']['scoringParameters::default'], ParamSet)
 
 
-def test_DMC_paramset_level_1():
+def test_dmc_paramset_level_1():
     test_config = BaseConfig(path=env.test_xml_path)
     assert isinstance(test_config['DiscreteModeChoice']['selector:MultinomialLogit'], ParamSet)
 
@@ -198,3 +201,13 @@ def test_param_level_1_key_valid():
     with pytest.raises(KeyError):
         test_config['planCalcScore']['scoringParameters::default'].is_valid_param_key('NOTVALID')
 
+
+def test_build_paramset_key_with_colon():
+    mock_elem = MagicMock()
+    mock_elem.attrib = {'type': 'selector:MultinomialLogit'}
+    test_config = BaseConfig(path=env.test_json_path)
+
+    paramset_type, key, uid = build_paramset_key(mock_elem)
+    assert paramset_type == 'selector:MultinomialLogit', "Paramset type did not match"
+    assert key == 'selector:MultinomialLogit', "Key did not match"
+    assert uid == 'MultinomialLogit', "UID did not match"
