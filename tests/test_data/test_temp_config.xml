@@ -60,6 +60,21 @@
     <param name="mutationRange" value="1000.0"/>
     <param name="useIndividualSettingsForSubpopulations" value="false"/>
   </module>
+  <module name="DiscreteModeChoice">
+    <param name="modelType" value="Tour"/>
+    <param name="selector" value="MultinomialLogit"/>
+    <param name="tourConstraints" value="SubtourMode"/>
+    <param name="tourFinder" value="PlanBased"/>
+    <param name="tourEstimator" value="Uniform"/>
+    <parameterset type="selector:MultinomialLogit">
+      <param name="considerMinimumUtility" value="false"/>
+      <param name="maximumUtility" value="700.0"/>
+      <param name="minimumUtility" value="-700.0"/>
+    </parameterset>
+    <parameterset type="modeAvailability:Car">
+      <param name="availableModes" value="car,pt,walk,bike"/>
+    </parameterset>
+  </module>
   <module name="subtourModeChoice">
     <param name="chainBasedModes" value="car,bike"/>
     <param name="considerCarAvailability" value="false"/>

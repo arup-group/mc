@@ -145,7 +145,6 @@ class Base:
 
             elif sub_object.tag == "parameterset":
                 _, key, uid = build_paramset_key(sub_object)
-
                 self.parametersets[key] = ParamSet(key, xml_object=sub_object, uid=uid)
 
             else:
@@ -571,9 +570,9 @@ class Module(Base):
             return self.params[key].value
         if key in self.parametersets:
             return self.parametersets[key]
-        if key + ":default" in self.parametersets:
+        if key + "::default" in self.parametersets:
             print("WARNING assuming 'default' required")
-            return self.parametersets[key + ":default"]
+            return self.parametersets[key + "::default"]
 
         # try to collect list of paramsets
         collected = []
@@ -654,9 +653,9 @@ class Module(Base):
             return self.params[key].value
         if key in self.parametersets:
             return self.parametersets[key]
-        if key + ":default" in self.parametersets:
+        if key + "::default" in self.parametersets:
             print("WARNING assuming 'default' required")
-            return self.parametersets[key + ":default"]
+            return self.parametersets[key + "::default"]
 
         return default
 
@@ -715,7 +714,10 @@ class ParamSet(Base):
             self.build_from_json(json_object)
 
     def __str__(self) -> str:
-        return f"{self.class_type.upper()}: {self.type} ({self.name})"
+        if ":" in self.type:
+            return f"{self.class_type.upper()}: {self.type} ({self.type})"
+        else:
+            return f"{self.class_type.upper()}: {self.type} ({self.name})"
 
     def print(self, i: int = 0) -> None:
         """
@@ -733,9 +735,9 @@ class ParamSet(Base):
             return self.params[key].value
         if key in self.parametersets:
             return self.parametersets[key]
-        if key + ":default" in self.parametersets:
-            print("WARNING assuming '<parameterset>:default' required")
-            return self.parametersets[key + ":default"]
+        if key + "::default" in self.parametersets:
+            print("WARNING assuming '<parameterset>::default' required")
+            return self.parametersets[key + "::default"]
 
         # try to collect list of paramsets
         collected = []
@@ -834,9 +836,9 @@ class ParamSet(Base):
             return self.params[key].value
         if key in self.parametersets:
             return self.parametersets[key]
-        if key + ":default" in self.parametersets:
+        if key + "::default" in self.parametersets:
             print("WARNING assuming 'default' required")
-            return self.parametersets[key + ":default"]
+            return self.parametersets[key + "::default"]
 
         return default
 
@@ -886,7 +888,7 @@ class Param(Base):
         return True
 
 
-def specials_snap(a, b, divider=":", ignore="*"):
+def specials_snap(a, b, divider="::", ignore="*"):
     """
     Special function to check for key matches with consideration of
     special character '*' that represents 'all'.
@@ -938,7 +940,7 @@ def json_path(path: Path) -> bool:
     return False
 
 
-def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
+def build_paramset_key(elem: et.Element, seperator: str = "::") -> Tuple[str, str, str]:
     """
     Function to extract the appropriate suffix from a given parameterset xml element. Returns the
     element type (either for subpopulation, mode or activity) and new key. This key is used to
@@ -952,7 +954,7 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
         (uid,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='activityType']")
         ]
-        key = paramset_type + ":" + uid
+        key = paramset_type + seperator + uid
         return paramset_type, key, uid
 
     if paramset_type in [
@@ -962,14 +964,14 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
         "modeRangeRestrictionSet",
     ]:
         (uid,) = [p.attrib["value"] for p in elem.xpath("./param[@name='mode']")]
-        key = paramset_type + ":" + uid
+        key = paramset_type + seperator + uid
         return paramset_type, key, uid
 
     if paramset_type in ["scoringParameters"]:
         (uid,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='subpopulation']")
         ]
-        key = paramset_type + ":" + uid
+        key = paramset_type + seperator + uid
         return paramset_type, key, uid
 
     if paramset_type in ["strategysettings"]:
@@ -979,15 +981,24 @@ def build_paramset_key(elem: et.Element) -> Tuple[str, str, str]:
         (strategy,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='strategyName']")
         ]
-        uid = subpop + ":" + strategy
-        key = paramset_type + ":" + uid
+        uid = subpop + seperator + strategy
+        key = paramset_type + seperator + uid
         return paramset_type, key, uid
 
     if paramset_type in ["modeMapping"]:
         (uid,) = [
             p.attrib["value"] for p in elem.xpath("./param[@name='passengerMode']")
         ]
-        key = paramset_type + ":" + uid
+        key = paramset_type + seperator + uid
+        return paramset_type, key, uid
+
+    if ":" in paramset_type:
+        """
+        special cases when matsim config has semicolons in paramerset such as selector:MultinomialLogit
+        and modeAvailability:Car from DMC module
+        """
+        uid = paramset_type.split(":")[-1]
+        key = paramset_type
         return paramset_type, key, uid
 
     raise ValueError(
@@ -1015,13 +1026,13 @@ def sets_diff(self: list, other: list, name: str, loc: str) -> list:
     return diffs
 
 
-def get_paramset_type(key: str) -> str:
+def get_paramset_type(key: str, seperator: str = "::") -> str:
     """
     Return parameterset type from unique key.
     :param key: str
     :return: str
     """
-    return key.split(":")[0]
+    return key.split(seperator)[0]
 
 
 def get_params_search(dic: dict, target: str) -> dict:

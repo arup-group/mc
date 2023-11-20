@@ -21,16 +21,17 @@ def add_directory_to_report(config):
 
     # add paths of the output diretory
     message.append("{:=^150s}".format("output directory"))
-    message.append(
-        f"output_directory:{config['controler']['outputDirectory']}")
+    message.append(f"output_directory:{config['controler']['outputDirectory']}")
 
     # add mobsim setting summary
     message.append("{:=^150s}".format("mobsim setting"))
     message.append(f"mobsim:{config['controler']['mobsim']}")
     message.append(
-        f"Flow_Capacity_Factor:{config[config['controler']['mobsim']]['flowCapacityFactor']}")
+        f"Flow_Capacity_Factor:{config[config['controler']['mobsim']]['flowCapacityFactor']}"
+    )
     message.append(
-        f"Storage_Capacity_Factor:{config[config['controler']['mobsim']]['storageCapacityFactor']}")
+        f"Storage_Capacity_Factor:{config[config['controler']['mobsim']]['storageCapacityFactor']}"
+    )
 
     return message
 
@@ -46,17 +47,19 @@ def add_scoring_to_report(config):
     message.append("")
     # Initialize a dictionary to store mode parameters
     parm = {}
-    for mode in (config['subtourModeChoice']['modes'].split(',')):
-        parm[mode] = ["mode_specific_constant",
-                      "marginal_utility_of_distance",
-                      "marginal_utility_of_traveling",
-                      "monetary_distance_rate"]
+    for mode in config["subtourModeChoice"]["modes"].split(","):
+        parm[mode] = [
+            "mode_specific_constant",
+            "marginal_utility_of_distance",
+            "marginal_utility_of_traveling",
+            "monetary_distance_rate",
+        ]
 
     subpopulation_set = {}
-    subpop = 'subpopulation: '
-    for i in config['planCalcScore'].find('subpopulation'):
+    subpop = "subpopulation: "
+    for i in config["planCalcScore"].find("subpopulation"):
         subpopulation_set.setdefault(str(i.value), [])
-        subpop = subpop + str(i.value) + ','
+        subpop = subpop + str(i.value) + ","
         for j in config.find("scoringParameters:" + str(i.value) + "/mode"):
             subpopulation_set[str(i.value)].append(j.value)
 
@@ -66,8 +69,7 @@ def add_scoring_to_report(config):
     message.append(table_header)
     message.append("-" * (31 * (len(subpopulation_set) + 1)))
     # iterate through modes and subpopulations to create the table rows
-    for idx, mode in enumerate(
-            config['subtourModeChoice']['modes'].split(',')):
+    for idx, mode in enumerate(config["subtourModeChoice"]["modes"].split(",")):
         row_data = "|{:^30}|".format(mode)
         for subpop_name in subpopulation_set.keys():
             row_data += "{:^30}|".format(" ")
@@ -75,62 +77,44 @@ def add_scoring_to_report(config):
         message.append("-" * (31 * (len(subpopulation_set) + 1)))
         # iterate through the scoring parameters and add the values to the
         for row_idx, row_name in enumerate(
-                ["marginalUtilityOfMoney", "performing", "utilityOfLineSwitch"] + parm[mode]):
+            ["marginalUtilityOfMoney", "performing", "utilityOfLineSwitch"] + parm[mode]
+        ):
             row_data = "|{:^30}|".format(row_name)
             for subpop_name in subpopulation_set.keys():
                 if row_idx == 0:
-                    cell_value = config['planCalcScore']['scoringParameters:' +
-                                                         subpop_name]['marginalUtilityOfMoney']
+                    cell_value = config["planCalcScore"][
+                        "scoringParameters::" + subpop_name
+                    ]["marginalUtilityOfMoney"]
                 elif row_idx == 1:
-                    cell_value = config['planCalcScore']['scoringParameters:' +
-                                                         subpop_name]['performing']
+                    cell_value = config["planCalcScore"][
+                        "scoringParameters::" + subpop_name
+                    ]["performing"]
                 elif row_idx == 2:
-                    cell_value = config['planCalcScore']['scoringParameters:' +
-                                                         subpop_name]['utilityOfLineSwitch']
+                    cell_value = config["planCalcScore"][
+                        "scoringParameters::" + subpop_name
+                    ]["utilityOfLineSwitch"]
                 else:
                     if mode not in subpopulation_set[subpop_name]:
                         cell_value = "NA"
                     else:
                         if row_name == "mode_specific_constant":
-                            cell_value = config[
-                                'planCalcScore'
-                            ][
-                                'scoringParameters:' + subpop_name
-                            ][
-                                'modeParams:' + mode
-                            ][
-                                'constant'
-                            ]
+                            cell_value = config["planCalcScore"][
+                                "scoringParameters::" + subpop_name
+                            ]["modeParams::" + mode]["constant"]
                         elif row_name == "marginal_utility_of_distance":
-                            cell_value = config[
-                                'planCalcScore'
-                            ][
-                                'scoringParameters:' + subpop_name
-                            ][
-                                'modeParams:' + mode
-                            ][
-                                'marginalUtilityOfDistance_util_m'
-                            ]
+                            cell_value = config["planCalcScore"][
+                                "scoringParameters::" + subpop_name
+                            ]["modeParams::" + mode]["marginalUtilityOfDistance_util_m"]
                         elif row_name == "marginal_utility_of_traveling":
-                            cell_value = config[
-                                'planCalcScore'
-                            ][
-                                'scoringParameters:' + subpop_name
-                            ][
-                                'modeParams:' + mode
-                            ][
-                                'marginalUtilityOfTraveling_util_hr'
+                            cell_value = config["planCalcScore"][
+                                "scoringParameters::" + subpop_name
+                            ]["modeParams::" + mode][
+                                "marginalUtilityOfTraveling_util_hr"
                             ]
                         elif row_name == "monetary_distance_rate":
-                            cell_value = config[
-                                'planCalcScore'
-                            ][
-                                'scoringParameters:' + subpop_name
-                            ][
-                                'modeParams:' + mode
-                            ][
-                                'monetaryDistanceRate'
-                            ]
+                            cell_value = config["planCalcScore"][
+                                "scoringParameters::" + subpop_name
+                            ]["modeParam:s:" + mode]["monetaryDistanceRate"]
                 row_data += "{:^30}|".format(cell_value)
             message.append(row_data)
             message.append("-" * (31 * (len(subpopulation_set) + 1)))
@@ -142,7 +126,7 @@ def write_text(text, output_path):
     """
     Write the key information into a text file
     """
-    textfile = open(os.path.join(output_path, 'simulation_report.txt'), 'w')
+    textfile = open(os.path.join(output_path, "simulation_report.txt"), "w")
     for element in text:
         textfile.write(element + "\n")
     textfile.close()
@@ -152,13 +136,15 @@ def write_csv(data, output_path):
     """
     Write the key information into a CSV file
     """
-    with open(os.path.join(output_path, 'simulation_report.csv'), 'w', newline='') as csvfile:
+    with open(
+        os.path.join(output_path, "simulation_report.csv"), "w", newline=""
+    ) as csvfile:
         csv_writer = csv.writer(csvfile)
         for row in data:
             # Skip rows with dividing lines
             if "----" in row:
                 continue
-            csv_writer.writerow(row.split('|'))
+            csv_writer.writerow(row.split("|"))
 
 
 def report_config(config, output_path):
@@ -175,8 +161,9 @@ def find_log_files(file_name, root_dir):
     for root, dirs, files in os.walk(root_dir):
         for file in files:
             if file.startswith(file_name):
-                if str(
-                        root)[-2:] == '/0':  # find the file in zero iteration only in the simulation folder
+                if (
+                    str(root)[-2:] == "/0"
+                ):  # find the file in zero iteration only in the simulation folder
                     file_directory.append(os.path.join(root, file))
     return file_directory
 
@@ -185,14 +172,14 @@ def merge_files(file_directory, root_dir):
     """
     Combine and update the matsim_overrides log from different simulation jobs
     """
-    with open(os.path.join(root_dir, 'matsim_overrides_summary.log'), "w") as outfile:
+    with open(os.path.join(root_dir, "matsim_overrides_summary.log"), "w") as outfile:
         for f in file_directory:
             with open(f) as infile:
                 text = infile.readlines()
                 text.insert(0, f + "\n")
                 text.insert(0, "log_path:")
-                text.insert(0, "-" * 100 + '\n')  # split line
-                outfile.write(''.join(text))
+                text.insert(0, "-" * 100 + "\n")  # split line
+                outfile.write("".join(text))
 
 
 def summarise_overrides_log(file_name, root_dir):

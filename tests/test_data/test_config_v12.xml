@@ -85,6 +85,26 @@
 	<param name="useIndividualSettingsForSubpopulations" value="false" />
 </module>
 <!-- ====================================================================== -->
+<module name="DiscreteModeChoice">
+    <param name="modelType" value="Tour" />
+    <param name="selector" value="MultinomialLogit" />
+	<parameterset type="selector:MultinomialLogit" >
+	<!-- Defines whether candidates with a utility lower than the minimum utility should be filtered out. -->
+	<param name="considerMinimumUtility" value="false" />
+	<!-- Candidates with a utility above that threshold will be cut off to this value. -->
+	<param name="maximumUtility" value="700.0" />
+	<!-- Candidates with a utility lower than that threshold will not be considered by default. -->
+	<param name="minimumUtility" value="-700.0" />
+    </parameterset>
+   <param name="tourConstraints" value="SubtourMode" />
+   <!--		<param name="tourConstraints" value="VehicleContinuity,SubtourMode" />-->
+   <param name="tourFinder" value="PlanBased" />
+   <param name="tourEstimator" value="Uniform" />
+   <parameterset type="modeAvailability:Car">
+	<param name="availableModes" value="car,pt,walk,bike" />
+  </parameterset>
+</module>
+<!-- ====================================================================== -->
 <module name="subtourModeChoice" >
 	<!-- Defines the chain-based modes, seperated by commas -->
 	<param name="chainBasedModes" value="car,bike" />

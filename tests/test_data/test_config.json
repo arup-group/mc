@@ -50,19 +50,19 @@
         "useModeMappingForPassengers": "true"
       },
       "parametersets": {
-        "intermodalAccessEgress:walk": {
+        "intermodalAccessEgress::walk": {
           "params": {
             "mode": "walk",
             "maxRadius": "1000"
           }
         },
-        "modeMapping:bus": {
+        "modeMapping::bus": {
           "params": {
             "routeMode": "bus",
             "passengerMode": "bus"
           }
         },
-        "modeMapping:train": {
+        "modeMapping::train": {
           "params": {
             "routeMode": "train",
             "passengerMode": "train"
@@ -83,6 +83,29 @@
         "useIndividualSettingsForSubpopulations": "false"
       }
     },
+    "DiscreteModeChoice": {
+      "params": {
+        "modelType": "Tour",
+        "selector": "MultinomialLogit",
+        "tourConstraints": "SubtourMode",
+        "tourFinder": "PlanBased",
+        "tourEstimator":"Uniform"
+    },
+      "parametersets": {
+          "selector:MultinomialLogit": {
+              "params": {
+                  "considerMinimumUtility": "false",
+                  "maximumUtility": "700.0",
+                  "minimumUtility": "-700.0"
+              }
+          },
+          "modeAvailability:Car": {
+              "params": {
+                  "availableModes": "car,pt,walk,bike"
+              }
+          }
+      }
+  },
     "subtourModeChoice": {
       "params": {
         "chainBasedModes": "car,bike",
@@ -168,7 +191,7 @@
         "writeExperiencedPlans": "false"
       },
       "parametersets": {
-        "scoringParameters:default": {
+        "scoringParameters::default": {
           "params": {
             "earlyDeparture": "-0.0",
             "lateArrival": "-18.0",
@@ -180,7 +203,7 @@
             "waitingPt": "-1.0"
           },
           "parametersets": {
-            "activityParams:education": {
+            "activityParams::education": {
               "params": {
                 "activityType": "education",
                 "closingTime": "17:00:00",
@@ -194,7 +217,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "activityParams:home": {
+            "activityParams::home": {
               "params": {
                 "activityType": "home",
                 "closingTime": "undefined",
@@ -208,7 +231,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "activityParams:work": {
+            "activityParams::work": {
               "params": {
                 "activityType": "work",
                 "closingTime": "19:00:00",
@@ -222,7 +245,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "modeParams:car": {
+            "modeParams::car": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -231,7 +254,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:pt": {
+            "modeParams::pt": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -240,7 +263,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:walk": {
+            "modeParams::walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -249,7 +272,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:access_walk": {
+            "modeParams::access_walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -258,7 +281,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:bike": {
+            "modeParams::bike": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -267,7 +290,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:train": {
+            "modeParams::train": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -276,7 +299,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:bus": {
+            "modeParams::bus": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -287,7 +310,7 @@
             }
           }
         },
-        "scoringParameters:unknown": {
+        "scoringParameters::unknown": {
           "params": {
             "earlyDeparture": "-0.0",
             "lateArrival": "-18.0",
@@ -299,7 +322,7 @@
             "waitingPt": "-1.0"
           },
           "parametersets": {
-            "activityParams:education": {
+            "activityParams::education": {
               "params": {
                 "activityType": "education",
                 "closingTime": "17:00:00",
@@ -313,7 +336,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "activityParams:home": {
+            "activityParams::home": {
               "params": {
                 "activityType": "home",
                 "closingTime": "undefined",
@@ -327,7 +350,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "activityParams:work": {
+            "activityParams::work": {
               "params": {
                 "activityType": "work",
                 "closingTime": "19:00:00",
@@ -341,7 +364,7 @@
                 "typicalDurationScoreComputation": "relative"
               }
             },
-            "modeParams:car": {
+            "modeParams::car": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -350,7 +373,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:pt": {
+            "modeParams::pt": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "0.0",
@@ -359,7 +382,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:walk": {
+            "modeParams::walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -368,7 +391,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:access_walk": {
+            "modeParams::access_walk": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -377,7 +400,7 @@
                 "monetaryDistanceRate": "0.0"
               }
             },
-            "modeParams:bike": {
+            "modeParams::bike": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -386,7 +409,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:train": {
+            "modeParams::train": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -395,7 +418,7 @@
                 "monetaryDistanceRate": "-0.0"
               }
             },
-            "modeParams:bus": {
+            "modeParams::bus": {
               "params": {
                 "constant": "0.0",
                 "marginalUtilityOfDistance_util_m": "-0.0",
@@ -418,7 +441,7 @@
         "planSelectorForRemoval": "WorstPlanSelector"
       },
       "parametersets": {
-        "strategysettings:unknown:ChangeSingleTripMode": {
+        "strategysettings::unknown::ChangeSingleTripMode": {
           "params": {
             "disableAfterIteration": "-1",
             "executionPath": "null",
@@ -427,7 +450,7 @@
             "weight": "0.1"
           }
         },
-        "strategysettings:unknown:ReRoute": {
+        "strategysettings::unknown::ReRoute": {
           "params": {
             "disableAfterIteration": "-1",
             "executionPath": "null",
@@ -436,7 +459,7 @@
             "weight": "0.2"
           }
         },
-        "strategysettings:unknown:TimeAllocationMutator_ReRoute": {
+        "strategysettings::unknown::TimeAllocationMutator_ReRoute": {
           "params": {
             "disableAfterIteration": "-1",
             "executionPath": "null",
@@ -445,7 +468,7 @@
             "weight": "0.1"
           }
         },
-        "strategysettings:unknown:SelectExpBeta": {
+        "strategysettings::unknown::SelectExpBeta": {
           "params": {
             "disableAfterIteration": "-1",
             "executionPath": "null",

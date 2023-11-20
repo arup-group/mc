@@ -87,6 +87,22 @@
 	<param name="useIndividualSettingsForSubpopulations" value="false" />
 </module>
 <!-- ====================================================================== -->
+<module name="DiscreteModeChoice">
+    <param name="modelType" value="Tour" />
+    <param name="selector" value="MultinomialLogit" />
+	<param name="tourConstraints" value="SubtourMode" />
+	<param name="tourFinder" value="PlanBased" />
+	<param name="tourEstimator" value="Uniform" />
+	<parameterset type="selector:MultinomialLogit" >
+	<param name="considerMinimumUtility" value="false" />
+	<param name="maximumUtility" value="700.0" />
+	<param name="minimumUtility" value="-700.0" />
+    </parameterset>
+   <parameterset type="modeAvailability:Car">
+	<param name="availableModes" value="car,pt,walk,bike" />
+  </parameterset>
+</module>
+<!-- ====================================================================== -->
 <module name="subtourModeChoice" >
 	<!-- Defines the chain-based modes, seperated by commas -->
 	<param name="chainBasedModes" value="car,bike" />
@@ -106,7 +122,6 @@
 	<!-- If enabled, it is ensured that all events that are created during a time step of the mobility simulation are processed before the next time step is simulated. E.g. neccessary when within-day replanning is used. -->
 	<param name="synchronizeOnSimSteps" value="true" />
 </module>
-<!-- ====================================================================== -->
 <module name="controler" >
 	<!-- Sets whether graphs showing some analyses should automatically be generated during the simulation. The generation of graphs usually takes a small amount of time that does not have any weight in big simulations, but add a significant overhead in smaller runs or in test cases where the graphical output is not even requested. -->
 	<param name="createGraphs" value="true" />
